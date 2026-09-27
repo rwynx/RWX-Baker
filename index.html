@@ -59,6 +59,7 @@
   </script>
 
   <link rel="stylesheet" href="rwxbaker-css/style.css">
+  <link rel="stylesheet" href="rwxbaker-css/mobile.css">
   <link rel="icon" type="image/png" href="favicon.png">
 </head>
 <body>
@@ -81,12 +82,16 @@
             <span class="panel-subtitle">Arknights: Endfield Message Generator</span>
           </div>
         </div>
-        <button type="button" id="btn-help-modal" class="help-btn" title="Editor Tips &amp; Shortcuts" aria-label="Editor Tips &amp; Shortcuts">
-          <span class="help-btn-glow" aria-hidden="true"></span>
-          <span class="help-btn-content">
-            <span class="help-btn-icon">💡</span> HINTS
-          </span>
-        </button>
+        <div class="panel-header-actions">
+          <button type="button" id="btn-help-modal" class="help-btn" title="Editor Tips &amp; Shortcuts" aria-label="Editor Tips &amp; Shortcuts">
+            <span class="help-btn-glow" aria-hidden="true"></span>
+            <span class="help-btn-content">
+              <span class="help-btn-icon">💡</span>
+              <span class="help-btn-text">HINTS</span>
+            </span>
+          </button>
+          <button type="button" id="btn-close-editor" class="editor-drawer-close-btn" title="Close Editor" aria-label="Close Editor">&times;</button>
+        </div>
       </div>
 
       <section class="view-controls" aria-label="View and display controls">
@@ -165,16 +170,21 @@
       <div class="panel-scroll-area">
         <section class="panel-section user-section-compact" aria-label="User identity">
           <div class="section-title-container">
-            <h3 class="section-title">USER IDENTITY</h3>
+            <h3 class="section-title">
+              <span class="label-desktop">USER IDENTITY</span>
+              <span class="label-mobile">USER</span>
+            </h3>
           </div>
           <div class="user-switcher" id="user-switcher" role="group" aria-label="User identity selection">
             <button type="button" class="user-btn active" data-user="endminf">
               <img src="rwxbaker-assets/avatars/operator/icon_round_chr_0003_endminf.png" alt="Endmin F">
-              <span>Endmin (F)</span>
+              <span class="label-desktop">Endmin (F)</span>
+              <span class="label-mobile">Endmin (F)</span>
             </button>
             <button type="button" class="user-btn" data-user="endminm">
               <img src="rwxbaker-assets/avatars/operator/icon_round_chr_0002_endminm.png" alt="Endmin M">
-              <span>Endmin (M)</span>
+              <span class="label-desktop">Endmin (M)</span>
+              <span class="label-mobile">Endmin (M)</span>
             </button>
           </div>
         </section>
@@ -313,6 +323,7 @@
         </section>
       </div>
     </aside>
+    <div id="editor-backdrop" class="editor-backdrop" aria-hidden="true"></div>
 
     <main id="phone-frame" class="hide-chat-deco">
       <header id="chat-header">
@@ -400,6 +411,12 @@
       </div>
       <div class="help-modal-content">
         <div class="help-tip-item">
+          <span class="help-tip-badge">DESKTOP</span>
+          <div class="help-tip-text">
+            <strong>Desktop Recommended:</strong> RWX Baker is primarily designed for large screens. For full drag-and-drop reordering, multi-page exports, and the most authentic studio canvas experience, we recommend using a desktop browser. Also if you see black bars in the message bubbles, they won't be visible in the final export, so don't worry about them!
+          </div>
+        </div>
+        <div class="help-tip-item">
           <span class="help-tip-badge">RESIZE</span>
           <div class="help-tip-text">
             <strong>Resize Images:</strong> Drag the corner handle on any image message in the conversation preview to freely adjust its display size (120px &ndash; 480px).
@@ -448,12 +465,22 @@
     </div>
   </div>
 
+  <div id="mobile-notice-toast" class="mobile-notice-toast hidden" role="alert" aria-live="polite">
+    <div class="notice-toast-content">
+      <span class="notice-toast-icon">💻</span>
+      <div class="notice-toast-text">
+        <strong>Desktop Recommended:</strong> For full canvas editing, drag &amp; drop layers, &amp; exports, visit on desktop! In mobile views, you may see black bars in the message bubbles, but they won't be visible in the final export, so don't worry about them!
+      </div>
+    </div>
+    <button type="button" id="btn-dismiss-notice" class="notice-toast-close" title="Dismiss notice" aria-label="Dismiss notice">&times;</button>
+  </div>
+
   <footer class="app-global-footer">
     <div class="footer-legal-inner">
       <a href="privacy.html" target="_blank" rel="noopener noreferrer" class="footer-legal-link">PRIVACY</a>
       <span class="footer-legal-dot">&bull;</span>
       <a href="notice.html" target="_blank" rel="noopener noreferrer" class="footer-legal-link">NOTICE</a>
-      <span class="footer-legal-dot">&bull;</span>
+      <span class="footer-legal-dot footer-legal-dot-second">&bull;</span>
       <span class="footer-legal-text">RWX Baker is an independent, non-commercial fan work. Free, no tracking, no ads. All game content, characters, and trademarks belong to HYPERGRYPH / GRYPHLINE.</span>
     </div>
   </footer>

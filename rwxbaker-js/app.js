@@ -1113,9 +1113,33 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
 
-    btnToggleEditor.addEventListener("click", () => {
-      editorPanel.classList.toggle("open");
-    });
+    const btnCloseEditor = document.getElementById("btn-close-editor");
+    const editorBackdrop = document.getElementById("editor-backdrop");
+
+    if (btnToggleEditor) {
+      btnToggleEditor.addEventListener("click", () => {
+        const isOpen = editorPanel.classList.toggle("open");
+        if (editorBackdrop) {
+          editorBackdrop.classList.toggle("active", isOpen);
+        }
+      });
+    }
+
+    if (btnCloseEditor) {
+      btnCloseEditor.addEventListener("click", () => {
+        editorPanel.classList.remove("open");
+        if (editorBackdrop) {
+          editorBackdrop.classList.remove("active");
+        }
+      });
+    }
+
+    if (editorBackdrop) {
+      editorBackdrop.addEventListener("click", () => {
+        editorPanel.classList.remove("open");
+        editorBackdrop.classList.remove("active");
+      });
+    }
 
     const btnHelpModal = document.getElementById("btn-help-modal");
     const helpModal = document.getElementById("help-modal");
@@ -1146,6 +1170,55 @@ document.addEventListener("DOMContentLoaded", () => {
         helpModal.classList.add("hidden");
       }
     });
+
+    // Mobile Desktop Recommendation Toast
+    const mobileNoticeToast = document.getElementById("mobile-notice-toast");
+    const btnDismissNotice = document.getElementById("btn-dismiss-notice");
+
+    if (mobileNoticeToast) {
+      let isDismissed = false;
+      try {
+        isDismissed = localStorage.getItem("rwx_mobile_notice_dismissed") === "true";
+      } catch (e) {}
+
+      if (window.innerWidth <= 820 && !isDismissed) {
+        let autoDismissTimer = null;
+
+        const dismissNotice = () => {
+          if (autoDismissTimer) {
+            clearTimeout(autoDismissTimer);
+            autoDismissTimer = null;
+          }
+          mobileNoticeToast.classList.remove("visible");
+          mobileNoticeToast.classList.add("fade-out");
+          try {
+            localStorage.setItem("rwx_mobile_notice_dismissed", "true");
+          } catch (e) {}
+          setTimeout(() => {
+            mobileNoticeToast.classList.add("hidden");
+          }, 350);
+        };
+
+        // Entrance animation after 800ms
+        setTimeout(() => {
+          mobileNoticeToast.classList.remove("hidden");
+          requestAnimationFrame(() => {
+            mobileNoticeToast.classList.add("visible");
+          });
+        }, 800);
+
+        // Auto-dismiss after 10 seconds if user hasn't closed it
+        autoDismissTimer = setTimeout(() => {
+          dismissNotice();
+        }, 10800);
+
+        if (btnDismissNotice) {
+          btnDismissNotice.addEventListener("click", () => {
+            dismissNotice();
+          });
+        }
+      }
+    }
 
     userSwitcher.addEventListener("click", (e) => {
       const btn = e.target.closest(".user-btn");

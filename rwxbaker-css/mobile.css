@@ -1,0 +1,862 @@
+/* ==========================================================================
+   RWX BAKER • dedicated mobile & tablet stylsheet 
+   applied on screens <= 820px to not screw the viewport
+   ========================================================================== */
+
+.editor-drawer-close-btn,
+.editor-backdrop,
+.label-mobile,
+.mobile-notice-toast {
+  display: none;
+}
+
+@media (max-width: 820px) {
+
+  .label-desktop {
+    display: none !important;
+  }
+  .label-mobile {
+    display: inline !important;
+  }
+
+  html, body {
+    width: 100%;
+    height: 100%;
+    height: 100dvh;
+    overflow: hidden;
+  }
+
+  #app-container {
+    width: 100vw;
+    height: calc(100dvh - 22px);
+    max-height: calc(100dvh - 22px);
+    padding: 12px 14px 8px 14px !important;
+    gap: 0 !important;
+    margin: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    position: relative !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+  }
+
+  #phone-frame,
+  .phone-mode #phone-frame,
+  #app-container.phone-mode #phone-frame {
+    transform: none !important;
+    width: calc(100vw - 28px) !important;
+    max-width: 440px !important;
+    min-width: 0 !important;
+    height: 100% !important;
+    max-height: calc(100% - 6px) !important;
+    flex: 1 1 auto !important;
+    border-radius: 20px !important;
+    border: 1.5px solid #44454b !important;
+    box-shadow: 0 10px 32px rgba(0, 0, 0, 0.75), 0 0 1px rgba(0, 190, 255, 0.35) !important;
+    align-self: center !important;
+    margin: 0 auto !important;
+    zoom: 1 !important;
+    overflow: hidden !important;
+    position: relative !important;
+  }
+
+  /* topographic map on mobile. ts won't work, this'll have to do */
+  .chat-bg-decorations {
+    top: var(--header-height, 72px) !important;
+    bottom: 50px !important;
+    opacity: 0.75 !important;
+  }
+
+  .chat-bg-deco-tl {
+    width: 140px !important;
+    opacity: 0.45 !important;
+    width: 230px !important;
+    max-width: 65% !important;
+    opacity: 0.85 !important;
+  }
+
+  .chat-bg-deco-br {
+    width: 180px !important;
+    opacity: 0.45 !important;
+    width: 300px !important;
+    max-width: 80% !important;
+    opacity: 0.85 !important;
+  }
+
+  .editor-toggle-btn {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 5px;
+    position: fixed !important;
+    top: 18px !important;
+    left: 20px !important;
+    z-index: 850 !important;
+    background: rgba(30, 31, 35, 0.92) !important;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: #ffffff !important;
+    border: 1px solid rgba(0, 190, 255, 0.5) !important;
+    border-radius: 16px !important;
+    padding: 5px 11px !important;
+    font-size: 0.74rem !important;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.6), 0 0 8px rgba(0, 190, 255, 0.25) !important;
+    cursor: pointer;
+    transition: transform 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
+  }
+
+  .editor-toggle-btn:hover,
+  .editor-toggle-btn:active {
+    background: rgba(40, 42, 48, 0.98) !important;
+    border-color: var(--color-accent-cyan) !important;
+    transform: translateY(-1px);
+  }
+
+  .editor-panel {
+    position: fixed !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    width: min(340px, 86vw) !important;
+    height: 100% !important;
+    max-height: 100dvh !important;
+    z-index: 950 !important;
+    zoom: 1 !important;
+    transform: translateX(-105%) !important;
+    transition: transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
+    box-shadow: 12px 0 35px rgba(0, 0, 0, 0.85) !important;
+    border-radius: 0 !important;
+    border-top: none !important;
+    border-bottom: none !important;
+    border-left: none !important;
+  }
+
+  .editor-panel.open {
+    transform: translateX(0) !important;
+  }
+
+  .editor-panel .panel-header {
+    padding: 10px 14px !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    gap: 8px !important;
+  }
+
+  .editor-panel .panel-brand {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    min-width: 0 !important;
+    flex: 1 1 auto !important;
+    overflow: hidden !important;
+  }
+
+  .editor-panel .panel-brand-logo {
+    height: 24px !important;
+    width: auto !important;
+    flex-shrink: 0 !important;
+  }
+
+  .editor-panel .panel-header-titles {
+    display: flex !important;
+    flex-direction: column !important;
+    min-width: 0 !important;
+  }
+
+  .editor-panel .panel-header-titles h2 {
+    font-size: 0.92rem !important;
+    margin: 0 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  .editor-panel .panel-subtitle {
+    display: none !important;
+  }
+
+  .editor-panel .panel-header-actions {
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    flex-shrink: 0 !important;
+  }
+
+  .editor-panel .help-btn {
+    padding: 4px 7px !important;
+    border-radius: 6px !important;
+    min-height: 28px !important;
+    height: 28px !important;
+  }
+
+  .editor-panel .help-btn .help-btn-text {
+    display: none !important;
+  }
+
+  .editor-panel .help-btn .help-btn-icon {
+    font-size: 0.95rem !important;
+    line-height: 1 !important;
+    margin: 0 !important;
+  }
+
+  .editor-drawer-close-btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 28px !important;
+    height: 28px !important;
+    border-radius: 6px !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.16) !important;
+    color: #e4e6eb !important;
+    font-size: 1.25rem !important;
+    line-height: 1 !important;
+    cursor: pointer !important;
+    transition: all 0.15s ease !important;
+  }
+
+  .editor-drawer-close-btn:hover,
+  .editor-drawer-close-btn:active {
+    background: rgba(229, 57, 53, 0.3) !important;
+    border-color: #ff5252 !important;
+    color: #ffffff !important;
+  }
+
+  .editor-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    z-index: 920;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+  }
+
+  .editor-backdrop.active,
+  .editor-panel.open ~ .editor-backdrop {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .view-controls {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+    padding: 10px 14px !important;
+  }
+
+  .view-controls .control-divider {
+    display: none !important;
+  }
+
+  .view-controls .view-control-group {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+    gap: 8px !important;
+  }
+
+  .view-controls .control-group-title {
+    font-size: 0.72rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.5px !important;
+    white-space: nowrap !important;
+  }
+
+  .view-controls .view-mode-controls {
+    display: flex !important;
+    gap: 4px !important;
+  }
+
+  .view-controls .view-mode-btn,
+  .view-controls .deco-toggle-btn {
+    padding: 3px 8px !important;
+    font-size: 0.74rem !important;
+    min-height: 24px !important;
+  }
+
+  .panel-section.user-section-compact {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 8px 14px !important;
+    gap: 8px !important;
+  }
+
+  .user-section-compact .section-title {
+    font-size: 0.8rem !important;
+    white-space: nowrap !important;
+  }
+
+  .user-section-compact .user-switcher {
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    flex: 1 1 auto !important;
+    max-width: 200px !important;
+    justify-content: flex-end !important;
+  }
+
+  .user-section-compact .user-btn {
+    padding: 4px 8px !important;
+    gap: 5px !important;
+    flex: 1 !important;
+    min-height: 26px !important;
+  }
+
+  .user-section-compact .user-btn img {
+    width: 18px !important;
+    height: 18px !important;
+  }
+
+  .user-section-compact .user-btn span {
+    font-size: 0.75rem !important;
+  }
+
+  #chat-header {
+    --header-height: 720px !important;
+    flex: 0 0 720px !important;
+    --header-banner-shift-x: 0px !important;
+    --header-banner-shift-y: 0px !important;
+    --header-banner-height: 56px !important;
+    --header-accent-width: 170px !important;
+    overflow: hidden !important;
+  }
+
+  .header-content {
+    padding: 0 10px 0 88px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    height: 100% !important;
+    transform: none !important;
+    overflow: hidden !important;
+  }
+
+  .header-left {
+    min-width: 0 !important;
+    flex-shrink: 0 !important;
+    transform: none !important;
+    overflow: hidden !important;
+    z-index: 2 !important;
+    margin-right: 8px !important;
+  }
+
+  .header-left .character-name {
+    font-size: 1.08rem !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    display: block !important;
+    letter-spacing: 0.2px !important;
+    max-width: 125px !important;
+  }
+
+  .header-right {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    height: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    transform: none !important;
+    overflow: hidden !important;
+    padding-right: 2px !important;
+  }
+
+  .header-banner {
+    height: 54px !important;
+    max-height: 54px !important;
+    width: 100% !important;
+    max-width: 250px !important;
+    object-fit: cover !important;
+    object-position: right center !important;
+    transform: none !important;
+  }
+
+  .header-blue-lines {
+    width: 24px !important;
+    opacity: 0.38 !important;
+    transform: none !important;
+  }
+
+  .header-baker-deco {
+    display: none !important;
+  }
+
+  #chat-viewport {
+    padding: 10px 8px !important;
+  }
+
+  #message-list {
+    gap: 10px !important;
+  }
+
+  .message-row {
+    --message-avatar-size: 42px !important;
+    --message-avatar-image-size: 34px !important;
+    --message-avatar-gap: 6px !important;
+    padding: 1px 2px !important;
+  }
+
+  .bubble {
+    max-width: 78% !important;
+    font-size: 0.85rem !important;
+    line-height: 1.35 !important;
+  }
+
+  .bubble.incoming {
+    padding: 8px 12px 9px 13px !important;
+  }
+
+  .bubble.outgoing {
+    padding: 8px 13px 9px 12px !important;
+  }
+
+  .bubble-text {
+    word-break: break-word !important;
+  }
+
+  .chat-image-wrap {
+    max-width: min(220px, 68vw) !important;
+  }
+
+  .chat-image {
+    max-width: 100% !important;
+    height: auto !important;
+    border-radius: 6px !important;
+  }
+
+  .image-resize-handle {
+    width: 24px !important;
+    height: 24px !important;
+    right: -8px !important;
+    bottom: -8px !important;
+  }
+
+  #choice-container {
+    padding: 6px 10px !important;
+    gap: 6px !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    position: relative !important;
+  }
+
+  .choice-pill {
+    width: 100% !important;
+    max-width: 100% !important;
+    font-size: 0.82rem !important;
+    padding: 7px 12px !important;
+    margin: 0 !important;
+    border-radius: 20px !important;
+  }
+
+  .phone-mode .choice-container:has(.template-choices-clear-btn) .choice-pill {
+    max-width: 100% !important;
+    margin: 0 !important;
+  }
+
+  .template-choices-clear-btn,
+  .phone-mode .template-choices-clear-btn {
+    position: static !important;
+    transform: none !important;
+    align-self: center !important;
+    margin-bottom: 3px !important;
+    padding: 3px 10px !important;
+    font-size: 0.70rem !important;
+  }
+
+  #input-footer {
+    padding: 6px 8px !important;
+  }
+
+  .input-bar {
+    gap: 5px !important;
+  }
+
+  .input-btn {
+    width: 36px !important;
+    height: 36px !important;
+    min-width: 36px !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .input-btn img {
+    object-fit: contain !important;
+  }
+
+  #btn-emoticon img {
+    width: 22px !important;
+    height: 22px !important;
+  }
+
+  #btn-emoji img {
+    width: 40px !important;
+    height: 40px !important;
+  }
+
+  .send-btn {
+    width: 36px !important;
+    height: 36px !important;
+    min-width: 36px !important;
+  }
+
+  .send-btn img {
+    width: 20px !important;
+    height: 20px !important;
+  }
+
+  .editable-message-input.bottom-input {
+    font-size: 0.84rem !important;
+    min-height: 32px !important;
+    padding: 6px 10px !important;
+  }
+
+  .sticker-panel,
+  .emoji-picker-panel {
+    left: 8px !important;
+    right: 8px !important;
+    bottom: 50px !important;
+    max-height: 210px !important;
+  }
+
+  .help-modal-backdrop {
+    padding: 16px 12px !important;
+    align-items: center !important;
+    justify-content: center !important;
+    z-index: 1050 !important;
+  }
+
+  .help-modal-card {
+    width: min(360px, 94vw) !important;
+    max-width: 360px !important;
+    max-height: 78vh !important;
+    max-height: 78dvh !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+    border-radius: 12px !important;
+    border: 1px solid #44464f !important;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.8), 0 0 1px rgba(0, 220, 255, 0.4) !important;
+  }
+
+  .help-modal-header {
+    padding: 10px 14px !important;
+    background: #23252a !important;
+    border-bottom: 1px solid #33363e !important;
+    flex-shrink: 0 !important;
+  }
+
+  .help-modal-title {
+    gap: 6px !important;
+  }
+
+  .help-modal-title h3 {
+    font-size: 0.86rem !important;
+    letter-spacing: 0.6px !important;
+  }
+
+  .help-modal-close {
+    font-size: 1.25rem !important;
+    padding: 0 2px !important;
+    line-height: 1 !important;
+  }
+
+  .help-modal-content {
+    padding: 10px 12px !important;
+    gap: 8px !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    flex: 1 1 auto !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: rgba(0, 190, 255, 0.4) transparent !important;
+  }
+
+  .help-modal-content::-webkit-scrollbar {
+    width: 4px !important;
+  }
+
+  .help-modal-content::-webkit-scrollbar-thumb {
+    background: rgba(0, 190, 255, 0.4) !important;
+    border-radius: 2px !important;
+  }
+
+  .help-tip-item {
+    display: flex !important;
+    gap: 8px !important;
+    align-items: flex-start !important;
+    padding: 8px 10px !important;
+    border-radius: 6px !important;
+    background: #16171a !important;
+    border: 1px solid #28292e !important;
+  }
+
+  .help-tip-badge {
+    font-size: 0.58rem !important;
+    padding: 1px 5px !important;
+    letter-spacing: 0.4px !important;
+    border-radius: 3px !important;
+    margin-top: 2px !important;
+  }
+
+  .help-tip-text {
+    font-size: 0.74rem !important;
+    line-height: 1.35 !important;
+    color: #b8bac2 !important;
+  }
+
+  .help-tip-text strong {
+    font-size: 0.75rem !important;
+    color: #ffffff !important;
+  }
+
+  .help-tip-text em {
+    color: var(--color-accent-cyan) !important;
+  }
+
+  .help-tip-text code {
+    font-size: 0.70rem !important;
+    padding: 0 3px !important;
+  }
+
+  .app-global-footer {
+    height: 20px !important;
+    min-height: 20px !important;
+    max-height: 20px !important;
+    padding: 0 10px !important;
+    background-color: rgba(18, 19, 21, 0.96) !important;
+    backdrop-filter: blur(6px) !important;
+    -webkit-backdrop-filter: blur(6px) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    overflow: hidden !important;
+    z-index: 100 !important;
+  }
+
+  .footer-legal-inner {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-wrap: nowrap !important;
+    white-space: nowrap !important;
+    gap: 8px !important;
+    font-size: 0.65rem !important;
+  }
+
+  .footer-legal-dot-second,
+  .footer-legal-text {
+    display: none !important;
+  }
+
+  .footer-legal-link {
+    font-size: 0.65rem !important;
+    letter-spacing: 0.5px !important;
+  }
+
+  .mobile-notice-toast {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 10px !important;
+    position: fixed !important;
+    bottom: 28px !important;
+    left: 12px !important;
+    right: 12px !important;
+    max-width: 440px !important;
+    margin: 0 auto !important;
+    background: rgba(22, 23, 27, 0.94) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(0, 190, 255, 0.4) !important;
+    border-left: 3px solid var(--color-accent-cyan) !important;
+    border-radius: 8px !important;
+    padding: 8px 12px !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7), 0 0 14px rgba(0, 190, 255, 0.2) !important;
+    z-index: 920 !important;
+    transform: translateY(20px);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.3s ease !important;
+  }
+
+  .mobile-notice-toast.visible {
+    transform: translateY(0) !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+
+  .mobile-notice-toast.fade-out {
+    transform: translateY(15px) !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+
+  .mobile-notice-toast.hidden {
+    display: none !important;
+  }
+
+  .notice-toast-content {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+  }
+
+  .notice-toast-icon {
+    font-size: 1.15rem !important;
+    line-height: 1 !important;
+    flex-shrink: 0 !important;
+  }
+
+  .notice-toast-text {
+    font-size: 0.74rem !important;
+    line-height: 1.35 !important;
+    color: #c4c7d0 !important;
+  }
+
+  .notice-toast-text strong {
+    color: #ffffff !important;
+    font-weight: 600 !important;
+  }
+
+  .notice-toast-close {
+    background: none !important;
+    border: none !important;
+    color: #9295a0 !important;
+    font-size: 1.3rem !important;
+    line-height: 1 !important;
+    cursor: pointer !important;
+    padding: 2px 6px !important;
+    border-radius: 4px !important;
+    flex-shrink: 0 !important;
+    transition: color 0.15s ease, background-color 0.15s ease !important;
+  }
+
+  .notice-toast-close:hover,
+  .notice-toast-close:active {
+    color: #ffffff !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+  }
+}
+
+/* ==========================================================================
+   for narrow screen phones view (< 480px, iphone or galaxy)
+   ========================================================================== */
+@media (max-width: 480px) {
+
+  #app-container {
+    padding: 10px 10px 6px 10px !important;
+  }
+
+  #phone-frame,
+  .phone-mode #phone-frame,
+  #app-container.phone-mode #phone-frame {
+    width: calc(100vw - 20px) !important;
+    max-height: calc(100% - 4px) !important;
+    border-radius: 18px !important;
+  }
+
+  .chat-bg-deco-tl {
+    width: 210px !important;
+    max-width: 62% !important;
+  }
+
+  .chat-bg-deco-br {
+    width: 270px !important;
+    max-width: 78% !important;
+  }
+
+  #chat-header {
+    --header-height: 68px !important;
+    flex: 0 0 68px !important;
+  }
+
+  .header-content {
+    padding: 0 8px 0 84px !important;
+  }
+
+  .header-left .character-name {
+    font-size: 1.02rem !important;
+    max-width: 110px !important;
+  }
+
+  .header-banner {
+    height: 50px !important;
+    max-height: 50px !important;
+    width: 100% !important;
+    max-width: 215px !important;
+    object-fit: cover !important;
+    object-position: right center !important;
+  }
+
+  #btn-emoji img {
+    width: 38px !important;
+    height: 38px !important;
+  }
+
+  #btn-emoticon img {
+    width: 20px !important;
+    height: 20px !important;
+  }
+
+  .send-btn img {
+    width: 19px !important;
+    height: 19px !important;
+  }
+
+  .message-row {
+    --message-avatar-size: 38px !important;
+    --message-avatar-image-size: 32px !important;
+    --message-avatar-gap: 5px !important;
+  }
+
+  .bubble {
+    max-width: 80% !important;
+    font-size: 0.82rem !important;
+    padding: 7px 11px !important;
+  }
+
+  .choice-pill {
+    font-size: 0.80rem !important;
+    padding: 6px 10px !important;
+  }
+
+  .editor-toggle-btn {
+    top: 15px !important;
+    left: 16px !important;
+    padding: 4px 9px !important;
+    font-size: 0.72rem !important;
+  }
+
+  .help-modal-card {
+    width: 95vw !important;
+    max-width: 330px !important;
+    max-height: 76vh !important;
+    max-height: 76dvh !important;
+  }
+
+  .help-tip-item {
+    padding: 7px 9px !important;
+    gap: 7px !important;
+  }
+
+  .help-tip-text {
+    font-size: 0.72rem !important;
+    line-height: 1.32 !important;
+  }
+}
