@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RWX Baker • Arknights: Endfield Dialogue &amp; Message Generator</title>
+  <meta name="description" content="Fan-made Baker Message &amp; Dialogue Generator for Arknights: Endfield. Craft authentic in-game chat messages, custom choices, and dialogues with Endfield operators. Free, private, and 100% client-side.">
+  <meta name="keywords" content="Arknights Endfield, Baker SNS, Baker, endfield baker generator, Endfield Baker, endfield message generator, endfield fake message, endfield chat generator, dialogue generator, Endfield fan tool, Hypergryph, Gryphline, rwx baker">
+  <meta name="author" content="RWyn">
+  <meta name="theme-color" content="#121317">
+  <link rel="canonical" href="https://baker.rwyn.ch/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://baker.rwyn.ch/">
+  <meta property="og:site_name" content="RWX Baker">
+  <meta property="og:title" content="RWX Baker • Arknights: Endfield Dialogue &amp; Message Generator">
+  <meta property="og:description" content="Fan-made Baker Message &amp; Dialogue Generator for Arknights: Endfield. Craft authentic in-game chat messages, custom choices, and dialogues with Endfield operators.">
+  <meta property="og:image" content="https://baker.rwyn.ch/showcase/og-preview.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:alt" content="RWX Baker • Arknights: Endfield Dialogue Generator Preview">
+  <meta property="og:locale" content="en_US">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://baker.rwyn.ch/">
+  <meta name="twitter:title" content="RWX Baker • Arknights: Endfield Dialogue &amp; Message Generator">
+  <meta name="twitter:description" content="Fan-made Baker Message &amp; Dialogue Generator for Arknights: Endfield. Craft authentic in-game chat messages, custom choices, and dialogues with Endfield operators.">
+  <meta name="twitter:image" content="https://baker.rwyn.ch/showcase/og-preview.png">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "RWX Baker",
+    "alternateName": [
+      "Endfield Baker Generator",
+      "Arknights Endfield Message Generator",
+      "Endfield Dialogue Generator"
+    ],
+    "url": "https://baker.rwyn.ch/",
+    "description": "An in-browser fan tool to generate, customize, and export authentic Arknights: Endfield Baker chat conversations, dialogues, and choices.",
+    "applicationCategory": "EntertainmentApplication, MultimediaApplication",
+    "operatingSystem": "All",
+    "browserRequirements": "Requires JavaScript. Requires HTML5 Canvas.",
+    "image": "https://baker.rwyn.ch/showcase/og-preview.png",
+    "screenshot": "https://baker.rwyn.ch/showcase/og-preview.png",
+    "author": {
+      "@type": "Person",
+      "name": "RWyn",
+      "url": "https://rwyn.ch"
+    },
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    }
+  }
+  </script>
+
+  <link rel="stylesheet" href="rwxbaker-css/style.css">
+  <link rel="icon" type="image/png" href="favicon.png">
+</head>
+<body>
+  <video class="bg-video" src="rwxbaker-assets/ui/backgrounds/rwyn_nebula.mp4" muted loop autoplay playsinline aria-hidden="true"></video>
+  <div class="bg-tint" aria-hidden="true"></div>
+  <canvas id="field" aria-hidden="true"></canvas>
+
+  <div id="app-container">
+
+    <button type="button" id="btn-toggle-editor" class="editor-toggle-btn" title="Toggle Editor Panel">
+      <span>⚙️ Editor</span>
+    </button>
+
+    <aside id="editor-panel" class="editor-panel">
+      <div class="panel-header">
+        <div class="panel-brand">
+          <img src="rwxbaker-assets/ui/rwx-logo.png" alt="RWX Logo" class="panel-brand-logo">
+          <div class="panel-header-titles">
+            <h2>RWX BAKER • Studio</h2>
+            <span class="panel-subtitle">Arknights: Endfield Message Generator</span>
+          </div>
+        </div>
+        <button type="button" id="btn-help-modal" class="help-btn" title="Editor Tips &amp; Shortcuts" aria-label="Editor Tips &amp; Shortcuts">
+          <span class="help-btn-glow" aria-hidden="true"></span>
+          <span class="help-btn-content">
+            <span class="help-btn-icon">💡</span> HINTS
+          </span>
+        </button>
+      </div>
+
+      <section class="view-controls" aria-label="View and display controls">
+        <div class="view-control-group">
+          <span class="control-group-title">VIEW</span>
+          <div class="view-mode-controls" role="group" aria-label="Layout mode">
+            <button type="button" class="view-mode-btn active" data-view-mode="tablet" title="Tablet View Mode" aria-label="Tablet Mode">
+              <svg class="view-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="2" y="3.5" width="16" height="13" rx="2"></rect>
+                <circle cx="15.5" cy="10" r="0.6" fill="currentColor"></circle>
+              </svg>
+              <span class="view-btn-label">Tablet</span>
+            </button>
+            <button type="button" class="view-mode-btn" data-view-mode="phone" title="Phone View Mode" aria-label="Phone Mode">
+              <svg class="view-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="4.5" y="2" width="11" height="16" rx="2"></rect>
+                <circle cx="10" cy="15" r="0.6" fill="currentColor"></circle>
+              </svg>
+              <span class="view-btn-label">Phone</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="control-divider" aria-hidden="true"></div>
+
+        <div class="view-control-group">
+          <span class="control-group-title">MAP DECORATION</span>
+          <div class="deco-mode-controls" role="group" aria-label="Map decoration visibility">
+            <button type="button" class="deco-toggle-btn" id="btn-deco-on" data-deco="on" title="Show Topographic Map Contours">On</button>
+            <button type="button" class="deco-toggle-btn active" id="btn-deco-off" data-deco="off" title="Hide Topographic Map Contours">Off</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="backup-section" aria-label="Conversation backup controls">
+        <div class="backup-row">
+          <span class="control-group-title">BACKUP</span>
+          <div class="backup-controls">
+            <button type="button" id="btn-save-json" class="backup-btn" title="Download conversation as JSON backup">
+              <img src="rwxbaker-assets/ui/save-btn.png" alt="" class="backup-btn-icon">
+              <span>Save JSON</span>
+            </button>
+            <button type="button" id="btn-load-json" class="backup-btn" title="Load conversation from JSON backup">
+              <img src="rwxbaker-assets/ui/import-btn.png" alt="" class="backup-btn-icon">
+              <span>Load JSON</span>
+            </button>
+            <input type="file" id="input-load-json" accept=".json,application/json" class="hidden" style="display:none">
+          </div>
+        </div>
+      </section>
+
+      
+        <section class="export-section" aria-label="Export controls">
+        <div class="export-section-heading">
+          <div class="section-title-container">
+            <h3 class="section-title">EXPORT</h3>
+            <span class="section-instruction">• read the hints for export options</span>
+          </div>
+        </div>
+        <div class="export-controls">
+          <div class="export-mode-group" role="group" aria-label="Export mode">
+            <button type="button" class="export-mode-btn active" data-export-mode="screen" title="Capture the current fixed screen frame">Screen</button>
+            <button type="button" class="export-mode-btn" data-export-mode="full" title="Capture the full conversation from top to bottom">Full Chat</button>
+            <button type="button" class="export-mode-btn" data-export-mode="paged" title="Capture sequential slides with continuity">Multi-Page</button>
+          </div>
+          <button type="button" id="btn-export-png" class="export-png-btn" title="Download PNG screenshot">
+            <span class="export-btn-glow" aria-hidden="true"></span>
+            <span class="export-btn-content">
+              <img src="rwxbaker-assets/ui/export-btn.png" alt="" class="export-btn-icon">
+              <span id="export-btn-text">Export</span>
+            </span>
+          </button>
+        </div>
+      </section>
+
+      <div class="panel-scroll-area">
+        <section class="panel-section user-section-compact" aria-label="User identity">
+          <div class="section-title-container">
+            <h3 class="section-title">USER IDENTITY</h3>
+          </div>
+          <div class="user-switcher" id="user-switcher" role="group" aria-label="User identity selection">
+            <button type="button" class="user-btn active" data-user="endminf">
+              <img src="rwxbaker-assets/avatars/operator/icon_round_chr_0003_endminf.png" alt="Endmin F">
+              <span>Endmin (F)</span>
+            </button>
+            <button type="button" class="user-btn" data-user="endminm">
+              <img src="rwxbaker-assets/avatars/operator/icon_round_chr_0002_endminm.png" alt="Endmin M">
+              <span>Endmin (M)</span>
+            </button>
+          </div>
+        </section>
+
+        <section class="panel-section">
+          <h3 class="section-title">ACTIVE CHARACTER</h3>
+          <input type="text" id="character-search-input" class="character-search-input" placeholder="Search character...">
+          <div class="character-list" id="character-list">
+          </div>
+        </section>
+
+        <section class="panel-section" id="context-panel-section">
+          <div class="section-title-container">
+            <h3 class="section-title" id="context-section-title">COMPOSE CONTEXT</h3>
+            <span class="section-instruction hidden" id="context-section-instruction">• update or cancel to leave edit mode</span>
+          </div>
+
+          <div class="context-sender-toggle">
+            <label>Sender:</label>
+            <div class="button-group">
+              <button type="button" class="sender-btn active" id="btn-context-sender-char">Character</button>
+              <button type="button" class="sender-btn" id="btn-context-sender-user">User</button>
+            </div>
+          </div>
+
+          <div class="context-sender-toggle">
+            <label>Conversation:</label>
+            <div class="button-group">
+              <button type="button" class="sender-btn active" id="btn-conversation-direct">Direct Message</button>
+              <button type="button" class="sender-btn" id="btn-conversation-group">Group Message</button>
+            </div>
+          </div>
+
+          <div id="group-participants" class="group-participants hidden">
+            <input type="text" id="group-name-input" class="group-name-input" placeholder="Group name (optional)" autocomplete="off">
+            <p class="group-participants-hint">Click characters above to add to group.<br>Click a participant below to set them as the active sender.</p>
+            <div class="group-participants-heading">
+              <span>Participants</span>
+            </div>
+            <div id="group-participant-list" class="group-participant-list"></div>
+          </div>
+
+          <div class="context-type-selector">
+            <button type="button" class="type-tab active" data-type="text">Text</button>
+            <button type="button" class="type-tab" data-type="image">Image</button>
+            <button type="button" class="type-tab" data-type="choices">Choices</button>
+            <button type="button" class="type-tab" data-type="reaction">Reaction</button>
+          </div>
+
+          <div id="context-form-text" class="context-form">
+            <div class="composer-input-row">
+              <div id="context-text-input" class="editable-message-input" contenteditable="true" data-placeholder="Type a message..."></div>
+              <button type="button" class="context-emoji-btn" data-emoji-target="context-text-input" title="Add emoji" aria-label="Add emoji">&#9786;</button>
+            </div>
+            <button type="button" id="btn-context-send-text" class="panel-action-btn">Send Message</button>
+            <button type="button" id="btn-context-open-stickers" class="panel-action-btn" title="Pick and send an in-game sticker">Send Sticker</button>
+          </div>
+
+          <div id="context-form-image" class="context-form hidden">
+            <input type="file" id="context-image-file" accept="image/*">
+            <div id="context-image-preview-container" class="image-preview-container hidden">
+              <img id="context-image-preview" alt="Preview">
+              <button type="button" id="btn-remove-image-preview" class="remove-btn">&times;</button>
+            </div>
+            <button type="button" id="btn-context-send-image" class="panel-action-btn" disabled>Send Image</button>
+          </div>
+
+          <div id="context-form-reaction" class="context-form hidden">
+            <label for="reaction-target-select">Target Message:</label>
+            <select id="reaction-target-select">
+              <option value="">-- Select a Message --</option>
+            </select>
+
+            <div id="existing-reactions-section" class="existing-reactions-section hidden">
+              <label>Current Reactions on Message:</label>
+              <div id="existing-reactions-list" class="existing-reactions-list"></div>
+            </div>
+
+            <label>Select Emoji Reaction:</label>
+            <div id="reaction-emoji-picker-grid" class="reaction-emoji-picker-grid">
+            </div>
+            <input type="hidden" id="reaction-emoji-selected-path" value="rwxbaker-assets/emoji/sns_emoji_001.png">
+            <button type="button" id="btn-context-add-reaction" class="panel-action-btn">Add Selected Reaction</button>
+          </div>
+
+          <div id="context-form-choices" class="context-form hidden">
+            <div class="composer-input-row">
+              <div id="choice-input-one" class="editable-message-input choice-input" contenteditable="true" data-placeholder="First choice..."></div>
+              <button type="button" class="context-emoji-btn" data-emoji-target="choice-input-one" title="Add emoji to first choice" aria-label="Add emoji to first choice">&#9786;</button>
+            </div>
+            <div class="composer-input-row">
+              <div id="choice-input-two" class="editable-message-input choice-input" contenteditable="true" data-placeholder="Second choice..."></div>
+              <button type="button" class="context-emoji-btn" data-emoji-target="choice-input-two" title="Add emoji to second choice" aria-label="Add emoji to second choice">&#9786;</button>
+            </div>
+            <button type="button" id="btn-context-add-choices" class="panel-action-btn">Add Choices</button>
+            <button type="button" id="btn-context-remove-choices" class="panel-action-btn secondary small">Remove Choices</button>
+          </div>
+
+          <div id="context-emoji-picker" class="context-emoji-picker hidden">
+            <div class="context-emoji-header">
+              <span>Emojis</span>
+              <button type="button" id="btn-close-context-emoji" class="context-emoji-close" title="Close" aria-label="Close emoji picker">&times;</button>
+            </div>
+            <div class="context-emoji-grid" id="context-emoji-grid"></div>
+          </div>
+
+          <div id="context-sticker-picker" class="context-sticker-picker hidden">
+            <div class="context-sticker-header">
+              <div class="context-sticker-header-left">
+                <img src="rwxbaker-assets/icons/icon_sns_chat_emoticon.png" alt="" class="picker-header-icon">
+                <span>Game Stickers</span>
+              </div>
+              <button type="button" id="btn-close-context-sticker" class="context-sticker-close" title="Close" aria-label="Close sticker picker">&times;</button>
+            </div>
+            <div class="context-sticker-grid" id="context-sticker-grid"></div>
+          </div>
+
+          <div id="context-edit-actions" class="context-edit-actions hidden">
+            <button type="button" id="btn-context-update" class="panel-action-btn edit-update-btn">Update Message</button>
+            <button type="button" id="btn-context-delete" class="panel-action-btn danger small">Delete Message</button>
+            <button type="button" id="btn-context-cancel" class="panel-action-btn secondary small">Cancel Edit</button>
+          </div>
+        </section>
+
+        <section class="panel-section">
+          <div class="section-title-row">
+            <div class="section-title-container">
+              <h3 class="section-title">CONVERSATION LAYERS</h3>
+              <span class="section-instruction">• drag to reorder</span>
+            </div>
+            <button type="button" id="btn-clear-conversation" class="small-danger-btn">Clear All</button>
+          </div>
+          <div class="layers-list" id="layers-list">
+            <div class="empty-layers-msg">No messages in conversation.</div>
+          </div>
+        </section>
+      </div>
+    </aside>
+
+    <main id="phone-frame" class="hide-chat-deco">
+      <header id="chat-header">
+        <img src="rwxbaker-assets/deco/session_title_left_bar.png" alt="" class="header-blue-lines" aria-hidden="true">
+        <img src="rwxbaker-assets/deco/deco_sns_tweet_decorate_04.png" alt="" class="header-baker-deco" aria-hidden="true">
+        <div class="header-content">
+          <div class="header-left">
+            <span class="character-name" id="chat-header-name">Select character...</span>
+          </div>
+          <div class="header-right">
+            <img src="rwxbaker-assets/deco/session_title_right_bar.png" alt="Header Banner" class="header-banner">
+          </div>
+        </div>
+        <div class="header-accent-line">
+          <div class="accent-color-strip"></div>
+        </div>
+      </header>
+
+      <div id="chat-bg-decorations" class="chat-bg-decorations" aria-hidden="true">
+        <img src="rwxbaker-assets/deco/deco_sns_tweet_decorate_31.png" alt="" class="chat-bg-deco chat-bg-deco-tl">
+        <img src="rwxbaker-assets/deco/deco_sns_tweet_decorate_32.png" alt="" class="chat-bg-deco chat-bg-deco-br">
+      </div>
+
+      <div id="chat-viewport">
+        <div id="message-list">
+        </div>
+      </div>
+
+      <div id="choice-container" class="choice-container">
+      </div>
+
+      <div id="sticker-panel" class="sticker-panel hidden">
+        <div class="sticker-panel-header">
+          <span>Game Stickers</span>
+          <button type="button" id="btn-close-stickers" class="close-btn">&times;</button>
+        </div>
+        <div class="sticker-grid" id="sticker-grid"></div>
+      </div>
+
+      <div id="emoji-picker-panel" class="emoji-picker-panel hidden">
+        <div class="emoji-picker-header">
+          <span>Emojis</span>
+          <button type="button" id="btn-close-emoji-picker" class="close-btn">&times;</button>
+        </div>
+        <div class="emoji-grid" id="emoji-grid"></div>
+      </div>
+
+      <footer id="input-footer">
+        <div class="input-bar">
+          <button type="button" id="btn-emoticon" class="input-btn" title="Stickers">
+            <img src="rwxbaker-assets/icons/icon_sns_chat_emoticon.png" alt="Stickers">
+          </button>
+          <div class="input-wrapper">
+            <div id="message-input" class="editable-message-input bottom-input" contenteditable="true" data-placeholder="Type a message..."></div>
+          </div>
+          <button type="button" id="btn-emoji" class="input-btn" title="Emoji Picker">
+            <img src="rwxbaker-assets/emoji/sns_emoji_011.png" alt="Emoji Picker">
+          </button>
+          <button type="button" id="btn-send" class="send-btn" title="Send">
+            <img src="rwxbaker-assets/icons/icon_sns_message_02.png" alt="Send">
+          </button>
+        </div>
+      </footer>
+    </main>
+  </div>
+
+  <div id="json-drop-overlay" class="json-drop-overlay hidden" aria-hidden="true">
+    <div class="json-drop-card">
+      <div class="json-drop-deco-bar"></div>
+      <img src="rwxbaker-assets/ui/import-btn.png" alt="Import" class="json-drop-icon-img">
+      <div class="json-drop-title">DROP THE JSON HERE</div>
+      <div class="json-drop-subtitle">to load your conversation into RWX Baker</div>
+      <div class="json-drop-badge">RWX BACKUP ENGINE</div>
+    </div>
+  </div>
+
+  <div id="help-modal" class="help-modal-backdrop hidden">
+    <div class="help-modal-card">
+      <div class="help-modal-header">
+        <div class="help-modal-title">
+          <span class="help-modal-icon">💡</span>
+          <h3>STUDIO TIPS &amp; SHORTCUTS</h3>
+        </div>
+        <button type="button" id="btn-close-help" class="help-modal-close" aria-label="Close tips">&times;</button>
+      </div>
+      <div class="help-modal-content">
+        <div class="help-tip-item">
+          <span class="help-tip-badge">RESIZE</span>
+          <div class="help-tip-text">
+            <strong>Resize Images:</strong> Drag the corner handle on any image message in the conversation preview to freely adjust its display size (120px &ndash; 480px).
+          </div>
+        </div>
+        <div class="help-tip-item">
+          <span class="help-tip-badge">REORDER</span>
+          <div class="help-tip-text">
+            <strong>Drag &amp; Drop anywhere:</strong> Grab message bubbles directly on the chat preview (drag across any row) or grab items in the Layers list to reorder.
+          </div>
+        </div>
+        <div class="help-tip-item">
+          <span class="help-tip-badge">GROUP</span>
+          <div class="help-tip-text">
+            <strong>Group Chats:</strong> Toggle Conversation to <em>Group</em> to pick multiple characters, set a custom group name, and switch speakers.
+          </div>
+        </div>
+        <div class="help-tip-item">
+          <span class="help-tip-badge">SEND</span>
+          <div class="help-tip-text">
+            <strong>Quick Send:</strong> Press <code>Enter</code> in the message input bar to send outgoing messages instantly.
+          </div>
+        </div>
+        <div class="help-tip-item">
+          <span class="help-tip-badge">EDIT</span>
+          <div class="help-tip-text">
+            <strong>Edit Messages:</strong> Click any message or layer to change its text, character, or type.
+          </div>
+        </div>
+        <div class="help-tip-item">
+          <span class="help-tip-badge">BACKUP</span>
+          <div class="help-tip-text">
+            <strong>Backup Chat:</strong> You can use the <code>Save JSON</code> button to download a backup of your conversation. Use the <code>Load JSON</code> button to restore a previously saved conversation.<br>You can also drag and drop a JSON file anywhere on the screen to load it.
+          </div>
+        </div>
+        <div class="help-tip-item">
+          <span class="help-tip-badge">EXPORT</span>
+          <div class="help-tip-text">
+            <strong>PNG Export Modes:</strong><br>
+            • <em>Screen:</em> Saves the current visible preview frame. Good for smaller conversations, it captures whatever is visible on the screen at the moment.<br>
+            • <em>Full Chat:</em> Saves the complete conversation from top to bottom into one full screenshot. If your conversation is very long, consider using Multi-Page mode to break it into sequential screenshots.<br>
+            • <em>Multi-Page:</em> Breaks long chats into sequential screenshots (<code>RWX-Baker-1.png, RWX-Baker-2.png, ...-3.png </code>etc.) with continuity overlap. This mode always captures the image with the last message of the previous image at the top, creating continuity between pages.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="app-global-footer">
+    <div class="footer-legal-inner">
+      <a href="privacy.html" target="_blank" rel="noopener noreferrer" class="footer-legal-link">PRIVACY</a>
+      <span class="footer-legal-dot">&bull;</span>
+      <a href="notice.html" target="_blank" rel="noopener noreferrer" class="footer-legal-link">NOTICE</a>
+      <span class="footer-legal-dot">&bull;</span>
+      <span class="footer-legal-text">RWX Baker is an independent, non-commercial fan work. Free, no tracking, no ads. All game content, characters, and trademarks belong to HYPERGRYPH / GRYPHLINE.</span>
+    </div>
+  </footer>
+
+  <script src="rwxbaker-js/dom-to-image-more.min.js"></script>
+  <script src="rwxbaker-js/tutorial-template.js"></script>
+  <script src="rwxbaker-js/app.js"></script>
+</body>
+</html>

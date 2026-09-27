@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://baker.rwyn.ch/sitemap.xml

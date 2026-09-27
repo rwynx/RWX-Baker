@@ -1,0 +1,7 @@
+# raw files & unused assets (not needed for deployment)
+_rwxbaker-raw-assets/
+
+# OS / Editor files
+.DS_Store
+Thumbs.db
+.vscode/
