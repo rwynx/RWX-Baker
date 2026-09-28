@@ -167,6 +167,7 @@
     min-width: 0 !important;
   }
 
+  .editor-panel .panel-header-titles h1,
   .editor-panel .panel-header-titles h2 {
     font-size: 0.92rem !important;
     margin: 0 !important;

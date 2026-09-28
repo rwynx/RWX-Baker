@@ -671,6 +671,7 @@ canvas#field {
   min-width: 0;
 }
 
+.panel-header h1,
 .panel-header h2 {
   font-family: "Bender", "HarmonyOS Sans", sans-serif;
   font-size: 1.1rem;
