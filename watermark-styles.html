@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RWX Baker • Export Watermark Styles &amp; Stamp Lab</title>
+  <link rel="stylesheet" href="rwxbaker-css/style.css">
+  <link rel="stylesheet" href="rwxbaker-css/mobile.css">
+  <style>
+    body {
+      background-color: #0d0e11;
+      color: #e4e7ed;
+      padding: 0;
+      margin: 0;
+      overflow-x: hidden;
+    }
+
+    .test-control-panel {
+      position: sticky;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(18, 19, 23, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(0, 210, 255, 0.25);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+      padding: 12px 24px;
+      box-sizing: border-box;
+      z-index: 1000;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+      font-family: "HarmonyOS Sans", sans-serif;
+      font-size: 0.85rem;
+    }
+
+    .test-title {
+      font-family: "Bender", sans-serif;
+      font-size: 1.05rem;
+      font-weight: bold;
+      color: var(--color-accent-cyan);
+      letter-spacing: 1px;
+      margin-right: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .test-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .test-group label {
+      font-size: 0.75rem;
+      color: #8c909e;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: bold;
+    }
+
+    .test-btn-group {
+      display: inline-flex;
+      background: #141518;
+      border: 1px solid #2b2d35;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .test-btn {
+      background: transparent;
+      border: none;
+      color: #a0a4b0;
+      padding: 6px 12px;
+      font-size: 0.78rem;
+      font-family: "Bender", sans-serif;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .test-btn.active {
+      background: var(--color-accent-cyan);
+      color: #0b0c0e;
+      font-weight: bold;
+    }
+
+    .test-btn:hover:not(.active) {
+      background: #202228;
+      color: #fff;
+    }
+
+    .test-slider-wrap {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.75rem;
+      color: #a0a4b0;
+    }
+
+    .test-slider-wrap input[type="range"] {
+      width: 80px;
+      accent-color: var(--color-accent-cyan);
+    }
+
+    .test-policy-banner {
+      background: rgba(255, 200, 0, 0.07);
+      border-bottom: 1px solid rgba(255, 200, 0, 0.32);
+      border-top: 1px solid rgba(255, 200, 0, 0.18);
+      padding: 12px 24px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .policy-banner-content {
+      max-width: 1337px;
+      width: 100%;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      font-family: "HarmonyOS Sans", sans-serif;
+    }
+
+    .policy-icon {
+      font-size: 1.25rem;
+      line-height: 1;
+      padding-top: 2px;
+      flex-shrink: 0;
+    }
+
+    .policy-text {
+      font-size: 0.80rem;
+      line-height: 1.5;
+      color: #dedfe4;
+    }
+
+    .policy-text strong.policy-heading {
+      color: var(--color-accent-yellow);
+      letter-spacing: 0.5px;
+      display: block;
+      margin-bottom: 3px;
+      font-family: "Bender", sans-serif;
+      font-size: 0.88rem;
+    }
+
+    .policy-text p {
+      margin: 0;
+      color: #b5b9c7;
+    }
+
+    .policy-text p strong {
+      display: inline;
+      color: #ffffff;
+      font-family: inherit;
+      font-size: inherit;
+    }
+
+    .test-canvas-container {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 32px;
+      padding: 26px 24px 80px;
+      min-height: calc(100vh - 120px);
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    #phone-frame {
+      --message-position-x: 0px !important;
+      --message-position-y: 0px !important;
+      transform: none !important;
+      margin: 0 !important;
+      flex-shrink: 0;
+    }
+
+    .test-sidebar {
+      width: 360px;
+      flex-shrink: 0;
+      background: #141519;
+      border: 1px solid #2b2d35;
+      border-radius: 8px;
+      padding: 18px 20px;
+      box-sizing: border-box;
+      font-family: "HarmonyOS Sans", sans-serif;
+    }
+
+    .test-sidebar-title {
+      font-family: "Bender", sans-serif;
+      font-size: 0.95rem;
+      font-weight: bold;
+      color: var(--color-accent-cyan);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .test-code-box {
+      position: relative;
+      background: #090a0d;
+      border: 1px solid #23252c;
+      border-radius: 6px;
+      padding: 12px;
+      margin-bottom: 14px;
+      font-family: 'Consolas', 'Courier New', monospace;
+      font-size: 0.76rem;
+      color: #79c0ff;
+      line-height: 1.45;
+      overflow-x: auto;
+      white-space: pre;
+    }
+
+    .test-copy-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: #1f2127;
+      border: 1px solid #3d414d;
+      color: #c9d1d9;
+      border-radius: 4px;
+      padding: 3px 8px;
+      font-size: 0.70rem;
+      cursor: pointer;
+      font-family: "HarmonyOS Sans", sans-serif;
+      transition: all 0.15s ease;
+    }
+
+    .test-copy-btn:hover {
+      background: var(--color-accent-cyan);
+      color: #0b0c0e;
+      border-color: var(--color-accent-cyan);
+    }
+
+    .rwx-watermark-overlay {
+      position: absolute;
+      pointer-events: none;
+      user-select: none;
+      z-index: 50;
+      transition: all 0.2s ease;
+    }
+
+    .pos-header-right {
+      top: 10px;
+      right: 18px;
+    }
+
+    .pos-header-left {
+      top: 6px;
+      left: 65px;
+    }
+
+    .pos-viewport-bottom-right {
+      bottom: 84px;
+      right: 20px;
+    }
+
+    .pos-viewport-top-right {
+      top: 86px;
+      right: 20px;
+    }
+
+    .test-notes {
+      max-width: 1337px;
+      margin: 20px auto 40px;
+      background: #141519;
+      border: 1px solid #2b2d35;
+      border-left: 3px solid var(--color-accent-cyan);
+      border-radius: 8px;
+      padding: 16px 20px;
+      font-size: 0.82rem;
+      line-height: 1.5;
+      color: #a4a8b5;
+      box-sizing: border-box;
+    }
+
+    .test-notes strong {
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="test-control-panel">
+    <div class="test-title">
+      <span>RWX STAMP LAB</span>
+    </div>
+
+    <div class="test-group">
+      <label>Design:</label>
+      <div class="test-btn-group">
+        <button class="test-btn active" data-var="v1">1. Telemetry Strip</button>
+        <button class="test-btn" data-var="v2">2. Corner HUD</button>
+        <button class="test-btn" data-var="v3">3. R Glass Badge</button>
+        <button class="test-btn" data-var="v4">4. Minimal Stencil</button>
+      </div>
+    </div>
+
+    <div class="test-group">
+      <label>Position:</label>
+      <div class="test-btn-group">
+        <button class="test-btn" data-pos="header-right">Header Right</button>
+        <button class="test-btn" data-pos="header-left">Header Left</button>
+        <button class="test-btn active" data-pos="viewport-top-right">Viewport Top</button>
+        <button class="test-btn" data-pos="viewport-bottom-right">Viewport Bottom</button>
+      </div>
+    </div>
+
+    <div class="test-group">
+      <label>Opacity:</label>
+      <div class="test-slider-wrap">
+        <input type="range" id="slider-opacity" min="15" max="100" value="40">
+        <span id="val-opacity">40%</span>
+      </div>
+    </div>
+
+    <div class="test-group">
+      <label>Scale:</label>
+      <div class="test-slider-wrap">
+        <input type="range" id="slider-scale" min="70" max="130" value="100">
+        <span id="val-scale">100%</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="test-policy-banner">
+    <div class="policy-banner-content">
+      <div class="policy-icon">⚠️</div>
+      <div class="policy-text">
+        <strong class="policy-heading">DO NOT REMOVE THIS &amp; LEAK PREVENTION (PLEASE READ BEFORE FORKING)</strong>
+        <p>
+          Please do <strong>NOT</strong> remove, disable, or crop out this export watermark/telemetry stamp, even in personal or local forks. This stamp exists out of my deepest respect for <strong>Hypergryph</strong>'s intellectual property and original game creation, and specifically to prevent fan-made roleplay/mock conversations from being used as official in-game dialogues, announcements, or fake leaks. Keeping this stamp intact protects both the community and creators, ensuring RWX Baker remains an ethical fan project. I wasn't going to include this in the project but in good faith, I'm giving you the opportunity to customize it. I hope you do the same and respect this rule.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="test-canvas-container">
+
+    <aside class="test-sidebar">
+      <div class="test-sidebar-title">
+        <span>DEVELOPER SNIPPET</span>
+        <span style="font-size: 0.72rem; color: #8c909e; font-family: 'HarmonyOS Sans', sans-serif;">Live Sync</span>
+      </div>
+      <p style="font-size: 0.75rem; color: #8c909e; margin: 0 0 12px; line-height: 1.4;">
+        Customize your own export watermark stamp. Select options on top to generate drop-in code for your local fork:
+      </p>
+
+      <div style="font-size: 0.72rem; font-weight: bold; color: #a4a8b5; margin-bottom: 4px; text-transform: uppercase;">
+        1. CSS Configuration
+      </div>
+      <div class="test-code-box">
+        <button class="test-copy-btn" id="btn-copy-css">Copy</button>
+        <code id="code-css"></code>
+      </div>
+
+      <div style="font-size: 0.72rem; font-weight: bold; color: #a4a8b5; margin-bottom: 4px; text-transform: uppercase;">
+        2. JS Dynamic Injection (app.js)
+      </div>
+      <div class="test-code-box">
+        <button class="test-copy-btn" id="btn-copy-js">Copy</button>
+        <code id="code-js"></code>
+      </div>
+
+      <div style="font-size: 0.72rem; color: #6e7382; line-height: 1.35; margin-top: 10px;">
+        💡 <em>Dynamic injection prevents inspecting/removing the watermark in the live browser before export. Again, please do not remove or modify this in a way that... allows. Thank you all.</em>
+      </div>
+    </aside>
+
+    <main id="phone-frame" style="position: relative; margin: 0;">
+
+      <img id="active-watermark" 
+           src="rwxbaker-assets/watermarks/watermark-v1-telemetry.png" 
+           alt="Watermark Stamp" 
+           class="rwx-watermark-overlay pos-viewport-top-right" 
+           style="opacity: 0.4; transform: scale(1);">
+
+      <header id="chat-header">
+        <img src="rwxbaker-assets/deco/session_title_left_bar.png" alt="" class="header-blue-lines" aria-hidden="true">
+        <img src="rwxbaker-assets/deco/deco_sns_tweet_decorate_04.png" alt="" class="header-baker-deco" aria-hidden="true">
+        <div class="header-content">
+          <div class="header-left">
+            <span class="character-name" id="chat-header-name">Laevatain</span>
+          </div>
+          <div class="header-right">
+            <img src="rwxbaker-assets/deco/session_title_right_bar.png" alt="Header Banner" class="header-banner">
+          </div>
+        </div>
+        <div class="header-accent-line">
+          <div class="accent-color-strip"></div>
+        </div>
+      </header>
+
+      <div id="chat-bg-decorations" class="chat-bg-decorations" aria-hidden="true">
+        <img src="rwxbaker-assets/deco/deco_sns_tweet_decorate_31.png" alt="" class="chat-bg-deco chat-bg-deco-tl">
+        <img src="rwxbaker-assets/deco/deco_sns_tweet_decorate_32.png" alt="" class="chat-bg-deco chat-bg-deco-br">
+      </div>
+
+      <div id="chat-viewport" style="min-height: 480px; padding: 20px 16px;">
+        <div id="message-list">
+          
+          <div class="message-row incoming" style="margin-bottom: 24px;">
+            <div class="avatar-col">
+              <img src="rwxbaker-assets/avatars/operator/icon_round_chr_0016_laevat.png" class="chat-avatar" alt="Laevatain">
+            </div>
+            <div class="content-col">
+              <div class="sender-name">Laevatain</div>
+              <div class="message-bubble has-tail" style="background: #1e1f23; border: 1px solid #33363f; color: #fff; padding: 12px 16px; border-radius: 4px; max-width: 380px;">
+                Endministrator, where are you? I'm testing new features, wanna take a look?
+              </div>
+            </div>
+          </div>
+
+          <div class="message-row outgoing" style="margin-bottom: 24px; display: flex; justify-content: flex-end;">
+            <div class="content-col" style="display: flex; flex-direction: column; align-items: flex-end;">
+              <div class="message-bubble has-tail" style="background: rgba(0, 210, 255, 0.15); border: 1px solid rgba(0, 210, 255, 0.35); color: #fff; padding: 12px 16px; border-radius: 4px; max-width: 380px;">
+                Oh? I didn't know you were into CSS. I hate that.
+              </div>
+            </div>
+          </div>
+
+          <div class="message-row incoming" style="margin-bottom: 24px;">
+            <div class="avatar-col">
+              <img src="rwxbaker-assets/avatars/operator/icon_round_chr_0016_laevat.png" class="chat-avatar" alt="Laevatain">
+            </div>
+            <div class="content-col">
+              <div class="sender-name">Laevatain</div>
+              <div class="message-bubble has-tail" style="background: #1e1f23; border: 1px solid #33363f; color: #fff; padding: 12px 16px; border-radius: 4px; max-width: 380px;">
+                Skill issue ngl.
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <footer id="input-footer">
+        <div class="input-bar">
+          <button type="button" class="input-btn" title="Stickers">
+            <img src="rwxbaker-assets/icons/icon_sns_chat_emoticon.png" alt="Stickers">
+          </button>
+          <div class="input-wrapper">
+            <div class="editable-message-input bottom-input" style="color: #6a6f7d;">Type a message...</div>
+          </div>
+          <button type="button" class="input-btn" title="Emoji Picker">
+            <img src="rwxbaker-assets/emoji/sns_emoji_011.png" alt="Emoji Picker">
+          </button>
+          <button type="button" class="send-btn" title="Send">
+            <img src="rwxbaker-assets/icons/icon_sns_message_02.png" alt="Send">
+          </button>
+        </div>
+      </footer>
+
+    </main>
+  </div>
+
+  <script>
+    const watermarkImg = document.getElementById('active-watermark');
+    const opacitySlider = document.getElementById('slider-opacity');
+    const valOpacity = document.getElementById('val-opacity');
+    const scaleSlider = document.getElementById('slider-scale');
+    const valScale = document.getElementById('val-scale');
+    const codeCss = document.getElementById('code-css');
+    const codeJs = document.getElementById('code-js');
+    const btnCopyCss = document.getElementById('btn-copy-css');
+    const btnCopyJs = document.getElementById('btn-copy-js');
+
+    let currentVar = 'v1';
+    let currentPos = 'viewport-top-right';
+    let currentOpacity = 0.40;
+    let currentScale = 1.0;
+
+    const variations = {
+      v1: 'rwxbaker-assets/watermarks/watermark-v1-telemetry.png',
+      v2: 'rwxbaker-assets/watermarks/watermark-v2-corner-hud.png',
+      v3: 'rwxbaker-assets/watermarks/watermark-v3-badge.png',
+      v4: 'rwxbaker-assets/watermarks/watermark-v4-minimal.png'
+    };
+
+    const positionCoords = {
+      'header-right': { top: '10px', right: '18px' },
+      'header-left': { top: '6px', left: '65px' },
+      'viewport-top-right': { top: '86px', right: '20px' },
+      'viewport-bottom-right': { bottom: '84px', right: '20px' }
+    };
+
+    function updateCodeSnippets() {
+      const coords = positionCoords[currentPos] || { top: '86px', right: '20px' };
+      const coordLines = Object.entries(coords).map(([k, v]) => `  ${k}: ${v};`).join('\n');
+      
+      const cssString = 
+`.rwx-export-watermark {
+  position: absolute;
+${coordLines}
+  opacity: ${currentOpacity.toFixed(2)};
+  transform: scale(${currentScale.toFixed(2)});
+  pointer-events: none;
+  user-select: none;
+  z-index: 99;
+}`;
+      codeCss.textContent = cssString;
+
+      const jsString = 
+`// Dynamic Injection (exportConversation)
+const watermark = document.createElement("img");
+watermark.className = "rwx-export-watermark";
+watermark.src = "${variations[currentVar]}";
+phoneFrame.appendChild(watermark);`;
+      codeJs.textContent = jsString;
+    }
+
+    document.querySelectorAll('[data-pos]').forEach(b => {
+      b.classList.toggle('active', b.getAttribute('data-pos') === currentPos);
+    });
+
+    document.querySelectorAll('[data-var]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('[data-var]').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentVar = btn.getAttribute('data-var');
+        watermarkImg.src = variations[currentVar];
+        updateCodeSnippets();
+      });
+    });
+
+    document.querySelectorAll('[data-pos]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('[data-pos]').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentPos = btn.getAttribute('data-pos');
+        watermarkImg.className = `rwx-watermark-overlay pos-${currentPos}`;
+        updateCodeSnippets();
+      });
+    });
+
+    opacitySlider.addEventListener('input', (e) => {
+      const val = parseInt(e.target.value, 10);
+      currentOpacity = val / 100;
+      valOpacity.textContent = val + '%';
+      watermarkImg.style.opacity = currentOpacity;
+      updateCodeSnippets();
+    });
+
+    scaleSlider.addEventListener('input', (e) => {
+      const val = parseInt(e.target.value, 10);
+      currentScale = val / 100;
+      valScale.textContent = val + '%';
+      watermarkImg.style.transform = `scale(${currentScale})`;
+      updateCodeSnippets();
+    });
+
+    function setupCopy(btn, codeEl) {
+      btn.addEventListener('click', () => {
+        navigator.clipboard.writeText(codeEl.textContent).then(() => {
+          const orig = btn.textContent;
+          btn.textContent = 'Copied!';
+          setTimeout(() => { btn.textContent = orig; }, 1500);
+        });
+      });
+    }
+    setupCopy(btnCopyCss, codeCss);
+    setupCopy(btnCopyJs, codeJs);
+
+    updateCodeSnippets();
+  </script>
+</body>
+</html>

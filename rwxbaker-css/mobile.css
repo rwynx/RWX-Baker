@@ -878,4 +878,13 @@
     font-size: 0.72rem !important;
     line-height: 1.32 !important;
   }
+
+  .rwx-export-watermark {
+    top: 10px !important;
+    left: 14px !important;
+    right: auto !important;
+    max-width: 130px !important;
+    opacity: 0.38 !important;
+  }
 }
+

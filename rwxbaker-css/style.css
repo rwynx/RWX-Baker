@@ -3548,3 +3548,22 @@ body.legal-page::-webkit-scrollbar-thumb:hover {
   text-decoration: underline;
 }
 
+.rwx-export-watermark {
+  position: absolute;
+  top: 80px;
+  right: 40px;
+  opacity: 0.50;
+  pointer-events: none;
+  user-select: none;
+  z-index: 99;
+  height: auto;
+}
+
+.phone-mode .rwx-export-watermark {
+  top: 18px;
+  left: -5px;
+  right: auto;
+  max-width: 130px;
+}
+
+

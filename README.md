@@ -60,7 +60,8 @@ First and foremost, GLORY TO HYPERGRYPH!<br>GLORY TO THE COMMUNITY OF PLAYERS WH
 - **High-Resolution PNG Export:**
   - **Screen Mode:** Captures the current visible frame. Set as default, captures the render on the screen at that moment.
   - **Full Chat Mode:** Stitches the entire conversation from start to finish into a single continuous image.<br>Not recommended for very long conversations. For those try Multi-Page mode instead. 
-  - **Multi-Page Mode:** Automatically segments long conversations into sequential slides (`RWX-Baker-1.png`, `RWX-Baker-2.png`, etc.) with continuity overlap for social media carousels.<br><br>Click on the HINTS button see more tips about these export options.<br><br>
+  - **Multi-Page Mode:** Automatically segments long conversations into sequential slides (`RWX-Baker-1.png`, `RWX-Baker-2.png`, etc.) with continuity overlap for social media carousels.
+  - **Anti-Leak Telemetry Stamp:** Exports automatically include a subtle Endfield OS telemetry stamp (`// RWX.SYS-01` or `RWX // BKR ■ 01`) dynamically rendered during capture to verify fan/community origin.<br><br>Click on the HINTS button see more tips about these export options.<br><br>
   ![ExampleExportOptions](showcase/export-options.gif)
 - **Dual Viewports:** Switch seamlessly between **Tablet** and **Phone** aspect modes.<br>Note: Phone mode is currently a bit broken, since I initially started making this tool for the actual, in-game size of the Baker, not compact Phone version. But I will hopefully fix it in the future. For now, use it only for small 1 on 1 chats. That shouldn't break anything.<br><br><img src="showcase/switch-views.png" width="45%" alt="Description of image">
 - **100% Private & Client-Side:** No sign-ups, no cookies, no advertising, and no analytics. Every keystroke and image export is processed strictly within your local browser.
@@ -103,6 +104,7 @@ RWX Baker has **zero build dependencies**, it runs directly out of the box using
 
 ```
 ├── index.html                           # main editor
+├── watermark-styles.html                # interactive watermark lab & code generator
 ├── CUSTOMIZATION.md                     # CSS variables, offsets & styling guide
 ├── privacy.html                         
 ├── notice.html                          
@@ -120,7 +122,8 @@ RWX Baker has **zero build dependencies**, it runs directly out of the box using
     ├── fonts/                           # harmonyOS sans & bender web fonts
     ├── icons/                           # UI action icons
     ├── stickers/                        # 168 game stickers (excluding skland stickers)
-    └── ui/                              # site assets/backgrounds etc.
+    ├── ui/                              # site assets/backgrounds etc.
+    └── watermarks/                      # 4 sci-fi OS export watermark stamps
 ```
 
 ---
@@ -132,6 +135,7 @@ Want to do some lazy edits/tweaks to layout? Adjust chat dimensions, or skin the
 - Bubble alignments, avatars, and media offsets (stickers, images etc.)
 - Header asset controls, move the chat header assets around (especially phone view asset pos needs help)
 - Topographic map decoration controls and opacity
+- Export watermark stamp styles, positions, and live tuning workbench ([watermark-styles.html](watermark-styles.html))
 - Glow effects, animated button borders, and color themes
 - And some other stuff
 

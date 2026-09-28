@@ -12,10 +12,11 @@ This guide documents the design system, CSS custom properties (variables), layou
 4. [Chat Viewport & Device Frames](#chat-viewport--device-frames)
 5. [Message Bubbles & Media Spacing](#message-bubbles--media-spacing)
 6. [Topographic Map Decorations](#topographic-map-decorations)
-7. [Chat Header & Watermark Elements](#chat-header--watermark-elements)
-8. [Interactive Buttons & Glow Effects](#interactive-buttons--glow-effects)
-9. [DOM Architecture & Component Reference](#dom-architecture--component-reference)
-10. [How to Apply Custom Styles](#how-to-apply-custom-styles)
+7. [Chat Header & Background Typography](#chat-header--background-typography)
+8. [Export Watermark & Stamp Customization](#export-watermark--stamp-customization)
+9. [Interactive Buttons & Glow Effects](#interactive-buttons--glow-effects)
+10. [DOM Architecture & Component Reference](#dom-architecture--component-reference)
+11. [How to Apply Custom Styles](#how-to-apply-custom-styles)
 
 ---
 
@@ -143,7 +144,7 @@ Controls for the optional in-game background topographic isoline patterns (`.cha
 
 ---
 
-## Chat Header & Watermark Elements
+## Chat Header & Background Typography
 
 Controls for the top title bar and background decorative text (`.chat-header`):
 
@@ -164,6 +165,88 @@ Controls for the top title bar and background decorative text (`.chat-header`):
 | `--header-blue-lines-width`| `46px` | Width of the cyan vertical graphic stripes. |
 | `--header-accent-width` | `200px` | Width of the bottom horizontal cyan accent line. |
 | `--header-accent-height`| `4px` | Thickness of the bottom horizontal cyan accent line. |
+
+---
+
+## Export Watermark & Stamp Customization
+
+To distinguish generated dialogue from official game assets and prevent misleading leaks, exported images include a subtle sci-fi telemetry stamp (`.rwx-export-watermark`) placed discreetly in the upper right viewport corner. I wasn't going to include it in the repo but in good faith, I'd like to give everyone the opportunity to customize it.
+
+
+**Mandatory Fan Work Attribution & Anti-Leak Policy:**
+> Please do **NOT** remove, disable, or crop out the export watermark stamp, even in personal or local forks. This stamp exists out of my deepest respect for **Hypergryph**'s intellectual property and to prevent fan-made roleplay/mock conversations from being used as official in-game dialogues, announcements, or fake leaks. Keeping this stamp intact protects both the community and creators, ensuring RWX Baker remains an ethical fan project.
+
+### Design Variations
+
+Four authentic Endfield OS styled watermark stamps are bundled in `rwxbaker-assets/watermarks/`:
+
+| Variation | Asset Filename | Label / Text | Dimensions | Default Status |
+| :--- | :--- | :--- | :--- | :--- |
+| **V1: Telemetry Strip** | `watermark-v1-telemetry.png` | `// RWX.SYS-01 [TERMINAL]` | 220 × 36 px | Active (Randomized 50%) |
+| **V2: Corner HUD** | `watermark-v2-corner-hud.png` | `[RWX.OS // TELEMETRY]` | 240 × 48 px | Bundled in assets |
+| **V3: R Glass Badge** | `watermark-v3-badge.png` | `[R] RWX BAKER // GEN` | 260 × 36 px | Bundled in assets |
+| **V4: Minimal Stencil** | `watermark-v4-minimal.png` | `RWX // BKR ■ 01` | 180 × 30 px | Active (Randomized 50%) |
+
+### Anti-Tamper Dynamic Injection Architecture
+
+To prevent users from simply deleting or modifying the watermark via browser **Inspect Element**, the watermark element is **never present on the live DOM**. And as I said in the above warning, do not remove edit.
+
+Instead, it is injected directly into `#phone-frame` only for the split-second duration of `domtoimage.toPng(...)` inside `exportConversation()` in [`rwxbaker-js/app.js`](rwxbaker-js/app.js), and immediately stripped in the `finally` block. See how it works below:
+
+```javascript
+// 1. Variations, pick one above
+const chosenWatermarkSrc = WATERMARK_ASSETS[Math.floor(Math.random() * WATERMARK_ASSETS.length)];
+
+// 2. Preload image asset alongside bubble slices
+await Promise.all([..., watermarkImg.onload]);
+
+// 3. Inject only for capture (it doesn't show on the viewport when live)
+let exportWatermarkEl = document.createElement("img");
+exportWatermarkEl.className = "rwx-export-watermark";
+exportWatermarkEl.src = chosenWatermarkSrc;
+phoneFrame.appendChild(exportWatermarkEl);
+
+// 4. Capture screenshot/export
+await domtoimage.toPng(phoneFrame, ...);
+
+// 5. Instantly clean up in `finally`
+finally {
+  if (exportWatermarkEl?.parentNode) {
+    exportWatermarkEl.parentNode.removeChild(exportWatermarkEl);
+  }
+}
+```
+
+### Styling & CSS Overrides
+
+The position and transparency of the stamp are controlled by `.rwx-export-watermark` in [`rwxbaker-css/style.css`](rwxbaker-css/style.css). Default values already look good and tested many times, but still if you want to change it.
+
+```css
+.rwx-export-watermark {
+  position: absolute;
+  top: 86px;
+  right: 20px;
+  opacity: 0.40;
+  pointer-events: none;
+  user-select: none;
+  z-index: 99;
+  height: auto;
+}
+
+.phone-mode .rwx-export-watermark {
+  top: 10px;
+  left: 14px;
+  right: auto;
+  max-width: 130px;
+}
+```
+
+### Interactive Watermark Lab (`watermark-styles.html`)
+
+TLDR: An interactive testing workbench and live code generator is included in the project root: **[`watermark-styles.html`](watermark-styles.html)**. Check the page  for LIVE preview, you can copy the live snippet on the left and use it directly.
+
+- **Real-Time Visual Sandbox:** Switch between all 4 designs, test 4 preset anchors (Header Right, Header Left, Viewport Top, Viewport Bottom), and tweak opacity/scale sliders against a realistic chat preview.
+- **Live Code Generator:** Selecting options automatically renders ready-to-copy CSS rules and JS injection snippets in the developer sidebar, making it trivial for local forks to customize or reposition their own stamps.
 
 ---
 

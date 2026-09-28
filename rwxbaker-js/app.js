@@ -2228,10 +2228,28 @@ document.addEventListener("DOMContentLoaded", () => {
     const rightImg = new Image();
     rightImg.src = "rwxbaker-assets/deco/bg_message_right.png";
 
+    // Randomly select between Telemetry Strip (v1) and Minimal Stencil (v4)
+    const WATERMARK_ASSETS = [
+      "rwxbaker-assets/watermarks/watermark-v1-telemetry.png",
+      "rwxbaker-assets/watermarks/watermark-v4-minimal.png"
+    ];
+    // In multi-page mode, keep a consistent watermark across all pages in this batch
+    const chosenWatermarkSrc = WATERMARK_ASSETS[Math.floor(Math.random() * WATERMARK_ASSETS.length)];
+    const watermarkImg = new Image();
+    watermarkImg.src = chosenWatermarkSrc;
+
     await Promise.all([
       new Promise((res) => { if (leftImg.complete) res(); else leftImg.onload = res; }),
-      new Promise((res) => { if (rightImg.complete) res(); else rightImg.onload = res; })
+      new Promise((res) => { if (rightImg.complete) res(); else rightImg.onload = res; }),
+      new Promise((res) => { if (watermarkImg.complete) res(); else watermarkImg.onload = res; })
     ]);
+
+    // Attach watermark stamp dynamically into phoneFrame only during capture
+    let exportWatermarkEl = document.createElement("img");
+    exportWatermarkEl.className = "rwx-export-watermark";
+    exportWatermarkEl.src = chosenWatermarkSrc;
+    exportWatermarkEl.alt = "RWX";
+    phoneFrame.appendChild(exportWatermarkEl);
 
     const incomingTails = phoneFrame.querySelectorAll(".incoming .message-bubble.has-tail");
     const outgoingTails = phoneFrame.querySelectorAll(".outgoing .message-bubble.has-tail");
@@ -2403,6 +2421,11 @@ document.addEventListener("DOMContentLoaded", () => {
       messageList.style.transform = "";
       phoneFrame.classList.remove("is-exporting");
       chatViewport.scrollTop = originalScrollTop;
+
+      if (exportWatermarkEl && exportWatermarkEl.parentNode) {
+        exportWatermarkEl.parentNode.removeChild(exportWatermarkEl);
+        exportWatermarkEl = null;
+      }
 
       if (btnExportPng) btnExportPng.disabled = false;
       if (exportBtnText) exportBtnText.textContent = originalBtnText;
