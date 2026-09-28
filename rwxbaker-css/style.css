@@ -3560,10 +3560,10 @@ body.legal-page::-webkit-scrollbar-thumb:hover {
 }
 
 .phone-mode .rwx-export-watermark {
-  top: 18px;
-  left: -5px;
+  top: 3px;
+  left: 48px;
   right: auto;
-  max-width: 130px;
+  max-width: 125px;
 }
 
 

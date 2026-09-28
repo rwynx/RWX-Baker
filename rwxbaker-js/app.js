@@ -261,7 +261,43 @@ document.addEventListener("DOMContentLoaded", () => {
       btnClearConversation.classList.add("highlight-pulse");
     }
 
+    initWatermark();
     updateUI();
+  }
+
+  // anti-temper guard (do not fucking remove this)
+  const WATERMARK_ASSETS = [
+    "rwxbaker-assets/watermarks/watermark-v1-telemetry.png",
+    "rwxbaker-assets/watermarks/watermark-v4-minimal.png"
+  ];
+  let activeWatermarkSrc = WATERMARK_ASSETS[Math.floor(Math.random() * WATERMARK_ASSETS.length)];
+
+  function initWatermark() {
+    const liveStamp = document.getElementById("live-watermark-stamp");
+    if (liveStamp) {
+      liveStamp.src = activeWatermarkSrc;
+    }
+
+    //  anti-temper guard for live temper & inspect (do not fucking remove this)
+    if (window.MutationObserver && phoneFrame) {
+      const observer = new MutationObserver(() => {
+        let currentStamp = document.getElementById("live-watermark-stamp");
+        if (!currentStamp && phoneFrame) {
+          currentStamp = document.createElement("img");
+          currentStamp.id = "live-watermark-stamp";
+          currentStamp.className = "rwx-export-watermark";
+          currentStamp.src = activeWatermarkSrc;
+          currentStamp.alt = "RWX // BKR";
+          currentStamp.setAttribute("aria-hidden", "true");
+          phoneFrame.insertBefore(currentStamp, phoneFrame.firstChild);
+        } else if (currentStamp) {
+          if (currentStamp.style.display === "none") currentStamp.style.display = "";
+          if (currentStamp.style.visibility === "hidden") currentStamp.style.visibility = "";
+          if (currentStamp.style.opacity === "0") currentStamp.style.opacity = "";
+        }
+      });
+      observer.observe(phoneFrame, { childList: true, subtree: true, attributes: true, attributeFilter: ["style", "class"] });
+    }
   }
 
   function renderCharacterList(filterText = "") {
@@ -2228,15 +2264,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const rightImg = new Image();
     rightImg.src = "rwxbaker-assets/deco/bg_message_right.png";
 
-    // Randomly select between Telemetry Strip (v1) and Minimal Stencil (v4)
-    const WATERMARK_ASSETS = [
-      "rwxbaker-assets/watermarks/watermark-v1-telemetry.png",
-      "rwxbaker-assets/watermarks/watermark-v4-minimal.png"
-    ];
-    // In multi-page mode, keep a consistent watermark across all pages in this batch
-    const chosenWatermarkSrc = WATERMARK_ASSETS[Math.floor(Math.random() * WATERMARK_ASSETS.length)];
+    // Ensure active watermark is loaded and attached (live stamp exists, fallback if removed)
     const watermarkImg = new Image();
-    watermarkImg.src = chosenWatermarkSrc;
+    watermarkImg.src = activeWatermarkSrc;
 
     await Promise.all([
       new Promise((res) => { if (leftImg.complete) res(); else leftImg.onload = res; }),
@@ -2244,12 +2274,18 @@ document.addEventListener("DOMContentLoaded", () => {
       new Promise((res) => { if (watermarkImg.complete) res(); else watermarkImg.onload = res; })
     ]);
 
-    // Attach watermark stamp dynamically into phoneFrame only during capture
-    let exportWatermarkEl = document.createElement("img");
-    exportWatermarkEl.className = "rwx-export-watermark";
-    exportWatermarkEl.src = chosenWatermarkSrc;
-    exportWatermarkEl.alt = "RWX";
-    phoneFrame.appendChild(exportWatermarkEl);
+    let exportWatermarkEl = null;
+    const liveStamp = document.getElementById("live-watermark-stamp");
+    if (!liveStamp || !liveStamp.parentNode) {
+      exportWatermarkEl = document.createElement("img");
+      exportWatermarkEl.id = "live-watermark-stamp";
+      exportWatermarkEl.className = "rwx-export-watermark";
+      exportWatermarkEl.src = activeWatermarkSrc;
+      exportWatermarkEl.alt = "RWX // BKR";
+      phoneFrame.appendChild(exportWatermarkEl);
+    } else {
+      liveStamp.src = activeWatermarkSrc;
+    }
 
     const incomingTails = phoneFrame.querySelectorAll(".incoming .message-bubble.has-tail");
     const outgoingTails = phoneFrame.querySelectorAll(".outgoing .message-bubble.has-tail");

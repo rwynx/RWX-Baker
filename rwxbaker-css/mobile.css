@@ -880,11 +880,11 @@
   }
 
   .rwx-export-watermark {
-    top: 10px !important;
-    left: 14px !important;
+    top: 3px !important;
+    left: 28px !important;
     right: auto !important;
-    max-width: 130px !important;
-    opacity: 0.38 !important;
+    max-width: 120px !important;
+    opacity: 0.40 !important;
   }
 }
 
