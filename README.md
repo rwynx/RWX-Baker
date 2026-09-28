@@ -46,7 +46,9 @@ First and foremost, GLORY TO HYPERGRYPH!<br>GLORY TO THE COMMUNITY OF PLAYERS WH
 
 - **Single & Group Conversations:**
   - Toggle between 1-on-1 chats and multi-character group channels.
-  - Custom group titles and dynamic speaker switching.<br><br><img src="showcase/chat-mode.png" width="30%" alt="chat-mode">
+  - Custom group titles and dynamic speaker switching.<br><br><img src="showcase/chat-mode.png" width="30%" alt="chat-mode"><br>
+  - Group chat example:<br><br>
+  <img src="showcase/group-chat.png" width="50%" alt="group-chat">
 - **Interactive Dialogue Composer** *(Skuqre take notes)*:
   - Standard speech bubbles for incoming & outgoing.
   - Image bubbles, yes you can send images with **real-time drag resizing**.<br><br><img src="showcase/image-msg.gif" width="40%" alt="image-msg"><br>
