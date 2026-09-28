@@ -656,6 +656,20 @@ canvas#field {
   min-width: 0;
 }
 
+.panel-brand-logo-link {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  text-decoration: none;
+  cursor: pointer;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.panel-brand-logo-link:hover {
+  opacity: 0.85;
+  transform: scale(1.04);
+}
+
 .panel-brand-logo {
   height: var(--panel-logo-height);
   width: auto;
@@ -3031,12 +3045,15 @@ body.is-resizing-image {
 
 .help-modal-card {
   width: 100%;
-  max-width: 480px;
+  max-width: 500px;
+  max-height: 82vh;
   background: #1e1f23;
   border: 1px solid #3d3f47;
   border-radius: 8px;
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6), 0 0 1px rgba(0, 220, 255, 0.3);
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
   animation: modalPopIn 0.2s ease-out;
 }
 
@@ -3058,6 +3075,7 @@ body.is-resizing-image {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-shrink: 0;
 }
 
 .help-modal-title {
@@ -3094,6 +3112,29 @@ body.is-resizing-image {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.help-modal-content::-webkit-scrollbar {
+  width: 5px;
+}
+
+.help-modal-content::-webkit-scrollbar-track {
+  background: #191a1d;
+}
+
+.help-modal-content::-webkit-scrollbar-thumb {
+  background: #393b44;
+  border-radius: 3px;
+}
+
+.help-modal-content::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent-cyan);
+}
+
+.help-tip-item-mobile-only {
+  display: none !important;
 }
 
 .help-tip-item {
@@ -3177,16 +3218,62 @@ body.is-resizing-image {
 .footer-legal-link {
   color: #a2a6b2;
   text-decoration: none;
-  font-family: "Bender", "HarmonyOS Sans", sans-serif;
+  font-family: "Bender", "HarmonyOS Sans", sans-serif !important;
   font-weight: bold;
+  font-size: 0.68rem;
   letter-spacing: 0.6px;
-  transition: color 0.15s ease;
+  text-transform: uppercase;
+  transition: color 0.15s ease, transform 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  line-height: 1;
   flex-shrink: 0;
+}
+
+.footer-legal-link span {
+  font-family: "Bender", "HarmonyOS Sans", sans-serif !important;
+  font-weight: bold;
+  font-size: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
 }
 
 .footer-legal-link:hover {
   color: var(--color-accent-cyan);
   text-decoration: underline;
+}
+
+.footer-rwx-icon {
+  width: 13px;
+  height: 13px;
+  object-fit: contain;
+  vertical-align: middle;
+  flex-shrink: 0;
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.footer-legal-link:hover .footer-rwx-icon {
+  transform: scale(1.15);
+  filter: drop-shadow(0 0 4px var(--color-accent-cyan));
+}
+
+.footer-github-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.footer-github-icon {
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
+  transition: transform 0.2s ease, fill 0.2s ease;
+}
+
+.footer-github-link:hover .footer-github-icon {
+  transform: scale(1.15);
+  fill: var(--color-accent-cyan);
 }
 
 .footer-legal-dot {

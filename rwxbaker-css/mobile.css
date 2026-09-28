@@ -605,6 +605,10 @@
     border: 1px solid #28292e !important;
   }
 
+  .help-tip-item.help-tip-item-mobile-only {
+    display: flex !important;
+  }
+
   .help-tip-badge {
     font-size: 0.58rem !important;
     padding: 1px 5px !important;
@@ -654,18 +658,32 @@
     justify-content: center !important;
     flex-wrap: nowrap !important;
     white-space: nowrap !important;
-    gap: 8px !important;
-    font-size: 0.65rem !important;
+    gap: 6px !important;
+    font-size: 0.63rem !important;
   }
 
   .footer-legal-dot-second,
+  .footer-legal-dot-last,
   .footer-legal-text {
     display: none !important;
   }
 
   .footer-legal-link {
-    font-size: 0.65rem !important;
+    font-size: 0.63rem !important;
     letter-spacing: 0.5px !important;
+    gap: 3px !important;
+  }
+
+  .footer-rwx-icon,
+  .footer-github-icon {
+    width: 10px !important;
+    height: 10px !important;
+  }
+
+  @media (max-width: 380px) {
+    .footer-github-subtext {
+      display: none !important;
+    }
   }
 
   .mobile-notice-toast {
