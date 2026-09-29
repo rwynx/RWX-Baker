@@ -31,36 +31,51 @@
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "WebApplication",
-    "name": "RWX Baker",
-    "alternateName": [
-      "Endfield Baker Generator",
-      "Arknights Endfield Message Generator",
-      "Endfield Dialogue Generator"
-    ],
-    "url": "https://baker.rwyn.ch/",
-    "description": "An in-browser fan tool to generate, customize, and export authentic Arknights: Endfield Baker chat conversations, dialogues, and choices.",
-    "applicationCategory": "EntertainmentApplication, MultimediaApplication",
-    "operatingSystem": "All",
-    "browserRequirements": "Requires JavaScript. Requires HTML5 Canvas.",
-    "image": "https://baker.rwyn.ch/showcase/og-preview.png",
-    "screenshot": "https://baker.rwyn.ch/showcase/og-preview.png",
-    "author": {
-      "@type": "Person",
-      "name": "RWyn",
-      "url": "https://rwyn.ch"
-    },
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "USD"
-    }
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://baker.rwyn.ch/#website",
+        "url": "https://baker.rwyn.ch/",
+        "name": "RWX Baker",
+        "alternateName": [
+          "RWX Baker • Rwyn",
+          "RWX Baker - Arknights Endfield Message Generator"
+        ]
+      },
+      {
+        "@type": "WebApplication",
+        "@id": "https://baker.rwyn.ch/#app",
+        "name": "RWX Baker",
+        "alternateName": [
+          "Endfield Baker Generator",
+          "Arknights Endfield Message Generator",
+          "Endfield Dialogue Generator"
+        ],
+        "url": "https://baker.rwyn.ch/",
+        "description": "An in-browser fan tool to generate, customize, and export authentic Arknights: Endfield Baker chat conversations, dialogues, and choices.",
+        "applicationCategory": "EntertainmentApplication, MultimediaApplication",
+        "operatingSystem": "All",
+        "browserRequirements": "Requires JavaScript. Requires HTML5 Canvas.",
+        "image": "https://baker.rwyn.ch/showcase/og-preview.png",
+        "screenshot": "https://baker.rwyn.ch/showcase/og-preview.png",
+        "author": {
+          "@type": "Person",
+          "name": "Rwyn",
+          "url": "https://rwyn.ch"
+        },
+        "offers": {mez
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        }
+      }
+    ]
   }
   </script>
 
   <link rel="stylesheet" href="rwxbaker-css/style.css">
   <link rel="stylesheet" href="rwxbaker-css/mobile.css">
-  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="favicon.png">
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 </head>
 <body>
