@@ -135,7 +135,7 @@ Want to do some lazy edits/tweaks to layout? Adjust chat dimensions, or skin the
 - Bubble alignments, avatars, and media offsets (stickers, images etc.)
 - Header asset controls, move the chat header assets around (especially phone view asset pos needs help)
 - Topographic map decoration controls and opacity
-- Export watermark stamp styles, positions, and live tuning workbench ([watermark-styles.html](watermark-styles.html))
+- Export watermark stamp styles, positions, and live tuning workbench ([LIVE • Watermark Styles](https://baker.rwyn.ch/watermark-styles.html))
 - Glow effects, animated button borders, and color themes
 - And some other stuff
 
