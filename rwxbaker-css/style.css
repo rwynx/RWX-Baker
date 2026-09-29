@@ -3550,8 +3550,8 @@ body.legal-page::-webkit-scrollbar-thumb:hover {
 
 .rwx-export-watermark {
   position: absolute;
-  top: 80px;
-  right: 40px;
+  top: 74px;
+  right: 36px;
   opacity: 0.50;
   pointer-events: none;
   user-select: none;

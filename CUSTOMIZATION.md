@@ -224,9 +224,9 @@ The position and transparency of the stamp are controlled by `.rwx-export-waterm
 ```css
 .rwx-export-watermark {
   position: absolute;
-  top: 86px;
-  right: 20px;
-  opacity: 0.40;
+  top: 74px;
+  right: 36px;
+  opacity: 0.50;
   pointer-events: none;
   user-select: none;
   z-index: 99;
@@ -234,10 +234,10 @@ The position and transparency of the stamp are controlled by `.rwx-export-waterm
 }
 
 .phone-mode .rwx-export-watermark {
-  top: 10px;
-  left: 14px;
+  top: 3px;
+  left: 48px;
   right: auto;
-  max-width: 130px;
+  max-width: 125px;
 }
 ```
 

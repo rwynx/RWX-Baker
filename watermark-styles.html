@@ -258,8 +258,8 @@
     }
 
     .pos-viewport-top-right {
-      top: 86px;
-      right: 20px;
+      top: 74px;
+      right: 36px;
     }
 
     .test-notes {
@@ -482,12 +482,12 @@
     const positionCoords = {
       'header-right': { top: '10px', right: '18px' },
       'header-left': { top: '6px', left: '65px' },
-      'viewport-top-right': { top: '86px', right: '20px' },
+      'viewport-top-right': { top: '76px', right: '38px' },
       'viewport-bottom-right': { bottom: '84px', right: '20px' }
     };
 
     function updateCodeSnippets() {
-      const coords = positionCoords[currentPos] || { top: '86px', right: '20px' };
+      const coords = positionCoords[currentPos] || { top: '76px', right: '38px' };
       const coordLines = Object.entries(coords).map(([k, v]) => `  ${k}: ${v};`).join('\n');
       
       const cssString = 
