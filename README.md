@@ -42,13 +42,14 @@ First and foremost, GLORY TO HYPERGRYPH!<br>GLORY TO THE COMMUNITY OF PLAYERS WH
 - **Stickers & Emojis:**
   - Full collection of **168 game stickers** with searchable/grid picker (excluding skland stickers).
   - **38 game emojis** for in-text embedding and message reactions.<br><br>
-  <img src="showcase/emojis-stickers1.png" width="40%" alt="emojis-stickers1"><br><img src="showcase/emojis-stickers2.png" width="40%" alt="showcase/emojis-stickers2"><br><img src="showcase/stickers_new.png" width="40%" alt="sticker-levi"><br>
+ <img src="showcase/stickers_new.png" width="40%" alt="sticker-levi"><br>
 
 - **Single & Group Conversations:**
   - Toggle between 1-on-1 chats and multi-character group channels.
-  - Custom group titles and dynamic speaker switching.<br><br><img src="showcase/chat-mode.png" width="30%" alt="chat-mode"><br>
-  - Group chat example:<br><br>
-  <img src="showcase/group-chat_new.png" width="50%" alt="group-chat">
+  - Custom group titles and dynamic speaker switching.<br>
+
+  **Group chat example:**<br>
+  <img src="showcase/group-chat_new.png" width="60%" alt="group-chat">
 - **Interactive Dialogue Composer** *(Skuqre take notes)*:
   - Standard speech bubbles for incoming & outgoing.
   - Image bubbles, yes you can send images with **real-time drag resizing**.<br><br><img src="showcase/image-msg_new.gif" width="40%" alt="image-msg"><br>
