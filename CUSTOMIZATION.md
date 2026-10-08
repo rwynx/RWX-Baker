@@ -358,11 +358,13 @@ document.getElementById('phone-frame').style.setProperty('--chat-deco-opacity', 
 
 ## Terminal Mode Architecture & Variables
 
-The in-game Endfield J-Screen Baker Terminal interface is implemented in [`terminal.html`](terminal.html) with styles isolated in [`rwxbaker-css/terminal.css`](rwxbaker-css/terminal.css) and application state in [`rwxbaker-js/terminal.js`](rwxbaker-js/terminal.js).
+The in-game fullscreen Baker Terminal interface is implemented in [`terminal.html`](terminal.html) with styles isolated in [`rwxbaker-css/terminal.css`](rwxbaker-css/terminal.css) and application state in [`rwxbaker-js/terminal.js`](rwxbaker-js/terminal.js).
 
-### 1. Layout & Dimension Variables
+### 1. RX Controller & CSS Variable Reference
 
-Defined at `:root` level in [`rwxbaker-css/terminal.css`](rwxbaker-css/terminal.css):
+Terminal Mode layout, dimensions, offsets, and colors are defined at `:root` in [`rwxbaker-css/terminal.css`](rwxbaker-css/terminal.css) using modular RX groups designed for quick, zero-build customization:
+
+#### [RX 1] Standalone Terminal Page Canvas (`terminal.html`)
 
 | Variable | Default Value | Description |
 | :--- | :--- | :--- |
@@ -371,14 +373,105 @@ Defined at `:root` level in [`rwxbaker-css/terminal.css`](rwxbaker-css/terminal.
 | `--terminal-frame-zoom` | `1` | Global UI scale multiplier for Terminal Mode. |
 | `--terminal-columns-gap` | `16px` | Horizontal space between Channels sidebar and Main Chat window. |
 | `--terminal-topbar-max-width` | `1590px` | Max width for the top navigation bar and system status controls. |
+
+#### [RX 2] Channels Sidebar & Session Cards (Left Column)
+
+| Variable | Default Value | Description |
+| :--- | :--- | :--- |
 | `--terminal-channels-width` | `460px` | Width of the left Channels / transmissions sidebar. |
 | `--terminal-channels-gap` | `10px` | Vertical spacing between session cards in the channels list. |
 | `--terminal-channels-bg-opacity` | `0.55` | Background glass tint opacity for the channels column. |
 | `--terminal-channels-blur` | `14px` | Backdrop blur intensity for the channels column. |
+| `--terminal-channels-opacity` | `1` | Overall channels column opacity. |
+| `--terminal-sidebar-gap` | `12px` | Vertical gap between Channels panel and Active Transmitter controls. |
+| `--terminal-channels-max-height` | `418px` | Height limit for Channels section (fits 4 session cards before scrolling). |
+| `--terminal-session-card-height` | `76px` | Height of each session card item. |
+| `--terminal-session-card-opacity` | `1` | Session card base opacity. |
+| `--terminal-session-title-size` | `15px` | Channel operator / squad title font size. |
+| `--terminal-session-preview-size` | `11.5px` | Recent message snippet font size in session cards. |
+| `--terminal-session-preview-emoji-size` | `16px` | Inline emoji dimension in channel session preview text. |
+| `--terminal-session-preview-emoji-valign` | `-2.5px` | Vertical alignment offset for inline emojis in channel session cards. |
+
+#### [RX 3] Main Chat Pane (Conversation Window)
+
+| Variable | Default Value | Description |
+| :--- | :--- | :--- |
+| `--terminal-chat-width` | `1114px` | Width of the main active conversation window. |
 | `--terminal-chat-bg-opacity` | `0.78` | Dark background glass tint opacity for active chat viewport. |
 | `--terminal-chat-blur` | `14px` | Backdrop blur intensity for active chat viewport. |
-| `--btn-accent-color` | `#d0ff00` | Signature Endfield neon lime/yellow accent color. |
-| `--btn-accent-glow` | `rgba(208, 255, 0, 0.4)` | Outer glow aura color for active buttons and badges. |
+| `--terminal-frame-total-width` | `calc(...)` | Dynamically calculated total frame width (Channels + Gap + Chat). |
+
+#### [RX 4] Terminal Header, Notch & Status Color Bars
+
+| Variable | Default Value | Description |
+| :--- | :--- | :--- |
+| `--terminal-header-height` | `64px` | Segmented header bar height. |
+| `--terminal-header-title-size` | `20px` | Header operator title font size. |
+| `--terminal-header-marquee-opacity` | `0.09` | Scrolling Endfield marquee background watermark opacity. |
+| `--terminal-notch-height` | `10px` | Top-right angular frame notch accent height. |
+| `--terminal-status-bar-opacity` | `1` | 3-color status indicator bar opacity. |
+| `--terminal-status-bars-shift-x` | `0px` | 3-color status bars horizontal offset tweak. |
+| `--terminal-status-bars-shift-y` | `0px` | 3-color status bars vertical offset tweak. |
+
+#### [RX 5 & 6] Input Composer & Watermark Stamp
+
+| Variable | Default Value | Description |
+| :--- | :--- | :--- |
+| `--terminal-input-decor-opacity` | `0.72` | Top serrated corner accent graphic opacity. |
+| `--terminal-input-footer-bg-opacity` | `0.94` | Composer input bar background opacity. |
+| `--watermark-position-top` | `73px` | Watermark vertical position centered in the gap above message bubble. |
+| `--watermark-position-right` | `36px` | Watermark horizontal position aligned to the right. |
+| `--watermark-opacity` | `0.50` | Watermark stamp opacity (0 to 1). |
+
+#### [RX 7] Message Bubbles, Typography & Vertical Padding Tuning
+
+| Variable | Default Value | Description |
+| :--- | :--- | :--- |
+| `--terminal-message-font-size` | `1.02rem` | Message bubble text font size. |
+| `--terminal-message-line-height` | `1.48` | Message bubble text line height. |
+| `--terminal-message-max-width` | `68%` | Max width percentage of conversation message bubbles. |
+| `--terminal-message-avatar-size` | `56px` | Circular avatar frame outer boundary. |
+| `--terminal-message-avatar-image-size` | `46px` | Inner character avatar portrait dimension. |
+| `--terminal-bubble-border-radius` | `13px` | Border radius for tail-less continuation bubbles. |
+| `--terminal-bubble-padding-top` | `9.5px` | Top padding for messages with tail (increase to nudge text downward). |
+| `--terminal-bubble-padding-bottom` | `8.5px` | Bottom padding for messages with tail (decrease to reduce bottom space). |
+| `--terminal-bubble-no-tail-padding-top` | `10.5px` | Top padding for tail-less continuation messages. |
+| `--terminal-bubble-no-tail-padding-bottom` | `9.5px` | Bottom padding for tail-less continuation messages. |
+
+#### [RX 8] Inline Game Emojis & Alignment
+
+| Variable | Default Value | Description |
+| :--- | :--- | :--- |
+| `--terminal-inline-emoji-size` | `24px` | Width & height of inline emojis in message bubbles and choices. |
+| `--terminal-inline-emoji-valign` | `-5px` | Vertical alignment for inline emojis in message bubbles (e.g. `-2px`, `-5px`, `middle`). |
+
+#### [RX 9] Terminal Dialogue Choices (Button Pills)
+
+| Variable | Default Value | Description |
+| :--- | :--- | :--- |
+| `--terminal-choice-pill-max-width` | `480px` | Max width of interactive choice pill buttons. |
+| `--terminal-choice-pill-padding-y` | `10px` | Vertical padding of choice pill buttons. |
+| `--terminal-choice-pill-padding-x` | `24px` | Horizontal padding of choice pill buttons. |
+| `--terminal-choice-font-size` | `0.98rem` | Font size of interactive choice pill buttons. |
+| `--terminal-choice-border-radius` | `24px` | Capsule pill border radius. |
+| `--terminal-choice-gap` | `8px` | Vertical gap between multiple choice pills. |
+
+#### [RX 10] Terminal Buttons & Theme Colors
+
+| Variable | Default Value | Description |
+| :--- | :--- | :--- |
+| `--btn-primary-bg` | `#d0ff00` | Primary action button background (Send Message, Set Choices, Submit). |
+| `--btn-primary-text` | `#0b0f15` | Text color on primary action buttons. |
+| `--btn-primary-glow` | `rgba(208, 255, 0, 0.4)` | Accent glow aura on primary action buttons. |
+| `--btn-secondary-bg` | `rgba(255, 255, 255, 0.08)` | Secondary action button background (Send Sticker, Cancel). |
+| `--btn-secondary-border` | `rgba(255, 255, 255, 0.2)` | Border color for secondary action buttons. |
+| `--btn-secondary-text` | `#e2e3e8` | Text color for secondary action buttons. |
+| `--btn-danger-bg` | `rgba(235, 68, 68, 0.15)` | Danger button background (Delete, Clear, Start Clean). |
+| `--btn-danger-border` | `rgba(235, 68, 68, 0.45)` | Border color for danger buttons. |
+| `--btn-danger-text` | `#ff6e6e` | Text color for danger buttons. |
+| `--btn-new-chat-bg` | `#d0ff00` | Background color for `+ NEW` channel creation button. |
+| `--btn-accent-color` | `#d0ff00` | Global signature neon yellow/lime accent color. |
+| `--btn-accent-glow` | `rgba(208, 255, 0, 0.4)` | Global accent glow aura color for active buttons and badges. |
 
 ### 2. Multi-Channel Sessions & Group Sender Formatting
 

@@ -37,6 +37,8 @@
   --terminal-session-card-opacity: 1;         /* Session card opacity */
   --terminal-session-title-size: 15px;        /* Channel operator/squad title font size */
   --terminal-session-preview-size: 11.5px;    /* Recent transmission snippet font size */
+  --terminal-session-preview-emoji-size: 16px; /* [RX TUNE] Inline emoji size in channel preview cards */
+  --terminal-session-preview-emoji-valign: -2.5px; /* [RX TUNE] Inline emoji vertical alignment in channel cards */
 
   /* ========================================================================
      [RX 3: MAIN CHAT PANE (CONVERSATION WINDOW)]
@@ -82,10 +84,17 @@
   --terminal-message-avatar-image-size: 46px; /* Terminal avatar portrait image size */
   --terminal-bubble-border-radius: 13px;      /* Rounded radius for tail-less messages */
 
+  /* [RX TUNE] MESSAGE TEXT VERTICAL BALANCE & PADDING (increase padding-top to shift text downward) */
+  --terminal-bubble-padding-top: 9.5px;       /* Top padding for messages with tail (default: 9.5px, was 8px) */
+  --terminal-bubble-padding-bottom: 8.5px;    /* Bottom padding for messages with tail (default: 8.5px, was 10px) */
+  --terminal-bubble-no-tail-padding-top: 10.5px; /* Top padding for messages without tail */
+  --terminal-bubble-no-tail-padding-bottom: 9.5px; /* Bottom padding for messages without tail */
+
   /* ========================================================================
      [RX 8: TERMINAL INLINE GAME EMOJIS]
      ======================================================================== */
-  --terminal-inline-emoji-size: 26px;         /* Inline emoji width & height in messages & choices */
+  --terminal-inline-emoji-size: 24px;         /* [RX TUNE] Inline emoji width & height in messages & choices */
+  --terminal-inline-emoji-valign: -5px;       /* [RX TUNE] Inline emoji vertical alignment (e.g. -2px, -3px, middle) */
 
   /* ========================================================================
      [RX 9: TERMINAL DIALOGUE CHOICES (BUTTON PILLS)]
@@ -403,17 +412,22 @@ body.terminal-standalone-page {
 }
 
 .terminal-topbar-export-controls .export-png-btn {
-  width: auto !important;
-  max-width: 96px !important;
+  width: 114px !important;
+  min-width: 114px !important;
+  max-width: 114px !important;
   height: 30px !important;
-  padding: 0 10px !important;
+  padding: 0 8px !important;
   border-radius: 4px !important;
-  flex: 0 0 auto !important;
+  flex: 0 0 114px !important;
+  box-sizing: border-box !important;
 }
 
 .terminal-topbar-export-controls .export-png-btn .export-btn-content {
-  font-size: 0.8rem !important;
-  gap: 6px !important;
+  font-size: 0.78rem !important;
+  gap: 5px !important;
+  white-space: nowrap !important;
+  justify-content: center !important;
+  width: 100% !important;
 }
 
 .terminal-topbar-export-controls .export-png-btn .export-btn-icon {
@@ -1317,6 +1331,10 @@ body.terminal-standalone-page {
   cursor: pointer;
 }
 
+#terminal-context-form-choices {
+  position: relative;
+}
+
 .terminal-choice-inputs-wrap {
   display: flex;
   flex-direction: column;
@@ -1356,6 +1374,53 @@ body.terminal-standalone-page {
   font-size: 0.78rem;
   outline: none;
   box-sizing: border-box;
+}
+
+.terminal-choice-input.editable-message-input {
+  min-height: 28px;
+  max-height: 52px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  line-height: 18px;
+}
+
+.terminal-choice-input:empty::before {
+  content: attr(data-placeholder);
+  color: #72737c;
+  font-size: 0.78rem;
+  pointer-events: none;
+}
+
+.terminal-choice-input .inline-game-emoji {
+  width: 18px;
+  height: 18px;
+  vertical-align: middle;
+  margin: 0 2px;
+  display: inline-block;
+  user-select: all;
+}
+
+.terminal-choice-emoji-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+  color: #8c8d94;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.15s ease;
+}
+
+.terminal-choice-emoji-btn:hover {
+  background: rgba(29, 221, 225, 0.15);
+  border-color: #1ddde1;
+  color: #1ddde1;
 }
 
 .terminal-choice-input:focus {
@@ -1562,6 +1627,53 @@ body.terminal-standalone-page {
   }
 }
 
+/* Terminal choices actions group (CLEAR and START CLEAN beside tutorial choices) */
+.terminal-choices-actions-group {
+  position: absolute;
+  right: calc(50% + 285px);
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 20;
+}
+
+.terminal-choices-actions-group .template-choices-clear-btn {
+  position: static !important;
+  transform: none !important;
+  font-size: 0.8rem;
+  padding: 8px 16px;
+  min-width: 120px;
+  text-align: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.terminal-start-clean-choice-btn {
+  background: rgba(255, 120, 40, 0.18) !important;
+  color: #ff9855 !important;
+  border: 1.5px solid #ff9855 !important;
+}
+
+.terminal-start-clean-choice-btn:hover {
+  background: #f4511e !important;
+  color: #ffffff !important;
+  border-color: #ff8a65 !important;
+  box-shadow: 0 6px 16px rgba(244, 81, 30, 0.55) !important;
+}
+
+@media (max-width: 1100px) {
+  .terminal-choices-actions-group {
+    position: static;
+    transform: none;
+    flex-direction: row;
+    justify-content: center;
+    margin-bottom: 6px;
+  }
+}
+
 .terminal-session-scroll {
   flex: 1;
   overflow-y: auto;
@@ -1694,6 +1806,17 @@ body.terminal-standalone-page {
   font-weight: 700;
   color: #ebece9;
   margin-right: 3px;
+}
+
+.terminal-session-card__preview .inline-game-emoji,
+.terminal-session-card__preview .inline-preview-emoji {
+  width: 16px !important;
+  height: 16px !important;
+  max-width: 16px !important;
+  max-height: 16px !important;
+  vertical-align: -2.5px !important;
+  margin: 0 2px !important;
+  display: inline-block !important;
 }
 
 .terminal-session-card__underline {
@@ -2124,24 +2247,49 @@ body.terminal-standalone-page {
   line-height: var(--terminal-message-line-height, 1.48) !important;
 }
 
+.terminal-standalone-page .incoming .message-bubble.has-tail {
+  padding-top: var(--terminal-bubble-padding-top, 9.5px) !important;
+  padding-bottom: var(--terminal-bubble-padding-bottom, 8.5px) !important;
+}
+
+.terminal-standalone-page .outgoing .message-bubble.has-tail {
+  padding-top: var(--terminal-bubble-padding-top, 9.5px) !important;
+  padding-bottom: var(--terminal-bubble-padding-bottom, 8.5px) !important;
+}
+
 .terminal-standalone-page .incoming .message-bubble.no-tail,
 .terminal-standalone-page .outgoing .message-bubble.no-tail {
   border-radius: var(--terminal-bubble-border-radius, 13px) !important;
+  padding-top: var(--terminal-bubble-no-tail-padding-top, 10.5px) !important;
+  padding-bottom: var(--terminal-bubble-no-tail-padding-bottom, 9.5px) !important;
 }
 
-.terminal-standalone-page .inline-game-emoji,
-.terminal-standalone-page .inline-message-emoji {
-  width: var(--terminal-inline-emoji-size, 26px) !important;
-  height: var(--terminal-inline-emoji-size, 26px) !important;
-  max-width: var(--terminal-inline-emoji-size, 26px) !important;
-  max-height: var(--terminal-inline-emoji-size, 26px) !important;
-  vertical-align: -5px !important;
-  margin: 0 3px !important;
+.terminal-standalone-page .message-bubble .inline-game-emoji,
+.terminal-standalone-page .message-bubble .inline-message-emoji,
+.terminal-standalone-page .choice-pill .inline-game-emoji,
+.terminal-standalone-page .choice-pill .inline-message-emoji {
+  width: var(--terminal-inline-emoji-size, 24px) !important;
+  height: var(--terminal-inline-emoji-size, 24px) !important;
+  max-width: var(--terminal-inline-emoji-size, 24px) !important;
+  max-height: var(--terminal-inline-emoji-size, 24px) !important;
+  vertical-align: var(--terminal-inline-emoji-valign, -2px) !important;
+  margin: 0 2px !important;
   display: inline-block !important;
   object-fit: contain !important;
   pointer-events: none !important;
   user-select: none !important;
   -webkit-user-drag: none !important;
+}
+
+/* Ensure channel card preview emojis stay clean, properly scaled and aligned */
+.terminal-standalone-page .terminal-session-card__preview .inline-game-emoji,
+.terminal-standalone-page .terminal-session-card__preview .inline-preview-emoji {
+  width: var(--terminal-session-preview-emoji-size, 16px) !important;
+  height: var(--terminal-session-preview-emoji-size, 16px) !important;
+  max-width: var(--terminal-session-preview-emoji-size, 16px) !important;
+  max-height: var(--terminal-session-preview-emoji-size, 16px) !important;
+  vertical-align: var(--terminal-session-preview-emoji-valign, -2.5px) !important;
+  margin: 0 2px !important;
 }
 
 .terminal-standalone-page .choice-container {

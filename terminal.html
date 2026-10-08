@@ -79,17 +79,6 @@
               <span>CHANNELS \\</span>
             </span>
             <div class="terminal-channels-header-actions">
-
-                <!-- NOTE to myyself:: for now i deactived the CLEAR button since all conversations can be deleted separately now
-
-              <button type="button" id="btn-terminal-clear-channels" class="terminal-clear-channels-btn" title="Delete All Channels / Chats">
-                <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <polyline points="3 6 5 6 21 6"></polyline>
-                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                </svg>
-                <span>CLEAR</span>
-              </button> -->
-
               <button type="button" id="btn-terminal-new-chat" class="terminal-new-chat-btn" title="Create New Channel / Chat">+ NEW</button>
             </div>
           </div>
@@ -226,13 +215,39 @@
               <div class="terminal-choice-inputs-wrap">
                 <div class="terminal-choice-input-row">
                   <span class="choice-num-tag">1</span>
-                  <input type="text" id="terminal-context-choice-1" class="terminal-choice-input" placeholder="First choice option...">
+                  <div id="terminal-context-choice-1" class="terminal-choice-input editable-message-input choice-input" contenteditable="true" data-placeholder="First choice option..."></div>
+                  <button type="button" class="terminal-choice-emoji-btn" data-choice-target="terminal-context-choice-1" title="Add emoji to first choice" aria-label="Add emoji to first choice">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+                      <line x1="9" y1="9" x2="9.01" y2="9"></line>
+                      <line x1="15" y1="9" x2="15.01" y2="9"></line>
+                    </svg>
+                  </button>
                 </div>
                 <div class="terminal-choice-input-row">
                   <span class="choice-num-tag">2</span>
-                  <input type="text" id="terminal-context-choice-2" class="terminal-choice-input" placeholder="Second choice (optional)...">
+                  <div id="terminal-context-choice-2" class="terminal-choice-input editable-message-input choice-input" contenteditable="true" data-placeholder="Second choice (optional)..."></div>
+                  <button type="button" class="terminal-choice-emoji-btn" data-choice-target="terminal-context-choice-2" title="Add emoji to second choice" aria-label="Add emoji to second choice">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+                      <line x1="9" y1="9" x2="9.01" y2="9"></line>
+                      <line x1="15" y1="9" x2="15.01" y2="9"></line>
+                    </svg>
+                  </button>
                 </div>
               </div>
+
+              <!-- Floating popup emoji picker panel for choices -->
+              <div id="terminal-choices-emoji-bar" class="terminal-inline-emoji-bar hidden">
+                <div class="terminal-emoji-picker-header">
+                  <span>CHOICE EMOJIS</span>
+                  <button type="button" id="btn-close-terminal-choices-emoji" class="terminal-emoji-picker-close" title="Close" aria-label="Close emoji picker">&times;</button>
+                </div>
+                <div id="terminal-choices-emojis" class="terminal-quick-emoji-row"></div>
+              </div>
+
               <div class="terminal-context-btn-row">
                 <button type="button" id="btn-terminal-context-add-choices" class="terminal-action-btn primary">
                   <span>Set Choices</span>
@@ -484,6 +499,7 @@
 
   <!-- scripts -->
   <script src="rwxbaker-js/dom-to-image-more.min.js"></script>
+  <script src="rwxbaker-assets/templates/terminal-template.js"></script>
   <script src="rwxbaker-js/tutorial-template.js"></script>
   <script src="rwxbaker-js/characters.js"></script>
   <script src="rwxbaker-js/terminal.js"></script>

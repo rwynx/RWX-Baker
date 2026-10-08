@@ -118,7 +118,7 @@ RWX Baker has **zero build dependencies**, it runs directly out of the box using
 
 ```
 ├── index.html                           # main editor
-├── terminal.html                        # in-game J-Screen terminal mode (WIP)
+├── terminal.html                        # in-game fullscreen Baker terminal mode (WIP)
 ├── watermark-styles.html                # interactive watermark lab & code generator
 ├── CUSTOMIZATION.md                     # CSS variables, offsets & styling guide
 ├── privacy.html                         

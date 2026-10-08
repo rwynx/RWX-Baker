@@ -43,6 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const btnTerminalNewChat = document.getElementById("btn-terminal-new-chat");
   const btnTerminalTutorial = document.getElementById("btn-terminal-tutorial");
   const btnTerminalClearChat = document.getElementById("btn-terminal-clear-chat");
+  const btnTerminalStartClean = document.getElementById("btn-terminal-start-clean");
   const btnReturnStudio = document.getElementById("btn-return-studio");
   const btnSaveJson = document.getElementById("btn-terminal-save-json");
   const btnLoadJson = document.getElementById("btn-terminal-load-json");
@@ -119,6 +120,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const contextChoice1 = document.getElementById("terminal-context-choice-1");
   const contextChoice2 = document.getElementById("terminal-context-choice-2");
+  const choicesEmojiBar = document.getElementById("terminal-choices-emoji-bar");
+  const choicesEmojisRow = document.getElementById("terminal-choices-emojis");
+  const btnCloseChoicesEmoji = document.getElementById("btn-close-terminal-choices-emoji");
+  const choiceEmojiBtns = document.querySelectorAll(".terminal-choice-emoji-btn");
+  let activeChoiceEmojiTarget = null;
   const btnContextAddChoices = document.getElementById("btn-terminal-context-add-choices");
   const btnContextClearChoices = document.getElementById("btn-terminal-context-clear-choices");
 
@@ -225,7 +231,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function loadPersistentState() {
     try {
-      const raw = localStorage.getItem("rwx_persistent_conversation");
+      const raw = localStorage.getItem("rwx_terminal_persistent_state");
       if (raw) {
         const data = JSON.parse(raw);
         if (data) {
@@ -239,22 +245,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
           if (Array.isArray(data.terminalChannels) && data.terminalChannels.length > 0) {
             terminalChannels = data.terminalChannels;
-            const ops = terminalChannels.find((c) => c.id === "channel-ops-4" || c.name === "Habitation Sector 4 Ops");
-            if (ops) {
-              ops.name = "Endfield Crisis Team";
-              ops.groupName = "Endfield Crisis Team";
-              ops.groupParticipantIds = ["pelica", "chen", "wolfgard"];
-              if (Array.isArray(ops.messages)) {
-                ops.messages.forEach((m) => {
-                  if (m.characterId === "boundary") {
-                    m.characterId = "chen";
-                    m.text = "Easy peasy! Very straightforward huh? Hehe~";
-                  } else if (m.characterId === "wolfgard" && m.id === "m_ops_1") {
-                    m.text = "Endmin, do you copy? This is a test message for the terminal group feature!";
-                  }
-                });
-              }
-            }
           }
           if (data.activeTerminalChannelId) {
             activeTerminalChannelId = data.activeTerminalChannelId;
@@ -268,136 +258,19 @@ document.addEventListener("DOMContentLoaded", () => {
         if (terminalChannels && terminalChannels.length > 0) {
       syncChannelToState(activeTerminalChannelId);
     } else {
-      const mainChar = CHARACTERS.laevatain || { id: "laevatain", name: "Laevatain", avatar: "rwxbaker-assets/avatars/operator/icon_round_chr_0016_laevat.png" };
-      const tutorialTpl = (typeof window !== "undefined" && window.RWX_TUTORIAL_TEMPLATE && localStorage.getItem("rwx_tutorial_cleared") !== "true")
-        ? window.RWX_TUTORIAL_TEMPLATE
+      const termTpl = (typeof window !== "undefined" && window.RWX_TERMINAL_TEMPLATE && localStorage.getItem("rwx_terminal_tutorial_cleared") !== "true")
+        ? window.RWX_TERMINAL_TEMPLATE
         : null;
-      state.activeCharacterId = "laevatain";
-      state.messages = tutorialTpl ? JSON.parse(JSON.stringify(tutorialTpl.messages || [])) : [];
-      state.choices = tutorialTpl ? [...(tutorialTpl.choices || [])] : [];
 
-      terminalChannels = [
-        {
-          id: "channel-main",
-          name: mainChar.name,
-          avatar: mainChar.avatar,
-          mode: "direct",
-          characterId: "laevatain",
-          groupName: "",
-          groupParticipantIds: [],
-          messages: state.messages,
-          choices: state.choices
-        },
-        {
-          id: "channel-ops-4",
-          name: "Endfield Crisis Team",
-          avatar: "rwxbaker-assets/deco/group-channel.webp",
-          mode: "group",
-          characterId: "wolfgard",
-          groupName: "Endfield Crisis Team",
-          groupParticipantIds: ["pelica", "chen", "wolfgard"],
-          messages: [
-            {
-              id: "m_ops_1",
-              sender: "incoming",
-              characterId: "wolfgard",
-              type: "text",
-              text: "Endmin, do you copy? This is a test message for the terminal group feature!",
-              imageSrc: null,
-              reactions: []
-            },
-            {
-              id: "m_ops_2",
-              sender: "incoming",
-              characterId: "pelica",
-              type: "text",
-              text: "You can create a group channel from above, just hit 'NEW' 💫",
-              imageSrc: null,
-              reactions: []
-            },
-            {
-              id: "m_ops_3",
-              sender: "incoming",
-              characterId: "chen",
-              type: "text",
-              text: "Easy peasy! Very straightforward huh? Hehe~",
-              imageSrc: null,
-              reactions: []
-            },
-            {
-              id: "m_ops_4",
-              sender: "incoming",
-              characterId: "wolfgard",
-              type: "text",
-              text: "You can choose the Active Character on the left side.",
-              imageSrc: null,
-              reactions: []
-            }
-          ],
-          choices: ["Wow that's easy!", "I'm trying right now."]
-        },
-        {
-          id: "channel-recon",
-          name: "Chen Qianyu",
-          avatar: "rwxbaker-assets/avatars/operator/icon_round_chr_0005_chen.png",
-          mode: "direct",
-          characterId: "chen",
-          groupName: "",
-          groupParticipantIds: [],
-          messages: [
-            {
-              id: "m_recon_1",
-              sender: "incoming",
-              characterId: "chen",
-              type: "text",
-              text: "Hey there, Endministrator!",
-              imageSrc: null,
-              reactions: []
-            },
-            {
-              id: "m_recon_2",
-              sender: "incoming",
-              characterId: "chen",
-              type: "text",
-              text: "Hehe, got any new mission for me?",
-              imageSrc: null,
-              reactions: []
-            }
-          ],
-          choices: ["Hey there!", "Where are you right now?"]
-        },
-        {
-          id: "channel-logistics",
-          name: "Gilberta",
-          avatar: "rwxbaker-assets/avatars/operator/icon_round_chr_0013_aglina.png",
-          mode: "direct",
-          characterId: "angelina",
-          groupName: "",
-          groupParticipantIds: [],
-          messages: [
-            {
-              id: "m_log_1",
-              sender: "incoming",
-              characterId: "angelina",
-              type: "text",
-              text: "Hey Endmin! I have a package for you!",
-              imageSrc: null,
-              reactions: []
-            },
-            {
-              id: "m_log_2",
-              sender: "incoming",
-              characterId: "angelina",
-              type: "text",
-              text: "Should I drop it off at the supply depot or send it to your office?",
-              imageSrc: null,
-              reactions: []
-            }
-          ],
-          choices: ["Leave it at the depot.", "Bring it to my office!"]
-        }
-      ];
-      activeTerminalChannelId = "channel-main";
+      if (termTpl && Array.isArray(termTpl.terminalChannels) && termTpl.terminalChannels.length > 0) {
+        terminalChannels = JSON.parse(JSON.stringify(termTpl.terminalChannels));
+        activeTerminalChannelId = termTpl.activeTerminalChannelId || terminalChannels[0].id;
+        state.activeUser = (termTpl.activeUser === "endminf" || termTpl.activeUser === "endminm") ? termTpl.activeUser : "endminf";
+      } else {
+        const fresh = createFreshDefaultChannel();
+        terminalChannels = [fresh];
+        activeTerminalChannelId = fresh.id;
+      }
     }
 
         syncChannelToState(activeTerminalChannelId);
@@ -419,7 +292,7 @@ document.addEventListener("DOMContentLoaded", () => {
         activeTerminalChannelId: activeTerminalChannelId,
         timestamp: Date.now()
       };
-      localStorage.setItem("rwx_persistent_conversation", JSON.stringify(payload));
+      localStorage.setItem("rwx_terminal_persistent_state", JSON.stringify(payload));
     } catch (e) {
       console.warn("Terminal: Could not save persistent state:", e);
     }
@@ -467,6 +340,34 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // channel list & switching
 
+  function formatPreviewWithEmojis(text) {
+    if (!text) return "";
+    const emojiRegex = /\[emoji:([^\]]+)\]/g;
+    let result = "";
+    let lastIndex = 0;
+    let match;
+
+    while ((match = emojiRegex.exec(text)) !== null) {
+      if (match.index > lastIndex) {
+        result += escapeHtml(text.substring(lastIndex, match.index));
+      }
+      let emojiSrc = match[1];
+      if (emojiSrc.startsWith("extracted/")) {
+        emojiSrc = emojiSrc.replace(/^extracted\//, "rwxbaker-assets/");
+      }
+      if (emojiSrc.includes("/rwxbaker-assets/")) {
+        emojiSrc = "rwxbaker-assets/" + emojiSrc.split("/rwxbaker-assets/")[1];
+      }
+      result += `<img class="inline-game-emoji inline-preview-emoji" src="${escapeHtml(emojiSrc)}" alt="Emoji">`;
+      lastIndex = emojiRegex.lastIndex;
+    }
+
+    if (lastIndex < text.length) {
+      result += escapeHtml(text.substring(lastIndex));
+    }
+    return result;
+  }
+
   function renderTerminalChannels() {
     if (!sessionCardsContainer) return;
     syncStateToActiveChannel();
@@ -489,8 +390,7 @@ document.addEventListener("DOMContentLoaded", () => {
         } else if (lastMsg.type === "sticker") {
           content = "[Sticker]";
         } else {
-          const cleanedText = (lastMsg.text || "").replace(/\[emoji:[^\]]+\]/g, "").trim();
-          content = cleanedText || (lastMsg.text ? "[Emoji]" : "");
+          content = formatPreviewWithEmojis(lastMsg.text || "");
         }
 
         const isGroup = ch.mode === "group" || (Array.isArray(ch.groupParticipantIds) && ch.groupParticipantIds.length > 0);
@@ -500,9 +400,9 @@ document.addEventListener("DOMContentLoaded", () => {
             const charObj = CHARACTERS[lastMsg.characterId];
             senderName = charObj ? charObj.name : "Operator";
           }
-          previewHtml = `<span class="terminal-session-card__sender">${escapeHtml(senderName)}:</span> ${escapeHtml(content)}`;
+          previewHtml = `<span class="terminal-session-card__sender">${escapeHtml(senderName)}:</span> ${content}`;
         } else {
-          previewHtml = escapeHtml(content);
+          previewHtml = content;
         }
       }
 
@@ -593,6 +493,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function clearAllTerminalChannels() {
     if (!confirm("Are you sure you want to delete all channels and conversations?")) return;
+    try {
+      localStorage.setItem("rwx_terminal_tutorial_cleared", "true");
+    } catch (_) {}
     exitEditMode();
     const fresh = createFreshDefaultChannel();
     terminalChannels = [fresh];
@@ -957,6 +860,9 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
           bubble.classList.add("no-tail");
         }
+        if (msg.text && msg.text.includes("[emoji:")) {
+          bubble.classList.add("has-inline-emoji");
+        }
         renderMessageContentWithEmojis(bubble, msg.text || "");
         msgItem.appendChild(bubble);
       }
@@ -1009,21 +915,37 @@ document.addEventListener("DOMContentLoaded", () => {
     choiceContainer.innerHTML = "";
 
     const hasTutorialClear = state.choices.some(
-      (c) => c.includes("start making your own") || c.includes("Clear All")
+      (c) => c.includes("START CLEAN") || c.includes("CLEAR deletes this chat") || c.includes("Clear All") || c.includes("start clean")
     );
 
     if (hasTutorialClear) {
+      const actionsGroup = document.createElement("div");
+      actionsGroup.className = "terminal-choices-actions-group";
+
       const clearBtn = document.createElement("button");
       clearBtn.type = "button";
       clearBtn.className = "template-choices-clear-btn highlight-pulse";
-      clearBtn.title = "Clear conversation and start fresh";
-      clearBtn.innerHTML = `<span>Clear All</span>`;
-
+      clearBtn.title = "Clear current chat only";
+      clearBtn.innerHTML = `<span>CLEAR</span>`;
       clearBtn.addEventListener("click", () => {
         clearTerminalConversation();
       });
 
-      choiceContainer.appendChild(clearBtn);
+      const startCleanBtn = document.createElement("button");
+      startCleanBtn.type = "button";
+      startCleanBtn.className = "template-choices-clear-btn terminal-start-clean-choice-btn highlight-pulse";
+      startCleanBtn.title = "Delete ALL channels and chats (Start clean)";
+      startCleanBtn.innerHTML = `<span>START CLEAN</span>`;
+      startCleanBtn.addEventListener("click", () => {
+        try {
+          localStorage.setItem("rwx_terminal_tutorial_cleared", "true");
+        } catch (_) {}
+        clearAllTerminalChannels();
+      });
+
+      actionsGroup.appendChild(clearBtn);
+      actionsGroup.appendChild(startCleanBtn);
+      choiceContainer.appendChild(actionsGroup);
     }
 
     state.choices.forEach((choiceText) => {
@@ -1033,8 +955,10 @@ document.addEventListener("DOMContentLoaded", () => {
       renderMessageContentWithEmojis(pill, choiceText);
 
       pill.addEventListener("click", () => {
-        if (choiceText.includes("start making your own") || choiceText.includes("Clear All")) {
-          clearTerminalConversation();
+        if (choiceText.includes("START CLEAN deletes all chats/groups") || choiceText.includes("start clean")) {
+          // If user specifically clicked the choice that mentions CLEAR / START CLEAN
+          state.choices = [];
+          renderChoices();
         } else {
           state.choices = [];
           appendMessage({
@@ -1055,7 +979,7 @@ document.addEventListener("DOMContentLoaded", () => {
     state.messages = [];
     state.choices = [];
     try {
-      localStorage.setItem("rwx_tutorial_cleared", "true");
+      localStorage.setItem("rwx_terminal_tutorial_cleared", "true");
     } catch (_) {}
     syncStateToActiveChannel();
     renderConversation();
@@ -1064,6 +988,25 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function loadTutorialTemplate() {
+    const termTpl = window.RWX_TERMINAL_TEMPLATE;
+    if (termTpl && Array.isArray(termTpl.terminalChannels) && termTpl.terminalChannels.length > 0) {
+      terminalChannels = JSON.parse(JSON.stringify(termTpl.terminalChannels));
+      activeTerminalChannelId = termTpl.activeTerminalChannelId || terminalChannels[0].id;
+      state.activeUser = (termTpl.activeUser === "endminf" || termTpl.activeUser === "endminm") ? termTpl.activeUser : "endminf";
+      try {
+        localStorage.removeItem("rwx_terminal_tutorial_cleared");
+      } catch (_) {}
+      syncChannelToState(activeTerminalChannelId);
+      renderTerminalChannels();
+      renderConversation();
+      renderChoices();
+      updateHeader();
+      updateControlCharDisplay();
+      updateActiveSpeakerCards();
+      renderSquadRoster();
+      savePersistentState();
+      return;
+    }
     const tutorial = window.RWX_TUTORIAL_TEMPLATE;
     if (!tutorial) return;
     state.activeUser = tutorial.activeUser || "endminf";
@@ -1076,7 +1019,7 @@ document.addEventListener("DOMContentLoaded", () => {
     state.currentSender = "incoming";
 
     try {
-      localStorage.removeItem("rwx_tutorial_cleared");
+      localStorage.removeItem("rwx_terminal_tutorial_cleared");
     } catch (_) {}
 
     const curCh = terminalChannels.find((c) => c.id === activeTerminalChannelId);
@@ -1346,6 +1289,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (contextFormText) contextFormText.classList.toggle("hidden", type !== "text");
     if (contextFormImage) contextFormImage.classList.toggle("hidden", type !== "image");
     if (contextFormChoices) contextFormChoices.classList.toggle("hidden", type !== "choices");
+    if (choicesEmojiBar && type !== "choices") choicesEmojiBar.classList.add("hidden");
+    if (inlineEmojiBar && type !== "text") inlineEmojiBar.classList.add("hidden");
     if (contextFormReaction) {
       contextFormReaction.classList.toggle("hidden", type !== "reaction");
       if (type === "reaction") {
@@ -1368,6 +1313,23 @@ document.addEventListener("DOMContentLoaded", () => {
         insertEmojiAtCursor(src, contextTextInput);
       });
       contextEmojisRow.appendChild(btn);
+    });
+  }
+
+  function populateChoiceEmojis() {
+    if (!choicesEmojisRow || choicesEmojisRow.children.length > 0) return;
+    GAME_EMOJIS.forEach((src) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "terminal-quick-emoji-btn";
+      btn.title = "Insert Emoji";
+      btn.innerHTML = `<img src="${src}" alt="Emoji">`;
+      btn.addEventListener("click", () => {
+        const target = activeChoiceEmojiTarget || contextChoice1;
+        if (!target) return;
+        insertEmojiAtCursor(src, target);
+      });
+      choicesEmojisRow.appendChild(btn);
     });
   }
 
@@ -1698,6 +1660,15 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
 
+    if (btnTerminalStartClean) {
+      btnTerminalStartClean.addEventListener("click", () => {
+        try {
+          localStorage.setItem("rwx_terminal_tutorial_cleared", "true");
+        } catch (_) {}
+        clearAllTerminalChannels();
+      });
+    }
+
         if (btnReturnStudio) {
       btnReturnStudio.addEventListener("click", (e) => {
         e.preventDefault();
@@ -1994,18 +1965,66 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
 
-        if (btnContextAddChoices) {
+        choiceEmojiBtns.forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const targetId = btn.dataset.choiceTarget;
+        const targetEl = document.getElementById(targetId);
+        if (!choicesEmojiBar) return;
+
+        if (!choicesEmojiBar.classList.contains("hidden") && activeChoiceEmojiTarget === targetEl) {
+          choicesEmojiBar.classList.add("hidden");
+          return;
+        }
+
+        activeChoiceEmojiTarget = targetEl;
+        choicesEmojiBar.classList.remove("hidden");
+        populateChoiceEmojis();
+      });
+    });
+
+    if (btnCloseChoicesEmoji && choicesEmojiBar) {
+      btnCloseChoicesEmoji.addEventListener("click", () => {
+        choicesEmojiBar.classList.add("hidden");
+      });
+    }
+
+    document.addEventListener("click", (e) => {
+      if (choicesEmojiBar && !choicesEmojiBar.classList.contains("hidden")) {
+        const wrap = document.getElementById("terminal-context-form-choices");
+        if (wrap && !wrap.contains(e.target)) {
+          choicesEmojiBar.classList.add("hidden");
+        }
+      }
+    });
+
+    [contextChoice1, contextChoice2].forEach((choiceEl) => {
+      if (choiceEl) {
+        choiceEl.addEventListener("focus", () => {
+          activeChoiceEmojiTarget = choiceEl;
+        });
+      }
+    });
+
+    if (btnContextAddChoices) {
       btnContextAddChoices.addEventListener("click", () => {
-        const c1 = contextChoice1 ? contextChoice1.value.trim() : "";
-        const c2 = contextChoice2 ? contextChoice2.value.trim() : "";
+        const c1 = contextChoice1 ? (contextChoice1.isContentEditable ? getInputValueAsStructuredText(contextChoice1).trim() : contextChoice1.value.trim()) : "";
+        const c2 = contextChoice2 ? (contextChoice2.isContentEditable ? getInputValueAsStructuredText(contextChoice2).trim() : contextChoice2.value.trim()) : "";
         const newChoices = [c1, c2].filter(Boolean);
         if (newChoices.length > 0) {
           state.choices = newChoices;
           renderChoices();
           savePersistentState();
         }
-        if (contextChoice1) contextChoice1.value = "";
-        if (contextChoice2) contextChoice2.value = "";
+        if (contextChoice1) {
+          if (contextChoice1.isContentEditable) setInputValueFromStructuredText(contextChoice1, "");
+          else contextChoice1.value = "";
+        }
+        if (contextChoice2) {
+          if (contextChoice2.isContentEditable) setInputValueFromStructuredText(contextChoice2, "");
+          else contextChoice2.value = "";
+        }
+        if (choicesEmojiBar) choicesEmojiBar.classList.add("hidden");
       });
     }
 
@@ -2014,8 +2033,15 @@ document.addEventListener("DOMContentLoaded", () => {
         state.choices = [];
         renderChoices();
         savePersistentState();
-        if (contextChoice1) contextChoice1.value = "";
-        if (contextChoice2) contextChoice2.value = "";
+        if (contextChoice1) {
+          if (contextChoice1.isContentEditable) setInputValueFromStructuredText(contextChoice1, "");
+          else contextChoice1.value = "";
+        }
+        if (contextChoice2) {
+          if (contextChoice2.isContentEditable) setInputValueFromStructuredText(contextChoice2, "");
+          else contextChoice2.value = "";
+        }
+        if (choicesEmojiBar) choicesEmojiBar.classList.add("hidden");
       });
     }
 
