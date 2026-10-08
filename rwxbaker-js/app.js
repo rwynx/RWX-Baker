@@ -3,6 +3,7 @@
 document.addEventListener("DOMContentLoaded", () => {
 
   const tutorial = window.RWX_TUTORIAL_TEMPLATE || null;
+  const CURRENT_TUTORIAL_VERSION = "20261008_v2";
 
   const state = {
     activeUser: "endminf",
@@ -237,6 +238,32 @@ document.addEventListener("DOMContentLoaded", () => {
     // init & characters
 
   function init() {
+    let tutorialCleared = false;
+    try {
+      const installedTutorialVersion = localStorage.getItem("rwx_tutorial_version");
+      if (installedTutorialVersion !== CURRENT_TUTORIAL_VERSION && window.RWX_TUTORIAL_TEMPLATE) {
+        localStorage.setItem("rwx_tutorial_version", CURRENT_TUTORIAL_VERSION);
+        localStorage.removeItem("rwx_tutorial_cleared");
+        loadTutorialTemplate();
+        setupEventListeners();
+        setupTransmissionModal();
+        initParticleField();
+        initWatermark();
+        updateUI();
+        return;
+      }
+
+      tutorialCleared = localStorage.getItem("rwx_tutorial_cleared") === "true";
+      const savedDeco = localStorage.getItem("rwx_chat_deco");
+      setDecoVisibility(savedDeco === "on");
+      const savedViewMode = localStorage.getItem("rwx_view_mode");
+      if (savedViewMode && ["tablet", "phone"].includes(savedViewMode)) {
+        setViewMode(savedViewMode);
+      } else {
+        setViewMode("tablet");
+      }
+    } catch (e) {}
+
     const hasPersistent = loadPersistentConversation();
 
     renderCharacterList();
@@ -249,19 +276,6 @@ document.addEventListener("DOMContentLoaded", () => {
     setupEventListeners();
     setupTransmissionModal();
     initParticleField();
-
-    let tutorialCleared = false;
-    try {
-      tutorialCleared = localStorage.getItem("rwx_tutorial_cleared") === "true";
-      const savedDeco = localStorage.getItem("rwx_chat_deco");
-      setDecoVisibility(savedDeco === "on");
-      const savedViewMode = localStorage.getItem("rwx_view_mode");
-      if (savedViewMode && ["tablet", "phone"].includes(savedViewMode)) {
-        setViewMode(savedViewMode);
-      } else {
-        setViewMode("tablet");
-      }
-    } catch (e) {}
 
     if (hasPersistent && state.messages.length > 0) {
       if (state.conversationMode === "group") {
@@ -3532,6 +3546,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     try {
       localStorage.removeItem("rwx_tutorial_cleared");
+      localStorage.setItem("rwx_tutorial_version", CURRENT_TUTORIAL_VERSION);
     } catch (_) {}
 
     renderCharacterList(characterSearchInput ? characterSearchInput.value : "");

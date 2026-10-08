@@ -228,15 +228,17 @@ document.addEventListener("DOMContentLoaded", () => {
   let modalFilter = "all";
 
   // storage & persistence
-  const CURRENT_TERMINAL_TEMPLATE_VERSION = "20261008_v1";
+  const CURRENT_TERMINAL_TEMPLATE_VERSION = "20261008_v2";
 
   function loadPersistentState() {
     const installedVersion = localStorage.getItem("rwx_terminal_template_version");
-    const isCleared = localStorage.getItem("rwx_terminal_tutorial_cleared") === "true";
 
-    // Auto-migrate to new default template version if user hasn't explicitly clicked START CLEAN
-    if (installedVersion !== CURRENT_TERMINAL_TEMPLATE_VERSION && !isCleared) {
+    // Auto-migrate to new default template version when version is bumped
+    if (installedVersion !== CURRENT_TERMINAL_TEMPLATE_VERSION) {
       localStorage.setItem("rwx_terminal_template_version", CURRENT_TERMINAL_TEMPLATE_VERSION);
+      try {
+        localStorage.removeItem("rwx_terminal_tutorial_cleared");
+      } catch (_) {}
       const termTpl = (typeof window !== "undefined" && window.RWX_TERMINAL_TEMPLATE) ? window.RWX_TERMINAL_TEMPLATE : null;
       if (termTpl && Array.isArray(termTpl.terminalChannels) && termTpl.terminalChannels.length > 0) {
         terminalChannels = JSON.parse(JSON.stringify(termTpl.terminalChannels));
@@ -273,25 +275,23 @@ document.addEventListener("DOMContentLoaded", () => {
       console.warn("Terminal: Could not parse persistent state:", e);
     }
 
-        if (terminalChannels && terminalChannels.length > 0) {
-      syncChannelToState(activeTerminalChannelId);
-    } else {
-      const termTpl = (typeof window !== "undefined" && window.RWX_TERMINAL_TEMPLATE && localStorage.getItem("rwx_terminal_tutorial_cleared") !== "true")
-        ? window.RWX_TERMINAL_TEMPLATE
-        : null;
+    const hasAnyMessages = terminalChannels && terminalChannels.some((ch) => Array.isArray(ch.messages) && ch.messages.length > 0);
+    const isCleared = localStorage.getItem("rwx_terminal_tutorial_cleared") === "true";
 
-      if (termTpl && Array.isArray(termTpl.terminalChannels) && termTpl.terminalChannels.length > 0) {
+    if (!hasAnyMessages && !isCleared && typeof window !== "undefined" && window.RWX_TERMINAL_TEMPLATE) {
+      const termTpl = window.RWX_TERMINAL_TEMPLATE;
+      if (Array.isArray(termTpl.terminalChannels) && termTpl.terminalChannels.length > 0) {
         terminalChannels = JSON.parse(JSON.stringify(termTpl.terminalChannels));
         activeTerminalChannelId = termTpl.activeTerminalChannelId || terminalChannels[0].id;
         state.activeUser = (termTpl.activeUser === "endminf" || termTpl.activeUser === "endminm") ? termTpl.activeUser : "endminf";
-      } else {
-        const fresh = createFreshDefaultChannel();
-        terminalChannels = [fresh];
-        activeTerminalChannelId = fresh.id;
       }
+    } else if (!terminalChannels || terminalChannels.length === 0) {
+      const fresh = createFreshDefaultChannel();
+      terminalChannels = [fresh];
+      activeTerminalChannelId = fresh.id;
     }
 
-        syncChannelToState(activeTerminalChannelId);
+    syncChannelToState(activeTerminalChannelId);
   }
 
   function savePersistentState() {
