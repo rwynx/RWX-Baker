@@ -984,6 +984,21 @@ body.terminal-standalone-page {
   text-transform: uppercase;
 }
 
+.terminal-studio-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.terminal-studio-header-actions .small-secondary-btn,
+.terminal-studio-header-actions .small-danger-btn {
+  white-space: nowrap;
+}
+
+.terminal-compose-studio.is-editing .terminal-studio-header-actions {
+  display: none !important;
+}
+
 .terminal-context-tabs {
   display: grid;
   grid-template-columns: repeat(4, 1fr);

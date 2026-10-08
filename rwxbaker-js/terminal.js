@@ -228,8 +228,26 @@ document.addEventListener("DOMContentLoaded", () => {
   let modalFilter = "all";
 
   // storage & persistence
+  const CURRENT_TERMINAL_TEMPLATE_VERSION = "20261008_v1";
 
   function loadPersistentState() {
+    const installedVersion = localStorage.getItem("rwx_terminal_template_version");
+    const isCleared = localStorage.getItem("rwx_terminal_tutorial_cleared") === "true";
+
+    // Auto-migrate to new default template version if user hasn't explicitly clicked START CLEAN
+    if (installedVersion !== CURRENT_TERMINAL_TEMPLATE_VERSION && !isCleared) {
+      localStorage.setItem("rwx_terminal_template_version", CURRENT_TERMINAL_TEMPLATE_VERSION);
+      const termTpl = (typeof window !== "undefined" && window.RWX_TERMINAL_TEMPLATE) ? window.RWX_TERMINAL_TEMPLATE : null;
+      if (termTpl && Array.isArray(termTpl.terminalChannels) && termTpl.terminalChannels.length > 0) {
+        terminalChannels = JSON.parse(JSON.stringify(termTpl.terminalChannels));
+        activeTerminalChannelId = termTpl.activeTerminalChannelId || terminalChannels[0].id;
+        state.activeUser = (termTpl.activeUser === "endminf" || termTpl.activeUser === "endminm") ? termTpl.activeUser : "endminf";
+        syncChannelToState(activeTerminalChannelId);
+        savePersistentState();
+        return;
+      }
+    }
+
     try {
       const raw = localStorage.getItem("rwx_terminal_persistent_state");
       if (raw) {
@@ -988,6 +1006,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function loadTutorialTemplate() {
+    exitEditMode();
     const termTpl = window.RWX_TERMINAL_TEMPLATE;
     if (termTpl && Array.isArray(termTpl.terminalChannels) && termTpl.terminalChannels.length > 0) {
       terminalChannels = JSON.parse(JSON.stringify(termTpl.terminalChannels));
@@ -995,6 +1014,7 @@ document.addEventListener("DOMContentLoaded", () => {
       state.activeUser = (termTpl.activeUser === "endminf" || termTpl.activeUser === "endminm") ? termTpl.activeUser : "endminf";
       try {
         localStorage.removeItem("rwx_terminal_tutorial_cleared");
+        localStorage.setItem("rwx_terminal_template_version", CURRENT_TERMINAL_TEMPLATE_VERSION);
       } catch (_) {}
       syncChannelToState(activeTerminalChannelId);
       renderTerminalChannels();
@@ -1005,6 +1025,7 @@ document.addEventListener("DOMContentLoaded", () => {
       updateActiveSpeakerCards();
       renderSquadRoster();
       savePersistentState();
+      scrollToBottom();
       return;
     }
     const tutorial = window.RWX_TUTORIAL_TEMPLATE;
@@ -1656,7 +1677,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (btnTerminalClearChat) {
       btnTerminalClearChat.addEventListener("click", () => {
-        clearTerminalConversation();
+        clearAllTerminalChannels();
       });
     }
 
