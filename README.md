@@ -1,6 +1,6 @@
 # RWX Baker • Arknights: Endfield Message Generator/Dialogue Maker
 
-> **An in-browser recreation and message generator for *Arknights: Endfield* "Baker" messaging app.**
+> **An in-browser recreation of the "Baker" messaging app and a message generator for *Arknights: Endfield*.**
 
 [![Live Tool](https://img.shields.io/badge/Live_App-baker.rwyn.ch-ffd200.svg?style=flat&logoColor=black)](https://baker.rwyn.ch/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
