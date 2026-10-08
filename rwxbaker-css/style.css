@@ -580,23 +580,47 @@ canvas#field {
 }
 
 /* export mode cleanups (hide scrollbars during capture) */
-#phone-frame.is-exporting {
+#phone-frame.is-exporting,
+#phone-frame.is-exporting #terminal-main-pane,
+#terminal-main-pane.is-exporting {
   box-shadow: none !important;
+  background: transparent !important;
 }
 
-#phone-frame.is-exporting #chat-viewport {
+#phone-frame.is-exporting #chat-viewport,
+#terminal-main-pane.is-exporting #chat-viewport {
   scrollbar-width: none !important;
+  -webkit-mask-image: none !important;
+  mask-image: none !important;
 }
 
-#phone-frame.is-exporting #chat-viewport::-webkit-scrollbar {
+#phone-frame.is-exporting #chat-viewport::-webkit-scrollbar,
+#terminal-main-pane.is-exporting #chat-viewport::-webkit-scrollbar {
   display: none !important;
 }
 
 #phone-frame.is-exporting .selected .message-bubble,
 #phone-frame.is-exporting .selected .message-image-card,
-#phone-frame.is-exporting .selected .message-sticker-card {
+#phone-frame.is-exporting .selected .message-sticker-card,
+#phone-frame.is-exporting .message-item.selected .message-bubble,
+#terminal-main-pane.is-exporting .selected .message-bubble,
+#terminal-main-pane.is-exporting .selected .message-image-card,
+#terminal-main-pane.is-exporting .selected .message-sticker-card,
+#terminal-main-pane.is-exporting .message-item.selected .message-bubble {
   outline: none !important;
   filter: none !important;
+  box-shadow: none !important;
+}
+
+#phone-frame.is-exporting #terminal-window-body,
+#terminal-main-pane.is-exporting #terminal-window-body {
+  background:
+    radial-gradient(ellipse 90% 70% at 20% 25%, rgba(20, 45, 75, 0.22) 0%, transparent 70%),
+    radial-gradient(ellipse 80% 60% at 85% 75%, rgba(50, 25, 65, 0.20) 0%, transparent 65%),
+    linear-gradient(180deg, rgba(16, 17, 20, 0.94) 0%, rgba(12, 13, 16, 0.98) 100%) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: none !important;
 }
 
 .editor-toggle-btn {
@@ -1644,6 +1668,29 @@ canvas#field {
   cursor: pointer;
 }
 
+.layers-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.small-secondary-btn {
+  background: transparent;
+  color: #8c8d94;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 4px;
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.small-secondary-btn:hover {
+  background: rgba(255, 239, 0, 0.18);
+  border-color: #ffef00;
+  color: #ffef00;
+}
+
 .small-danger-btn:hover {
   background: #e53935;
   color: #fff;
@@ -2006,15 +2053,14 @@ canvas#field {
   height: var(--message-height);
   width: var(--message-width);
   align-self: center;
-  background-color: var(--bg-chat-viewport);
-  background: radial-gradient(circle at 50% 50%, #26272c 0%, #1d1e21 100%);
-  border: 1.5px solid #45464a;
-  border-radius: 8px;
+  background: transparent;
+  border: none;
+  border-radius: 0;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow: visible;
   position: relative;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  box-shadow: none;
   zoom: var(--message-ui-scale);
   transform: translate(var(--message-position-x), var(--message-position-y));
 }
@@ -2191,6 +2237,9 @@ canvas#field {
 
 #chat-viewport {
   flex: 1;
+  width: 100%;
+  min-height: 0;
+  margin-top: 10px;
   overflow-y: auto;
   scrollbar-gutter: stable;
   padding: 24px 20px;
@@ -2201,6 +2250,20 @@ canvas#field {
   background: transparent;
   position: relative;
   z-index: 2;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    #000 12px,
+    #000 calc(100% - 12px),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    #000 12px,
+    #000 calc(100% - 12px),
+    transparent 100%
+  );
 }
 
 #chat-viewport::-webkit-scrollbar {
@@ -3012,8 +3075,35 @@ body.is-resizing-image {
   width: var(--message-width);
   flex: 0 0 var(--message-width);
   max-width: 100%;
+  background-color: var(--bg-chat-viewport);
+  background: radial-gradient(circle at 50% 50%, #26272c 0%, #1d1e21 100%);
   border-radius: 22px;
   border: 1.5px solid #45464a;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+}
+
+.phone-mode #chat-header {
+  display: flex !important;
+}
+
+.phone-mode .terminal-chat-header,
+.phone-mode .terminal-frame-top,
+.phone-mode .terminal-input-decoration {
+  display: none !important;
+}
+
+.phone-mode #terminal-main-pane,
+.phone-mode #terminal-window-body {
+  display: contents !important;
+}
+
+.phone-mode #chat-viewport {
+  margin-top: 0;
+}
+
+.phone-mode #input-footer {
+  border-radius: 0 0 22px 22px !important;
 }
 
 @media (max-width: 420px) {
@@ -3550,9 +3640,10 @@ body.legal-page::-webkit-scrollbar-thumb:hover {
 
 .rwx-export-watermark {
   position: absolute;
-  top: 74px;
-  right: 36px;
-  opacity: 0.50;
+  top: var(--watermark-position-top, 73px);
+  right: var(--watermark-position-right, 36px);
+  left: auto;
+  opacity: var(--watermark-opacity, 0.50);
   pointer-events: none;
   user-select: none;
   z-index: 99;
@@ -3566,4 +3657,61 @@ body.legal-page::-webkit-scrollbar-thumb:hover {
   max-width: 125px;
 }
 
+/* terminal mode layout */
+.top-quick-actions {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  z-index: 200;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
 
+.top-quick-actions .editor-toggle-btn {
+  position: static;
+}
+
+#chat-header {
+  display: none !important;
+}
+
+#terminal-sidebar {
+  display: none !important;
+}
+
+#terminal-main-pane {
+  display: flex !important;
+  flex-direction: column !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  gap: clamp(6px, 0.8vh, 10px) !important;
+  position: relative !important;
+}
+
+#terminal-window-body {
+  display: flex !important;
+  flex-direction: column !important;
+  min-height: 0;
+  height: 100%;
+  position: relative;
+  isolation: isolate;
+  border-left: 1.5px solid rgb(202 201 201 / 0.62) !important;
+  border-right: 1.5px solid rgb(202 201 201 / 0.62) !important;
+  border-bottom: 1.5px solid rgb(202 201 201 / 0.62) !important;
+  border-top: none !important;
+  border-radius: 0 0 16px 16px !important;
+  background: rgba(20, 20, 19, var(--terminal-chat-bg-opacity, 0.78)) !important;
+  box-shadow:
+    inset 0 0 28px rgba(255, 255, 255, 0.025),
+    0 12px 36px rgba(0, 0, 0, 0.6) !important;
+  backdrop-filter: blur(var(--terminal-chat-blur, 14px)) !important;
+  -webkit-backdrop-filter: blur(var(--terminal-chat-blur, 14px)) !important;
+  overflow: hidden !important;
+}
+
+#terminal-window-body .chat-bg-decorations {
+  top: 10px;
+  bottom: 58px;
+}

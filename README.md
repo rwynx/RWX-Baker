@@ -12,7 +12,7 @@ First and foremost, GLORY TO HYPERGRYPH!<br>GLORY TO THE COMMUNITY OF PLAYERS WH
 
 **RWX Baker** is a lightweight and pixel-faithful *(god it was painful)* web tool that lets you craft mock conversations, roleplay dialogues, and story scenarios using the in-game *Baker* SNS app styling from **Arknights: Endfield**. In short, an **Arknights: Endfield** message generator.
 
-*RWX (ar-vi-ex) comes from RWyn (ar-win) eXperimenting, like any other tool, app or bot of mine.*
+*RWX (ar-vi-ex) comes from RWyn (ar-win) eXperiments, like any other tool, app or bot of mine.*
 
 ---
 <br>
@@ -64,13 +64,22 @@ First and foremost, GLORY TO HYPERGRYPH!<br>GLORY TO THE COMMUNITY OF PLAYERS WH
   - **Anti-Leak Telemetry Stamp:** Exports automatically include a subtle Endfield OS telemetry stamp (`// RWX.SYS-01` or `RWX // BKR ■ 01`) dynamically rendered during capture to verify fan/community origin.<br><br>Click on the HINTS button see more tips about these export options.<br><br>
   ![ExampleExportOptions](showcase/export-options.gif)
 - **Dual Viewports:** Switch seamlessly between **Tablet** and **Phone** aspect modes.<br>Note: Phone mode is currently a bit broken, since I initially started making this tool for the actual, in-game size of the Baker, not compact Phone version. But I will hopefully fix it in the future. For now, use it only for small 1 on 1 chats. That shouldn't break anything.<br><br><img src="showcase/switch-views.png" width="45%" alt="Description of image">
-- **100% Private & Client-Side:** No sign-ups, no cookies, no advertising, and no analytics. Every keystroke and image export is processed strictly within your local browser.
+- **Terminal Mode (In-Game BAKER Interface) with conversations menu:** *(WIP)*
+  - Full-screen recreation of the actual in-game terminal interface.
+  - Multi-channel session list (direct links & group channels) with fast channel switching.
+  - Quick transmitter controls, squad roster picking, and independent PNG exports.
+
+*Still VERY much a work in progress and a bit rough, expect bugs.* If something breaks or looks cursed, let me know on Discord (`@rwyn`) or open an issue here.<br>Accessible via the button in the editor or directly at [`terminal.html`](https://baker.rwyn.ch/terminal.html).
+
+- **100% Private & Client-Side:** No sign-ups, no cookies, no advertising, and no analytics. Every keystroke, every word and any image export is processed strictly within your local browser.
 
 ---
 
 ## Want to run it locally?
 
 RWX Baker has **zero build dependencies**, it runs directly out of the box using vanilla HTML, CSS, and JS.<br>I wanted it to be this way from the start. Anyone can easily run it.
+
+**NOTE:** If you want to make adjustments for the actual LIVE version, dont hardcode values<br> in html or js because everything in css file is tuned for easy pixel-perfect adjustments.
 
 1. **Clone the repository:**
    ```bash
@@ -104,6 +113,7 @@ RWX Baker has **zero build dependencies**, it runs directly out of the box using
 
 ```
 ├── index.html                           # main editor
+├── terminal.html                        # in-game J-Screen terminal mode (WIP)
 ├── watermark-styles.html                # interactive watermark lab & code generator
 ├── CUSTOMIZATION.md                     # CSS variables, offsets & styling guide
 ├── privacy.html                         
@@ -111,9 +121,12 @@ RWX Baker has **zero build dependencies**, it runs directly out of the box using
 ├── LICENSE                              
 ├── showcase                             # example screenshots
 ├── rwxbaker-css/
-│   └── style.css                        # complete studio & preview styling
+│   ├── style.css                        # complete studio & preview styling
+│   └── terminal.css                     # terminal mode & full in-game baker UI layout styling (still in beta)
 ├── rwxbaker-js/
 │   ├── app.js                           # app core logic & state
+│   ├── terminal.js                      # terminal mode logic
+│   ├── characters.js                    # shared operator & NPC database
 │   └── dom-to-image-more.min.js         # client-side image rendering engine
 └── rwxbaker-assets/                     # only used bundle (~8.9 MB)
     ├── avatars/                         # operator & NPC portraits
@@ -135,8 +148,9 @@ Want to do some lazy edits/tweaks to layout? Adjust chat dimensions, or skin the
 - Bubble alignments, avatars, and media offsets (stickers, images etc.)
 - Header asset controls, move the chat header assets around (especially phone view asset pos needs help)
 - Topographic map decoration controls and opacity
-- Export watermark stamp styles, positions, and live tuning workbench ([LIVE • Watermark Styles](https://baker.rwyn.ch/watermark-styles.html))
+- Export watermark stamp styles, positions, and live tuning workbench (**[LIVE • Watermark Styles](https://baker.rwyn.ch/watermark-styles.html)**)
 - Glow effects, animated button borders, and color themes
+- Terminal mode canvas sizing, channel column widths, and notch variables in `terminal.css`.
 - And some other stuff
 
 ---
@@ -144,11 +158,13 @@ Want to do some lazy edits/tweaks to layout? Adjust chat dimensions, or skin the
 ## Contributing
 
 Contributions are welcomed. If you'd like to help:
-- Adding newly released characters, NPCs, or stickers as the game updates
-- Reporting UI rendering bugs or recommending workflow
-- Submitting localization or accessibility improvements
+- Adding newly released characters, NPCs, or stickers as the game updates,
+- Reporting UI rendering bugs or recommending workflow,
+- Submitting localization or accessibility improvements,
 
 Feel free to open an **issue** or submit a **pull request**.
+
+**NOTE:** If you want to make adjustments for the actual LIVE version, dont hardcode values<br> in html or js because everything in css file is tuned for easy pixel-perfect adjustments.
 
 ---
 

@@ -1,23 +1,21 @@
-/* ==========================================================================
-   Baker SNS Editor - Application Logic
-   ========================================================================== */
+/* baker sns editor */
 
 document.addEventListener("DOMContentLoaded", () => {
 
   const tutorial = window.RWX_TUTORIAL_TEMPLATE || null;
 
   const state = {
-    activeUser: tutorial ? tutorial.activeUser : "endminf",
-    activeCharacterId: tutorial ? tutorial.activeCharacterId : null,
+    activeUser: "endminf",
+    activeCharacterId: "laevatain",
     contextSender: "incoming", 
-    conversationMode: tutorial ? tutorial.conversationMode : "direct",
-    groupParticipantIds: tutorial ? [...tutorial.groupParticipantIds] : [], 
-    groupName: tutorial ? tutorial.groupName : "",
+    conversationMode: "direct",
+    groupParticipantIds: [], 
+    groupName: "",
     contextType: "text", // "text", "image", "reaction"
     uploadedImageBase64: null,
     selectedMessageId: null,
-    messages: tutorial ? JSON.parse(JSON.stringify(tutorial.messages)) : [],
-    choices: tutorial ? [...tutorial.choices] : [],
+    messages: [],
+    choices: [],
     exportMode: "screen",
   };
 
@@ -121,6 +119,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const messageList = document.getElementById("message-list");
   const chatViewport = document.getElementById("chat-viewport");
   const chatHeaderName = document.getElementById("chat-header-name");
+  const terminalChatHeaderName = document.getElementById("terminal-chat-header-name");
   const messageInput = document.getElementById("message-input");
   const btnSend = document.getElementById("btn-send");
 
@@ -235,11 +234,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  /* ==========================================================================
-     Initialization & Character Rendering
-     ========================================================================== */
+    // init & characters
 
   function init() {
+    const hasPersistent = loadPersistentConversation();
+
     renderCharacterList();
     renderStickerPicker();
     renderEmojiPicker();
@@ -248,6 +247,7 @@ document.addEventListener("DOMContentLoaded", () => {
     renderContextStickerPicker();
     renderReactionEmojiGrid();
     setupEventListeners();
+    setupTransmissionModal();
     initParticleField();
 
     let tutorialCleared = false;
@@ -255,10 +255,37 @@ document.addEventListener("DOMContentLoaded", () => {
       tutorialCleared = localStorage.getItem("rwx_tutorial_cleared") === "true";
       const savedDeco = localStorage.getItem("rwx_chat_deco");
       setDecoVisibility(savedDeco === "on");
+      const savedViewMode = localStorage.getItem("rwx_view_mode");
+      if (savedViewMode && ["tablet", "phone"].includes(savedViewMode)) {
+        setViewMode(savedViewMode);
+      } else {
+        setViewMode("tablet");
+      }
     } catch (e) {}
 
-    if (!tutorialCleared && state.messages.length > 0) {
-      btnClearConversation.classList.add("highlight-pulse");
+    if (hasPersistent && state.messages.length > 0) {
+      if (state.conversationMode === "group") {
+        if (contextPanelSection) contextPanelSection.classList.add("group-mode-active");
+        if (btnConversationDirect) btnConversationDirect.classList.remove("active");
+        if (btnConversationGroup) btnConversationGroup.classList.add("active");
+      }
+      if (groupNameInput) {
+        groupNameInput.value = state.groupName || "";
+      }
+      renderGroupParticipants();
+      renderCharacterList();
+      renderConversation();
+      renderChoices();
+    } else if (!tutorialCleared && window.RWX_TUTORIAL_TEMPLATE) {
+      loadTutorialTemplate();
+      if (btnClearConversation) {
+        btnClearConversation.classList.add("highlight-pulse");
+      }
+    } else {
+      renderGroupParticipants();
+      renderCharacterList();
+      renderConversation();
+      renderChoices();
     }
 
     initWatermark();
@@ -375,6 +402,10 @@ document.addEventListener("DOMContentLoaded", () => {
       chatHeaderName.textContent = currentChar ? currentChar.name : "Select character...";
     }
 
+    if (terminalChatHeaderName) {
+      terminalChatHeaderName.textContent = chatHeaderName.textContent;
+    }
+
     const userBtns = userSwitcher.querySelectorAll(".user-btn");
     userBtns.forEach((btn) => {
       if (btn.dataset.user === state.activeUser) {
@@ -388,11 +419,12 @@ document.addEventListener("DOMContentLoaded", () => {
     renderLayersList();
     renderChoices();
     updateReactionTargetSelect();
+    if (appContainer && appContainer.classList.contains("terminal-mode")) {
+      renderTerminalChannels();
+    }
   }
 
-  /* ==========================================================================
-     Drag & Drop Message Reordering (Shared between Chat UI & Layers)
-     ========================================================================== */
+    // drag and drop
 
   let draggedMessageId = null;
 
@@ -534,18 +566,12 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  /* ==========================================================================
-     Message Rendering & Grouping
-     ========================================================================== */
+    // message rendering
 
   function renderConversation() {
     messageList.innerHTML = "";
 
     if (state.messages.length === 0) {
-      const emptyPrompt = document.createElement("div");
-      emptyPrompt.classList.add("empty-conversation-prompt");
-      emptyPrompt.textContent = "Select a character and send a message to begin...";
-      messageList.appendChild(emptyPrompt);
       return;
     }
 
@@ -771,11 +797,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     scrollToBottom();
+    savePersistentConversation();
   }
 
-  /* ==========================================================================
-     Layers List & Editing
-     ========================================================================== */
+    // layers & edit
 
   function renderLayersList() {
     layersListEl.innerHTML = "";
@@ -1047,9 +1072,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  /* ==========================================================================
-     Event Handlers & User Actions
-     ========================================================================== */
+    // event handlers
 
   function setupEventListeners() {
     btnConversationDirect.addEventListener("click", () => {
@@ -1085,6 +1108,25 @@ document.addEventListener("DOMContentLoaded", () => {
         setViewMode(button.dataset.viewMode);
       });
     });
+
+    const btnLaunchTerminal = document.getElementById("btn-launch-terminal");
+    if (btnLaunchTerminal) {
+      btnLaunchTerminal.addEventListener("click", () => {
+        savePersistentConversation();
+        window.location.href = "terminal.html";
+      });
+    }
+
+    window.addEventListener("beforeunload", () => {
+      savePersistentConversation();
+    });
+
+    const btnTerminalNewChat = document.getElementById("btn-terminal-new-chat");
+    if (btnTerminalNewChat) {
+      btnTerminalNewChat.addEventListener("click", () => {
+        openTransmissionModal(false);
+      });
+    }
 
     decoToggleButtons.forEach((button) => {
       button.addEventListener("click", () => {
@@ -1202,8 +1244,24 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && helpModal && !helpModal.classList.contains("hidden")) {
-        helpModal.classList.add("hidden");
+      if (e.key === "Escape") {
+        const transModal = document.getElementById("new-transmission-modal");
+        if (transModal && !transModal.classList.contains("hidden")) {
+          closeTransmissionModal();
+          return;
+        }
+        if (helpModal && !helpModal.classList.contains("hidden")) {
+          helpModal.classList.add("hidden");
+        }
+        if (editorPanel && editorPanel.classList.contains("open")) {
+          editorPanel.classList.remove("open");
+          const editorBackdrop = document.getElementById("editor-backdrop");
+          if (editorBackdrop) editorBackdrop.classList.remove("active");
+        }
+      }
+      if ((e.key === "j" || e.key === "J") && !e.target.matches("input, textarea, select, [contenteditable]")) {
+        const isCurrentlyTerminal = appContainer.classList.contains("terminal-mode");
+        setViewMode(isCurrentlyTerminal ? "tablet" : "terminal");
       }
     });
 
@@ -1552,7 +1610,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const text = getInputValueAsStructuredText(messageInput).trim();
       if (text) {
         addMessage({
-          sender: "outgoing",
+          sender: state.contextSender || "outgoing",
           characterId: state.activeCharacterId,
           type: "text",
           text: text,
@@ -1629,9 +1687,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
       renderCharacterList(characterSearchInput ? characterSearchInput.value : "");
       renderGroupParticipants();
+      renderConversation();
       renderChoices();
       updateUI();
+      savePersistentConversation();
     });
+
+    const btnRestoreTutorial = document.getElementById("btn-restore-tutorial");
+    if (btnRestoreTutorial) {
+      btnRestoreTutorial.addEventListener("click", () => {
+        loadTutorialTemplate();
+      });
+    }
 
     btnEmoticon.addEventListener("click", () => {
       stickerPanel.classList.toggle("hidden");
@@ -1797,12 +1864,619 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+    // terminal channels
+
+  let activeTerminalChannelId = "channel-current";
+  const terminalChannels = [
+    {
+      id: "channel-current",
+      name: "AIC Supervisor Desk",
+      avatar: "rwxbaker-assets/deco/group-channel.webp",
+      mode: state.conversationMode || "group",
+      characterId: state.activeCharacterId || "pelica",
+      groupName: state.groupName || "AIC Supervisor Desk",
+      groupParticipantIds: state.groupParticipantIds && state.groupParticipantIds.length ? [...state.groupParticipantIds] : ["pelica", "chen", "wolfgard"],
+      messages: state.messages,
+      choices: state.choices,
+    },
+    {
+      id: "channel-ops-4",
+      name: "Endfield Crisis Team",
+      avatar: "rwxbaker-assets/deco/group-channel.webp",
+      mode: "group",
+      characterId: "wolfgard",
+      groupName: "Endfield Crisis Team",
+      groupParticipantIds: ["pelica", "chen", "wolfgard"],
+      messages: [
+        {
+          id: "m_ops_1",
+          sender: "incoming",
+          characterId: "wolfgard",
+          type: "text",
+          text: "Endmin, do you copy? This is a test message for the terminal group feature!",
+          imageSrc: null,
+          reactions: [],
+        },
+        {
+          id: "m_ops_2",
+          sender: "incoming",
+          characterId: "pelica",
+          type: "text",
+          text: "You can create a group channel from above, just hit 'NEW' 💫",
+          imageSrc: null,
+          reactions: [],
+        },
+        {
+          id: "m_ops_3",
+          sender: "incoming",
+          characterId: "chen",
+          type: "text",
+          text: "Easy peasy! Very straightforward huh? Hehe~",
+          imageSrc: null,
+          reactions: [],
+        },
+        {
+          id: "m_ops_4",
+          sender: "incoming",
+          characterId: "wolfgard",
+          type: "text",
+          text: "You can choose the Active Character on the left side.",
+          imageSrc: null,
+          reactions: [],
+        },
+      ],
+      choices: ["Wow that's easy!", "I'm trying right now."],
+    },
+    {
+      id: "channel-recon",
+      name: "Chen Qianyu",
+      avatar: "rwxbaker-assets/avatars/operator/icon_round_chr_0005_chen.png",
+      mode: "direct",
+      characterId: "chen",
+      groupName: "",
+      groupParticipantIds: [],
+      messages: [
+        {
+          id: "m_recon_1",
+          sender: "incoming",
+          characterId: "chen",
+          type: "text",
+          text: "Hey there, Endministrator!",
+          imageSrc: null,
+          reactions: [],
+        },
+        {
+          id: "m_recon_2",
+          sender: "incoming",
+          characterId: "chen",
+          type: "text",
+          text: "Hehe, got any new mission for me?",
+          imageSrc: null,
+          reactions: [],
+        },
+      ],
+      choices: ["Hey there!", "Where are you right now?"],
+    },
+    {
+      id: "channel-logistics",
+      name: "Gilberta",
+      avatar: "rwxbaker-assets/avatars/operator/icon_round_chr_0013_aglina.png",
+      mode: "direct",
+      characterId: "angelina",
+      groupName: "",
+      groupParticipantIds: [],
+      messages: [
+        {
+          id: "m_log_1",
+          sender: "incoming",
+          characterId: "angelina",
+          type: "text",
+          text: "Hey Endmin! I have a package for you!",
+          imageSrc: null,
+          reactions: [],
+        },
+        {
+          id: "m_log_2",
+          sender: "incoming",
+          characterId: "angelina",
+          type: "text",
+          text: "Should I drop it off at the supply depot or send it to your current location?",
+          imageSrc: null,
+          reactions: [],
+        },
+      ],
+      choices: ["I'm in Dijiang right now, you can come!", "Ah, give it to Perlica or Chen please."],
+    },
+  ];
+
+  function syncActiveTerminalChannel() {
+    const curCh = terminalChannels.find((c) => c.id === activeTerminalChannelId);
+    if (!curCh) return;
+    curCh.messages = state.messages;
+    curCh.choices = [...state.choices];
+    curCh.mode = state.conversationMode;
+    curCh.characterId = state.activeCharacterId;
+    curCh.groupName = state.groupName;
+    curCh.groupParticipantIds = [...state.groupParticipantIds];
+
+    if (state.conversationMode === "group") {
+      curCh.name = state.groupName && state.groupName.trim() ? state.groupName.trim() : "Group Operation";
+      curCh.avatar = "rwxbaker-assets/deco/group-channel.webp";
+    } else {
+      const char = state.activeCharacterId ? CHARACTERS[state.activeCharacterId] : null;
+      curCh.name = char ? char.name : "Direct Transmission";
+      curCh.avatar = char ? char.avatar : "rwxbaker-assets/avatars/operator/icon_round_chr_0004_pelica.png";
+    }
+  }
+
+  function renderTerminalChannels() {
+    const container = document.getElementById("terminal-session-cards");
+    if (!container) return;
+    syncActiveTerminalChannel();
+
+    container.innerHTML = "";
+    terminalChannels.forEach((ch) => {
+      const isSelected = ch.id === activeTerminalChannelId;
+      const card = document.createElement("article");
+      card.className = `terminal-session-card ${isSelected ? "terminal-session-card--selected" : ""}`;
+      card.dataset.channelId = ch.id;
+
+      let previewText = "No messages yet";
+      if (ch.messages && ch.messages.length > 0) {
+        const lastMsg = ch.messages[ch.messages.length - 1];
+        if (lastMsg.type === "image") {
+          previewText = "[Image transmitted]";
+        } else if (lastMsg.type === "reaction") {
+          previewText = "[Reaction signal]";
+        } else {
+          const cleanedText = (lastMsg.text || "").replace(/\[emoji:[^\]]+\]/g, "").trim();
+          previewText = cleanedText || "[Emoji]";
+        }
+      }
+
+      const frameImg = document.createElement("img");
+      frameImg.className = "terminal-session-card__frame";
+      frameImg.src = "rwxbaker-assets/deco/session-card-frame.webp";
+      frameImg.alt = "";
+
+      const faintImg = document.createElement("img");
+      faintImg.className = "terminal-session-card__faint";
+      faintImg.src = "rwxbaker-assets/deco/session-card-faint.webp";
+      faintImg.alt = "";
+
+      const avatarWrapper = document.createElement("div");
+      avatarWrapper.className = "terminal-session-card__avatar";
+      const avatarImg = document.createElement("img");
+      avatarImg.className = "terminal-session-card__avatar-image";
+      avatarImg.src = ch.avatar || "rwxbaker-assets/deco/group-channel.webp";
+      avatarImg.alt = ch.name;
+      avatarWrapper.appendChild(avatarImg);
+
+      const contentDiv = document.createElement("div");
+      contentDiv.className = "terminal-session-card__content";
+
+      const titleDiv = document.createElement("div");
+      titleDiv.className = "terminal-session-card__title";
+      titleDiv.textContent = ch.name;
+
+      const previewDiv = document.createElement("div");
+      previewDiv.className = "terminal-session-card__preview";
+      previewDiv.textContent = previewText;
+
+      const underlineImg = document.createElement("img");
+      underlineImg.className = "terminal-session-card__underline";
+      underlineImg.src = "rwxbaker-assets/deco/session-card-underline.webp";
+      underlineImg.alt = "";
+
+      contentDiv.appendChild(titleDiv);
+      contentDiv.appendChild(previewDiv);
+      contentDiv.appendChild(underlineImg);
+
+      const detailImg = document.createElement("img");
+      detailImg.className = "terminal-session-card__detail";
+      detailImg.src = "rwxbaker-assets/deco/session-card-detail.webp";
+      detailImg.alt = "";
+
+      card.appendChild(frameImg);
+      card.appendChild(faintImg);
+      card.appendChild(avatarWrapper);
+      card.appendChild(contentDiv);
+      card.appendChild(detailImg);
+
+      card.addEventListener("click", () => {
+        if (ch.id !== activeTerminalChannelId) {
+          selectTerminalChannel(ch.id);
+        }
+      });
+
+      container.appendChild(card);
+    });
+  }
+
+  function selectTerminalChannel(channelId) {
+    if (channelId === activeTerminalChannelId) return;
+
+    // 1. Save current state into current active channel
+    const prevCh = terminalChannels.find((c) => c.id === activeTerminalChannelId);
+    if (prevCh) {
+      prevCh.messages = JSON.parse(JSON.stringify(state.messages));
+      prevCh.choices = [...state.choices];
+      prevCh.mode = state.conversationMode;
+      prevCh.characterId = state.activeCharacterId;
+      prevCh.groupName = state.groupName;
+      prevCh.groupParticipantIds = [...state.groupParticipantIds];
+      if (state.conversationMode === "group") {
+        prevCh.name = state.groupName && state.groupName.trim() ? state.groupName.trim() : "Group Operation";
+        prevCh.avatar = "rwxbaker-assets/deco/group-channel.webp";
+      } else {
+        const char = state.activeCharacterId ? CHARACTERS[state.activeCharacterId] : null;
+        prevCh.name = char ? char.name : "Direct Transmission";
+        prevCh.avatar = char ? char.avatar : "rwxbaker-assets/avatars/operator/icon_round_chr_0004_pelica.png";
+      }
+    }
+
+    // 2. Find target channel
+    const nextCh = terminalChannels.find((c) => c.id === channelId);
+    if (!nextCh) return;
+
+    activeTerminalChannelId = channelId;
+
+    // 3. Load target channel into state
+    state.messages = JSON.parse(JSON.stringify(nextCh.messages || []));
+    state.choices = nextCh.choices ? [...nextCh.choices] : [];
+    state.conversationMode = nextCh.mode || "direct";
+    state.activeCharacterId = nextCh.characterId || null;
+    state.groupName = nextCh.groupName || "";
+    state.groupParticipantIds = nextCh.groupParticipantIds ? [...nextCh.groupParticipantIds] : [];
+    state.selectedMessageId = null;
+
+    // 4. Update conversation mode UI in editor
+    if (state.conversationMode === "group") {
+      btnConversationGroup.classList.add("active");
+      btnConversationDirect.classList.remove("active");
+      groupParticipants.classList.remove("hidden");
+      contextPanelSection.classList.add("group-mode-active");
+      if (groupNameInput) {
+        groupNameInput.value = state.groupName || "";
+      }
+    } else {
+      btnConversationDirect.classList.add("active");
+      btnConversationGroup.classList.remove("active");
+      groupParticipants.classList.add("hidden");
+      contextPanelSection.classList.remove("group-mode-active");
+    }
+
+    // 5. Re-render UI
+    renderCharacterList();
+    renderGroupParticipants();
+    renderChoices();
+    updateUI();
+    renderTerminalChannels();
+  }
+
+  function createNewTerminalChannel() {
+    syncActiveTerminalChannel();
+
+    const newNum = terminalChannels.length + 1;
+    const newId = "channel-" + Date.now();
+    const newName = `New Channel ${newNum}`;
+    const newCh = {
+      id: newId,
+      name: newName,
+      avatar: "rwxbaker-assets/deco/group-channel.webp",
+      mode: "direct",
+      characterId: "pelica",
+      groupName: "",
+      groupParticipantIds: [],
+      messages: [
+        {
+          id: "msg_" + Date.now() + "_1",
+          sender: "incoming",
+          characterId: "pelica",
+          type: "text",
+          text: `Terminal channel established: ${newName}. Ready for transmission.`,
+          imageSrc: null,
+          reactions: [],
+        },
+      ],
+      choices: [],
+    };
+
+    terminalChannels.push(newCh);
+    selectTerminalChannel(newId);
+  }
+
+    // transmission modal
+
+  const transmissionModal = document.getElementById("new-transmission-modal");
+  const transmissionModalHeading = document.getElementById("transmission-modal-heading");
+  const btnCloseTransmissionModal = document.getElementById("btn-close-transmission-modal");
+  const modalTabDirect = document.getElementById("modal-tab-direct");
+  const modalTabGroup = document.getElementById("modal-tab-group");
+  const transmissionGroupConfig = document.getElementById("transmission-group-config");
+  const transmissionGroupNameInput = document.getElementById("transmission-group-name");
+  const transmissionSelectedChips = document.getElementById("transmission-selected-chips");
+  const transmissionCharacterSearch = document.getElementById("transmission-character-search");
+  const transmissionCharacterGrid = document.getElementById("transmission-character-grid");
+  const btnCancelTransmission = document.getElementById("btn-cancel-transmission");
+  const btnSubmitTransmission = document.getElementById("btn-submit-transmission");
+  const transmissionSubmitLabel = document.getElementById("transmission-submit-label");
+
+  let modalMode = "direct";
+  let modalSelectedCharId = null;
+  let modalGroupParticipants = [];
+  let modalGroupName = "";
+  let modalFilter = "all";
+  let modalIsEditing = false;
+
+  function openTransmissionModal(isEdit = false) {
+    if (!transmissionModal) return;
+    modalIsEditing = isEdit;
+
+    if (isEdit) {
+      if (transmissionModalHeading) transmissionModalHeading.textContent = "CHANNEL SETTINGS";
+      if (transmissionSubmitLabel) transmissionSubmitLabel.textContent = "APPLY CHANGES";
+      modalMode = state.conversationMode || "direct";
+      modalSelectedCharId = state.activeCharacterId || "pelica";
+      modalGroupParticipants = state.groupParticipantIds && state.groupParticipantIds.length ? [...state.groupParticipantIds] : ["pelica"];
+      modalGroupName = state.groupName || "";
+    } else {
+      if (transmissionModalHeading) transmissionModalHeading.textContent = "NEW TRANSMISSION";
+      if (transmissionSubmitLabel) transmissionSubmitLabel.textContent = "ESTABLISH LINK";
+      modalMode = "direct";
+      modalSelectedCharId = "pelica";
+      modalGroupParticipants = ["pelica", "chen"];
+      modalGroupName = `Operation Unit ${terminalChannels.length + 1}`;
+    }
+
+    if (transmissionGroupNameInput) {
+      transmissionGroupNameInput.value = modalGroupName;
+    }
+    if (transmissionCharacterSearch) {
+      transmissionCharacterSearch.value = "";
+    }
+    modalFilter = "all";
+    document.querySelectorAll(".transmission-filter-btn").forEach((btn) => {
+      btn.classList.toggle("active", btn.dataset.filter === "all");
+    });
+
+    setModalMode(modalMode);
+    transmissionModal.classList.remove("hidden");
+  }
+
+  function closeTransmissionModal() {
+    if (transmissionModal) transmissionModal.classList.add("hidden");
+  }
+
+  function setModalMode(mode) {
+    modalMode = mode;
+    if (modalTabDirect) modalTabDirect.classList.toggle("active", mode === "direct");
+    if (modalTabGroup) modalTabGroup.classList.toggle("active", mode === "group");
+    if (transmissionGroupConfig) {
+      transmissionGroupConfig.classList.toggle("hidden", mode !== "group");
+    }
+    renderModalSelectedChips();
+    renderModalCharacterGrid();
+  }
+
+  function renderModalSelectedChips() {
+    if (!transmissionSelectedChips) return;
+    transmissionSelectedChips.innerHTML = "";
+    if (modalGroupParticipants.length === 0) {
+      transmissionSelectedChips.innerHTML = `<span class="no-participants-hint">Select operators from list below...</span>`;
+      return;
+    }
+    modalGroupParticipants.forEach((pid) => {
+      const char = CHARACTERS[pid];
+      if (!char) return;
+      const chip = document.createElement("span");
+      chip.className = "transmission-chip";
+      chip.innerHTML = `
+        <img class="transmission-chip__avatar" src="${char.avatar}" alt="">
+        <span>${char.name}</span>
+        <button type="button" class="transmission-chip__remove" title="Remove">&times;</button>
+      `;
+      chip.querySelector(".transmission-chip__remove").addEventListener("click", (e) => {
+        e.stopPropagation();
+        modalGroupParticipants = modalGroupParticipants.filter((id) => id !== pid);
+        renderModalSelectedChips();
+        renderModalCharacterGrid();
+      });
+      transmissionSelectedChips.appendChild(chip);
+    });
+  }
+
+  function renderModalCharacterGrid() {
+    if (!transmissionCharacterGrid) return;
+    transmissionCharacterGrid.innerHTML = "";
+
+    const query = (transmissionCharacterSearch ? transmissionCharacterSearch.value : "").toLowerCase().trim();
+    const chars = Object.values(CHARACTERS).filter((char) => {
+      if (modalFilter === "operators" && char.isNpc) return false;
+      if (modalFilter === "npcs" && !char.isNpc) return false;
+      if (query && !char.name.toLowerCase().includes(query)) return false;
+      return true;
+    });
+
+    chars.forEach((char) => {
+      const isSelected = modalMode === "direct"
+        ? modalSelectedCharId === char.id
+        : modalGroupParticipants.includes(char.id);
+
+      const card = document.createElement("div");
+      card.className = `transmission-char-card ${isSelected ? "selected" : ""}`;
+      card.innerHTML = `
+        <div class="transmission-char-card__avatar">
+          <img src="${char.avatar}" alt="${char.name}">
+        </div>
+        <div class="transmission-char-card__name">${char.name}</div>
+        ${isSelected ? '<span class="transmission-char-card__badge">✓</span>' : ""}
+      `;
+
+      card.addEventListener("click", () => {
+        if (modalMode === "direct") {
+          modalSelectedCharId = char.id;
+        } else {
+          if (modalGroupParticipants.includes(char.id)) {
+            modalGroupParticipants = modalGroupParticipants.filter((id) => id !== char.id);
+          } else {
+            modalGroupParticipants.push(char.id);
+          }
+          renderModalSelectedChips();
+        }
+        renderModalCharacterGrid();
+      });
+
+      transmissionCharacterGrid.appendChild(card);
+    });
+  }
+
+  function submitTransmissionModal() {
+    if (modalMode === "direct") {
+      const charId = modalSelectedCharId || "pelica";
+      const char = CHARACTERS[charId] || CHARACTERS.pelica;
+
+      if (modalIsEditing) {
+        state.conversationMode = "direct";
+        state.activeCharacterId = charId;
+        state.groupName = "";
+        state.groupParticipantIds = [];
+        syncActiveTerminalChannel();
+      } else {
+        const newId = "channel-" + Date.now();
+        const newCh = {
+          id: newId,
+          name: char.name,
+          avatar: char.avatar,
+          mode: "direct",
+          characterId: charId,
+          groupName: "",
+          groupParticipantIds: [],
+          messages: [
+            {
+              id: "msg_" + Date.now() + "_1",
+              sender: "incoming",
+              characterId: charId,
+              type: "text",
+              text: `Direct link established with ${char.name}. Ready for transmission.`,
+              imageSrc: null,
+              reactions: [],
+            },
+          ],
+          choices: [],
+        };
+        terminalChannels.push(newCh);
+        selectTerminalChannel(newId);
+      }
+    } else {
+      // Group mode
+      const participants = modalGroupParticipants.length > 0 ? [...modalGroupParticipants] : ["pelica", "chen"];
+      const gName = (transmissionGroupNameInput ? transmissionGroupNameInput.value.trim() : "") || "Squad Operation";
+
+      if (modalIsEditing) {
+        state.conversationMode = "group";
+        state.groupName = gName;
+        state.groupParticipantIds = participants;
+        state.activeCharacterId = participants[0] || "pelica";
+        syncActiveTerminalChannel();
+      } else {
+        const newId = "channel-" + Date.now();
+        const newCh = {
+          id: newId,
+          name: gName,
+          avatar: "rwxbaker-assets/deco/group-channel.webp",
+          mode: "group",
+          characterId: participants[0] || "pelica",
+          groupName: gName,
+          groupParticipantIds: participants,
+          messages: [
+            {
+              id: "msg_" + Date.now() + "_1",
+              sender: "incoming",
+              characterId: participants[0] || "pelica",
+              type: "text",
+              text: `Operation frequency opened for [${gName}]. All squad units online.`,
+              imageSrc: null,
+              reactions: [],
+            },
+          ],
+          choices: [],
+        };
+        terminalChannels.push(newCh);
+        selectTerminalChannel(newId);
+      }
+    }
+
+    closeTransmissionModal();
+    renderCharacterList();
+    renderGroupParticipants();
+    updateUI();
+    renderTerminalChannels();
+  }
+
+  function setupTransmissionModal() {
+    if (btnCloseTransmissionModal) {
+      btnCloseTransmissionModal.addEventListener("click", closeTransmissionModal);
+    }
+    if (btnCancelTransmission) {
+      btnCancelTransmission.addEventListener("click", closeTransmissionModal);
+    }
+    if (modalTabDirect) {
+      modalTabDirect.addEventListener("click", () => setModalMode("direct"));
+    }
+    if (modalTabGroup) {
+      modalTabGroup.addEventListener("click", () => setModalMode("group"));
+    }
+    if (btnSubmitTransmission) {
+      btnSubmitTransmission.addEventListener("click", submitTransmissionModal);
+    }
+
+    if (transmissionCharacterSearch) {
+      transmissionCharacterSearch.addEventListener("input", renderModalCharacterGrid);
+    }
+
+    const filterBtns = document.querySelectorAll(".transmission-filter-btn");
+    filterBtns.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        filterBtns.forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        modalFilter = btn.dataset.filter || "all";
+        renderModalCharacterGrid();
+      });
+    });
+
+    if (transmissionModal) {
+      transmissionModal.addEventListener("click", (e) => {
+        if (e.target === transmissionModal) {
+          closeTransmissionModal();
+        }
+      });
+    }
+  }
+
   function setViewMode(mode) {
     const isPhone = mode === "phone";
+    const isTerminal = mode === "terminal";
     appContainer.classList.toggle("phone-mode", isPhone);
+    appContainer.classList.toggle("terminal-mode", isTerminal);
     viewModeButtons.forEach((button) => {
       button.classList.toggle("active", button.dataset.viewMode === mode);
     });
+
+    if (btnToggleEditor) {
+      const label = btnToggleEditor.querySelector("span");
+      if (label) {
+        label.textContent = isTerminal ? "⚙️ OPEN EDITOR" : "⚙️ Editor";
+      }
+    }
+
+    if (isTerminal) {
+      renderTerminalChannels();
+    }
+
+    try {
+      localStorage.setItem("rwx_view_mode", mode);
+    } catch (_) {}
   }
 
   function setDecoVisibility(show) {
@@ -1869,6 +2543,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       choiceContainer.appendChild(button);
     });
+    savePersistentConversation();
   }
 
   function renderContextEmojiPicker() {
@@ -2172,6 +2847,26 @@ document.addEventListener("DOMContentLoaded", () => {
     return canvas.toDataURL("image/png");
   }
 
+  function renderInputDecoration(img, dw, dh) {
+    const canvas = document.createElement("canvas");
+    const h = dh || 16;
+    canvas.width = dw;
+    canvas.height = h;
+    const ctx = canvas.getContext("2d");
+
+    const sw = img.naturalWidth || img.width || 1312;
+    const sh = img.naturalHeight || img.height || 16;
+    const sliceRight = 36;
+
+    const dwMid = dw - sliceRight;
+    if (dwMid > 0) {
+      ctx.drawImage(img, 0, 0, sw - sliceRight, sh, 0, 0, dwMid, h);
+    }
+    ctx.drawImage(img, sw - sliceRight, 0, sliceRight, sh, dw - sliceRight, 0, sliceRight, h);
+
+    return canvas.toDataURL("image/png");
+  }
+
   // for calculating multi-page scroll positions
   function calculatePageScrollPositions() {
     const viewportHeight = chatViewport.clientHeight;
@@ -2248,6 +2943,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (!phoneFrame) return;
 
+    const mainPane = document.getElementById("terminal-main-pane") || phoneFrame;
+    const terminalWindowBody = document.getElementById("terminal-window-body");
+
     if (stickerPanel) stickerPanel.classList.add("hidden");
     if (emojiPickerPanel) emojiPickerPanel.classList.add("hidden");
     if (contextEmojiPicker) contextEmojiPicker.classList.add("hidden");
@@ -2267,11 +2965,14 @@ document.addEventListener("DOMContentLoaded", () => {
     // Ensure active watermark is loaded and attached (live stamp exists, fallback if removed)
     const watermarkImg = new Image();
     watermarkImg.src = activeWatermarkSrc;
+    const inputTopDecoImg = new Image();
+    inputTopDecoImg.src = "rwxbaker-assets/deco/conversation-input-top.webp";
 
     await Promise.all([
       new Promise((res) => { if (leftImg.complete) res(); else leftImg.onload = res; }),
       new Promise((res) => { if (rightImg.complete) res(); else rightImg.onload = res; }),
-      new Promise((res) => { if (watermarkImg.complete) res(); else watermarkImg.onload = res; })
+      new Promise((res) => { if (watermarkImg.complete) res(); else watermarkImg.onload = res; }),
+      new Promise((res) => { if (inputTopDecoImg.complete) res(); else inputTopDecoImg.onload = res; })
     ]);
 
     let exportWatermarkEl = null;
@@ -2348,12 +3049,57 @@ document.addEventListener("DOMContentLoaded", () => {
       bubble.style.backgroundRepeat = "no-repeat";
     });
 
+    const inputDecors = phoneFrame.querySelectorAll(".terminal-input-decoration");
+    const modifiedDecors = [];
+
+    inputDecors.forEach((decor) => {
+      const dw = decor.offsetWidth;
+      if (dw <= 0) return;
+      const targetHeight = 16;
+      const dataUrl = renderInputDecoration(inputTopDecoImg, dw, targetHeight);
+      modifiedDecors.push({
+        element: decor,
+        borderImage: decor.style.borderImage,
+        borderStyle: decor.style.borderStyle,
+        borderWidth: decor.style.borderWidth,
+        backgroundImage: decor.style.backgroundImage,
+        backgroundSize: decor.style.backgroundSize,
+        backgroundRepeat: decor.style.backgroundRepeat,
+        backgroundPosition: decor.style.backgroundPosition,
+        height: decor.style.height,
+        transform: decor.style.transform
+      });
+      decor.style.borderImage = "none";
+      decor.style.borderStyle = "none";
+      decor.style.borderWidth = "0";
+      decor.style.backgroundImage = `url("${dataUrl}")`;
+      decor.style.backgroundSize = `${dw}px ${targetHeight}px`;
+      decor.style.backgroundRepeat = "no-repeat";
+      decor.style.backgroundPosition = "left center";
+      decor.style.height = `${targetHeight}px`;
+      decor.style.transform = "translateY(-110%)";
+    });
+
     try {
+      phoneFrame.classList.add("is-exporting");
+      if (mainPane) mainPane.classList.add("is-exporting");
+      if (terminalWindowBody) {
+        terminalWindowBody.style.removeProperty("background");
+      }
+
       if (state.exportMode === "full") {
         // Full chat export (renders entire message viewport)
-        phoneFrame.classList.add("is-exporting");
         phoneFrame.style.height = "auto";
         phoneFrame.style.maxHeight = "none";
+        if (mainPane && mainPane !== phoneFrame) {
+          mainPane.style.height = "auto";
+          mainPane.style.maxHeight = "none";
+        }
+        if (terminalWindowBody) {
+          terminalWindowBody.style.height = "auto";
+          terminalWindowBody.style.maxHeight = "none";
+          terminalWindowBody.style.flex = "none";
+        }
         chatViewport.style.height = "auto";
         chatViewport.style.maxHeight = "none";
         chatViewport.style.flex = "none";
@@ -2367,17 +3113,18 @@ document.addEventListener("DOMContentLoaded", () => {
           scale: scale,
           style: {
             transform: "none",
-            margin: "0"
+            margin: "0",
+            zoom: "1"
           },
           onclone: (cloned) => {
             cloned.style.transform = "none";
+            cloned.style.zoom = "1";
           }
         });
 
         downloadDataUrl(dataUrl, "RWX-Baker-Full.png");
 
       } else if (state.exportMode === "screen") {
-        phoneFrame.classList.add("is-exporting");
         chatViewport.style.overflow = "hidden";
         messageList.style.transform = `translateY(-${originalScrollTop}px)`;
 
@@ -2387,10 +3134,12 @@ document.addEventListener("DOMContentLoaded", () => {
           scale: 2,
           style: {
             transform: "none",
-            margin: "0"
+            margin: "0",
+            zoom: "1"
           },
           onclone: (cloned) => {
             cloned.style.transform = "none";
+            cloned.style.zoom = "1";
           }
         });
 
@@ -2404,7 +3153,6 @@ document.addEventListener("DOMContentLoaded", () => {
           if (exportBtnText) exportBtnText.textContent = `Page ${i + 1}/${pages.length}...`;
           const scrollPos = pages[i];
 
-          phoneFrame.classList.add("is-exporting");
           chatViewport.style.overflow = "hidden";
           messageList.style.transform = `translateY(-${scrollPos}px)`;
 
@@ -2414,10 +3162,12 @@ document.addEventListener("DOMContentLoaded", () => {
             scale: 2,
             style: {
               transform: "none",
-              margin: "0"
+              margin: "0",
+              zoom: "1"
             },
             onclone: (cloned) => {
               cloned.style.transform = "none";
+              cloned.style.zoom = "1";
             }
           });
 
@@ -2447,15 +3197,44 @@ document.addEventListener("DOMContentLoaded", () => {
         element.style.backgroundRepeat = backgroundRepeat;
       });
 
+      modifiedDecors.forEach(({ element, borderImage, borderStyle, borderWidth, backgroundImage, backgroundSize, backgroundRepeat, backgroundPosition, height, transform }) => {
+        element.style.borderImage = borderImage;
+        element.style.borderStyle = borderStyle;
+        element.style.borderWidth = borderWidth;
+        element.style.backgroundImage = backgroundImage;
+        element.style.backgroundSize = backgroundSize;
+        element.style.backgroundRepeat = backgroundRepeat;
+        element.style.backgroundPosition = backgroundPosition;
+        element.style.height = height;
+        element.style.transform = transform;
+      });
+
+      phoneFrame.classList.remove("is-exporting");
+      if (mainPane) {
+        mainPane.classList.remove("is-exporting");
+        if (mainPane !== phoneFrame) {
+          mainPane.style.height = "";
+          mainPane.style.maxHeight = "";
+        }
+      }
+
       phoneFrame.style.height = "";
       phoneFrame.style.maxHeight = "";
       phoneFrame.style.transform = "";
+      if (terminalWindowBody) {
+        terminalWindowBody.style.height = "";
+        terminalWindowBody.style.maxHeight = "";
+        terminalWindowBody.style.flex = "";
+        terminalWindowBody.style.removeProperty("background");
+        terminalWindowBody.style.backgroundImage = "";
+        terminalWindowBody.style.backgroundSize = "";
+        terminalWindowBody.style.backgroundPosition = "";
+      }
       chatViewport.style.height = "";
       chatViewport.style.maxHeight = "";
       chatViewport.style.flex = "";
       chatViewport.style.overflow = "";
       messageList.style.transform = "";
-      phoneFrame.classList.remove("is-exporting");
       chatViewport.scrollTop = originalScrollTop;
 
       if (exportWatermarkEl && exportWatermarkEl.parentNode) {
@@ -2573,15 +3352,129 @@ document.addEventListener("DOMContentLoaded", () => {
     reader.readAsText(file);
   }
 
+    // persistent sync
+  function savePersistentConversation() {
+    try {
+      if (typeof syncActiveTerminalChannel === "function") {
+        syncActiveTerminalChannel();
+      }
+      const payload = {
+        activeUser: state.activeUser,
+        activeCharacterId: state.activeCharacterId,
+        conversationMode: state.conversationMode,
+        groupParticipantIds: state.groupParticipantIds || [],
+        groupName: state.groupName || "",
+        messages: state.messages || [],
+        choices: state.choices || [],
+        exportMode: state.exportMode || "screen",
+        terminalChannels: typeof terminalChannels !== "undefined" ? terminalChannels : [],
+        activeTerminalChannelId: typeof activeTerminalChannelId !== "undefined" ? activeTerminalChannelId : null,
+        timestamp: Date.now()
+      };
+      localStorage.setItem("rwx_persistent_conversation", JSON.stringify(payload));
+    } catch (e) {
+      console.warn("Could not save persistent conversation:", e);
+    }
+  }
+
+  function loadPersistentConversation() {
+    try {
+      const raw = localStorage.getItem("rwx_persistent_conversation");
+      if (!raw) return false;
+      const data = JSON.parse(raw);
+      if (!data || !Array.isArray(data.messages)) return false;
+
+      // If messages only contain a single auto-generated channel telemetry message and tutorial was never cleared, prefer tutorial template
+      const isAutoTelemetryOnly =
+        data.messages.length === 1 &&
+        data.messages[0].text &&
+        (data.messages[0].text.includes("established") || data.messages[0].text.includes("Ready for transmission"));
+
+      if (isAutoTelemetryOnly && localStorage.getItem("rwx_tutorial_cleared") !== "true" && window.RWX_TUTORIAL_TEMPLATE) {
+        return false;
+      }
+
+      state.activeUser = (data.activeUser === "endminf" || data.activeUser === "endminm") ? data.activeUser : "endminf";
+      state.activeCharacterId = data.activeCharacterId || "laevatain";
+      state.conversationMode = data.conversationMode || "direct";
+      state.groupParticipantIds = Array.isArray(data.groupParticipantIds) ? data.groupParticipantIds : [];
+      state.groupName = data.groupName || "";
+      state.messages = data.messages || [];
+      state.choices = Array.isArray(data.choices) ? data.choices : [];
+      state.exportMode = data.exportMode || "screen";
+
+      if (Array.isArray(data.terminalChannels) && data.terminalChannels.length > 0) {
+        terminalChannels = data.terminalChannels;
+        const ops = terminalChannels.find((c) => c.id === "channel-ops-4" || c.name === "Habitation Sector 4 Ops");
+        if (ops) {
+          ops.name = "Endfield Crisis Team";
+          ops.groupName = "Endfield Crisis Team";
+          ops.groupParticipantIds = ["pelica", "chen", "wolfgard"];
+          if (Array.isArray(ops.messages)) {
+            ops.messages.forEach((m) => {
+              if (m.characterId === "boundary") {
+                m.characterId = "chen";
+                m.text = "Easy peasy! Very straightforward huh? Hehe~";
+              } else if (m.characterId === "wolfgard" && m.id === "m_ops_1") {
+                m.text = "Endmin, do you copy? This is a test message for the terminal group feature!";
+              }
+            });
+          }
+        }
+      }
+      if (data.activeTerminalChannelId) {
+        activeTerminalChannelId = data.activeTerminalChannelId;
+      }
+      return true;
+    } catch (e) {
+      console.warn("Could not load persistent conversation:", e);
+      return false;
+    }
+  }
+
+  function loadTutorialTemplate() {
+    const tutorial = window.RWX_TUTORIAL_TEMPLATE;
+    if (!tutorial) return;
+    state.activeUser = tutorial.activeUser || "endminf";
+    state.activeCharacterId = tutorial.activeCharacterId || "laevatain";
+    state.conversationMode = tutorial.conversationMode || "direct";
+    state.groupParticipantIds = Array.isArray(tutorial.groupParticipantIds) ? [...tutorial.groupParticipantIds] : [];
+    state.groupName = tutorial.groupName || "";
+    state.messages = JSON.parse(JSON.stringify(tutorial.messages || []));
+    state.choices = Array.isArray(tutorial.choices) ? [...tutorial.choices] : [];
+    state.selectedMessageId = null;
+
+    if (contextPanelSection) contextPanelSection.classList.remove("group-mode-active");
+    if (btnConversationDirect) btnConversationDirect.classList.add("active");
+    if (btnConversationGroup) btnConversationGroup.classList.remove("active");
+    if (groupParticipants) groupParticipants.classList.add("hidden");
+    if (groupNameInput) groupNameInput.value = "";
+
+    setInputValueFromStructuredText(choiceInputOne, "");
+    setInputValueFromStructuredText(choiceInputTwo, "");
+
+    exitEditMode();
+    if (btnClearConversation) btnClearConversation.classList.remove("highlight-pulse");
+
+    try {
+      localStorage.removeItem("rwx_tutorial_cleared");
+    } catch (_) {}
+
+    renderCharacterList(characterSearchInput ? characterSearchInput.value : "");
+    renderGroupParticipants();
+    renderConversation();
+    renderChoices();
+    updateUI();
+    savePersistentConversation();
+  }
+
   function scrollToBottom() {
     requestAnimationFrame(() => {
       chatViewport.scrollTop = chatViewport.scrollHeight;
     });
   }
 
-  /* ==========================================================================
-     particle field from my main site (rwyn.ch ambience)
-     ========================================================================== */
+    // particle field
   function initParticleField() {
     const canvas = document.getElementById("field");
     if (!canvas) return;

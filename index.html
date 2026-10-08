@@ -63,7 +63,7 @@
           "name": "Rwyn",
           "url": "https://rwyn.ch"
         },
-        "offers": {mez
+        "offers": {
           "@type": "Offer",
           "price": "0",
           "priceCurrency": "USD"
@@ -75,6 +75,7 @@
 
   <link rel="stylesheet" href="rwxbaker-css/style.css">
   <link rel="stylesheet" href="rwxbaker-css/mobile.css">
+  <link rel="stylesheet" href="rwxbaker-css/terminal.css">
   <link rel="icon" type="image/png" sizes="192x192" href="favicon.png">
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 </head>
@@ -85,9 +86,11 @@
 
   <div id="app-container">
 
-    <button type="button" id="btn-toggle-editor" class="editor-toggle-btn" title="Toggle Editor Panel">
-      <span>⚙️ Editor</span>
-    </button>
+    <div class="top-quick-actions">
+      <button type="button" id="btn-toggle-editor" class="editor-toggle-btn" title="Toggle Editor Panel">
+        <span>⚙️ Editor</span>
+      </button>
+    </div>
 
     <aside id="editor-panel" class="editor-panel">
       <div class="panel-header">
@@ -142,6 +145,29 @@
             <button type="button" class="deco-toggle-btn active" id="btn-deco-off" data-deco="off" title="Hide Topographic Map Contours">Off</button>
           </div>
         </div>
+      </section>
+
+      <!-- terminal launcher -->
+      <section class="terminal-launcher-section" aria-label="Terminal Mode switch">
+        <button type="button" id="btn-launch-terminal" class="terminal-launcher-btn" title="Open full Terminal Mode (In-Game full Baker UI)">
+          <div class="terminal-launcher-content">
+            <span class="terminal-launcher-icon">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="2" y="3" width="20" height="14" rx="2"></rect>
+                <line x1="8" y1="21" x2="16" y2="21"></line>
+                <line x1="12" y1="17" x2="12" y2="21"></line>
+                <polyline points="7 8 9.5 10 7 12"></polyline>
+                <line x1="11.5" y1="12" x2="15.5" y2="12"></line>
+              </svg>
+            </span>
+            <div class="terminal-launcher-title-row">
+              <span class="terminal-launcher-title">TERMINAL MODE</span>
+              <span class="terminal-launcher-badge-new">NEW!</span>
+              <span class="terminal-launcher-badge">Still in BETA!</span>
+            </div>
+          </div>
+          <span class="terminal-launcher-arrow" aria-hidden="true">&#x2794;</span>
+        </button>
       </section>
 
       <section class="backup-section" aria-label="Conversation backup controls">
@@ -333,7 +359,10 @@
               <h3 class="section-title">CONVERSATION LAYERS</h3>
               <span class="section-instruction">• drag to reorder</span>
             </div>
-            <button type="button" id="btn-clear-conversation" class="small-danger-btn">Clear All</button>
+            <div class="layers-header-actions">
+              <button type="button" id="btn-restore-tutorial" class="small-secondary-btn" title="Restore tutorial conversation">Tutorial</button>
+              <button type="button" id="btn-clear-conversation" class="small-danger-btn">Clear All</button>
+            </div>
           </div>
           <div class="layers-list" id="layers-list">
             <div class="empty-layers-msg">No messages in conversation.</div>
@@ -346,7 +375,7 @@
     <main id="phone-frame" class="hide-chat-deco">
       <img id="live-watermark-stamp" class="rwx-export-watermark" src="rwxbaker-assets/watermarks/watermark-v1-telemetry.png" alt="RWX // BKR" aria-hidden="true">
 
-      <header id="chat-header">
+      <header id="chat-header" aria-hidden="true">
         <img src="rwxbaker-assets/deco/session_title_left_bar.png" alt="" class="header-blue-lines" aria-hidden="true">
         <img src="rwxbaker-assets/deco/deco_sns_tweet_decorate_04.png" alt="" class="header-baker-deco" aria-hidden="true">
         <div class="header-content">
@@ -362,51 +391,97 @@
         </div>
       </header>
 
-      <div id="chat-bg-decorations" class="chat-bg-decorations" aria-hidden="true">
-        <img src="rwxbaker-assets/deco/deco_sns_tweet_decorate_31.png" alt="" class="chat-bg-deco chat-bg-deco-tl">
-        <img src="rwxbaker-assets/deco/deco_sns_tweet_decorate_32.png" alt="" class="chat-bg-deco chat-bg-deco-br">
-      </div>
-
-      <div id="chat-viewport">
-        <div id="message-list">
-        </div>
-      </div>
-
-      <div id="choice-container" class="choice-container">
-      </div>
-
-      <div id="sticker-panel" class="sticker-panel hidden">
-        <div class="sticker-panel-header">
-          <span>Game Stickers</span>
-          <button type="button" id="btn-close-stickers" class="close-btn">&times;</button>
-        </div>
-        <div class="sticker-grid" id="sticker-grid"></div>
-      </div>
-
-      <div id="emoji-picker-panel" class="emoji-picker-panel hidden">
-        <div class="emoji-picker-header">
-          <span>Emojis</span>
-          <button type="button" id="btn-close-emoji-picker" class="close-btn">&times;</button>
-        </div>
-        <div class="emoji-grid" id="emoji-grid"></div>
-      </div>
-
-      <footer id="input-footer">
-        <div class="input-bar">
-          <button type="button" id="btn-emoticon" class="input-btn" title="Stickers">
-            <img src="rwxbaker-assets/icons/icon_sns_chat_emoticon.png" alt="Stickers">
-          </button>
-          <div class="input-wrapper">
-            <div id="message-input" class="editable-message-input bottom-input" contenteditable="true" data-placeholder="Type a message..."></div>
+      <!-- terminal sidebar -->
+      <div id="terminal-sidebar" class="terminal-sidebar" aria-hidden="true">
+                <aside class="terminal-session-list">
+          <div class="terminal-session-header">
+            <span class="terminal-session-title">CHANNELS</span>
+            <button type="button" id="btn-terminal-new-chat" class="terminal-new-chat-btn" title="Create New Channel / Chat">+ NEW</button>
           </div>
-          <button type="button" id="btn-emoji" class="input-btn" title="Emoji Picker">
-            <img src="rwxbaker-assets/emoji/sns_emoji_011.png" alt="Emoji Picker">
-          </button>
-          <button type="button" id="btn-send" class="send-btn" title="Send">
-            <img src="rwxbaker-assets/icons/icon_sns_message_02.png" alt="Send">
-          </button>
+          <div class="terminal-session-scroll">
+            <div class="terminal-session-cards" id="terminal-session-cards">
+                          </div>
+          </div>
+        </aside>
+      </div>
+
+      <!-- chat pane -->
+      <div id="terminal-main-pane" class="terminal-main-pane">
+                <header id="terminal-chat-header" class="terminal-chat-header">
+          <img class="terminal-header-seg terminal-header-seg-left" src="rwxbaker-assets/deco/group-header-left.webp" alt="">
+          <div class="terminal-header-center">
+            <img class="terminal-header-seg terminal-header-seg-center" src="rwxbaker-assets/deco/group-header-center.webp" alt="">
+            <h2 id="terminal-chat-header-name" class="terminal-header-title">Select character...</h2>
+          </div>
+          <img class="terminal-header-seg terminal-header-seg-right" src="rwxbaker-assets/deco/group-header-right.webp" alt="">
+          <span class="terminal-header-marquee-viewport" aria-hidden="true">
+            <span class="terminal-header-marquee-content"></span>
+          </span>
+        </header>
+
+                <div id="terminal-window-body" class="terminal-window-body">
+
+                    <div class="terminal-frame-top" aria-hidden="true">
+            <svg class="terminal-frame-notch" viewBox="0 0 232 10" preserveAspectRatio="none">
+              <path d="M0 0 L16 6 L216 6 L232 0" />
+            </svg>
+            <span class="terminal-frame-bars">
+              <span class="terminal-frame-bar terminal-frame-bar-magenta"></span>
+              <span class="terminal-frame-bar terminal-frame-bar-yellow"></span>
+              <span class="terminal-frame-bar terminal-frame-bar-cyan"></span>
+            </span>
+          </div>
+
+          <div id="chat-bg-decorations" class="chat-bg-decorations" aria-hidden="true">
+            <img src="rwxbaker-assets/deco/deco_sns_tweet_decorate_31.png" alt="" class="chat-bg-deco chat-bg-deco-tl">
+            <img src="rwxbaker-assets/deco/deco_sns_tweet_decorate_32.png" alt="" class="chat-bg-deco chat-bg-deco-br">
+          </div>
+
+          <div id="chat-viewport">
+            <div id="message-list">
+            </div>
+          </div>
+
+          <div id="choice-container" class="choice-container">
+          </div>
+
+          <div id="sticker-panel" class="sticker-panel hidden">
+            <div class="sticker-panel-header">
+              <span>Game Stickers</span>
+              <button type="button" id="btn-close-stickers" class="close-btn">&times;</button>
+            </div>
+            <div class="sticker-grid" id="sticker-grid"></div>
+          </div>
+
+          <div id="emoji-picker-panel" class="emoji-picker-panel hidden">
+            <div class="emoji-picker-header">
+              <span>Emojis</span>
+              <button type="button" id="btn-close-emoji-picker" class="close-btn">&times;</button>
+            </div>
+            <div class="emoji-grid" id="emoji-grid"></div>
+          </div>
+
+          <footer id="input-footer">
+            <span class="terminal-input-decoration" aria-hidden="true"></span>
+
+            <div class="input-bar">
+              <button type="button" id="btn-emoticon" class="input-btn" title="Stickers">
+                <img src="rwxbaker-assets/icons/icon_sns_chat_emoticon.png" alt="Stickers">
+              </button>
+              <div class="input-wrapper">
+                <div id="message-input" class="editable-message-input bottom-input" contenteditable="true" data-placeholder="Type a message..."></div>
+              </div>
+              <button type="button" id="btn-emoji" class="input-btn" title="Emoji Picker">
+                <img src="rwxbaker-assets/emoji/sns_emoji_011.png" alt="Emoji Picker">
+              </button>
+              <button type="button" id="btn-send" class="send-btn" title="Send">
+                <img src="rwxbaker-assets/icons/icon_sns_message_02.png" alt="Send">
+              </button>
+            </div>
+          </footer>
+
         </div>
-      </footer>
+      </div>
     </main>
   </div>
 
@@ -485,6 +560,65 @@
     </div>
   </div>
 
+  <!-- transmission modal -->
+  <div id="new-transmission-modal" class="transmission-modal-backdrop hidden" aria-hidden="true">
+    <div class="transmission-modal-card">
+      <div class="transmission-modal-header">
+        <div class="transmission-modal-title">
+          <span class="transmission-modal-icon">📡</span>
+          <h3 id="transmission-modal-heading">NEW TRANSMISSION</h3>
+        </div>
+        <button type="button" id="btn-close-transmission-modal" class="transmission-modal-close" aria-label="Close modal">&times;</button>
+      </div>
+
+      <div class="transmission-modal-body">
+                <div class="transmission-type-selector">
+          <button type="button" class="transmission-type-btn active" id="modal-tab-direct" data-mode="direct">
+            <span class="type-icon">👤</span>
+            <span class="type-title">Direct Link</span>
+          </button>
+          <button type="button" class="transmission-type-btn" id="modal-tab-group" data-mode="group">
+            <span class="type-icon">👥</span>
+            <span class="type-title">Group Channel</span>
+          </button>
+        </div>
+
+                <div id="transmission-group-config" class="transmission-group-config hidden">
+          <label class="transmission-field-label" for="transmission-group-name">CHANNEL / OPERATION NAME</label>
+          <input type="text" id="transmission-group-name" class="transmission-input" placeholder="e.g. Endfield Crisis Team">
+          <div class="transmission-participants-summary">
+            <span class="transmission-field-label">SELECTED SQUAD OPERATORS:</span>
+            <div id="transmission-selected-chips" class="transmission-selected-chips">
+              <span class="no-participants-hint">Select operators from list below...</span>
+            </div>
+          </div>
+        </div>
+
+                <div class="transmission-characters-section">
+          <div class="transmission-search-bar">
+            <input type="search" id="transmission-character-search" class="transmission-search-input" placeholder="🔍 Search operator or NPC by name...">
+            <div class="transmission-filter-tabs">
+              <button type="button" class="transmission-filter-btn active" data-filter="all">All</button>
+              <button type="button" class="transmission-filter-btn" data-filter="operators">Operators</button>
+              <button type="button" class="transmission-filter-btn" data-filter="npcs">NPCs</button>
+            </div>
+          </div>
+
+          <div class="transmission-character-grid" id="transmission-character-grid">
+                      </div>
+        </div>
+      </div>
+
+      <div class="transmission-modal-footer">
+        <button type="button" id="btn-cancel-transmission" class="transmission-btn-cancel">CANCEL</button>
+        <button type="button" id="btn-submit-transmission" class="transmission-btn-submit">
+          <span class="submit-glow"></span>
+          <span id="transmission-submit-label">ESTABLISH LINK</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
   <div id="mobile-notice-toast" class="mobile-notice-toast hidden" role="alert" aria-live="polite">
     <div class="notice-toast-content">
       <span class="notice-toast-icon">💻</span>
@@ -521,6 +655,7 @@
     </div>
   </footer>
 
+  <script src="rwxbaker-js/characters.js"></script>
   <script src="rwxbaker-js/dom-to-image-more.min.js"></script>
   <script src="rwxbaker-js/tutorial-template.js"></script>
   <script src="rwxbaker-js/app.js"></script>

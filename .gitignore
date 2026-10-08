@@ -1,5 +1,8 @@
 # raw files & unused assets (not needed for deployment)
 _rwxbaker-raw-assets/
+_OnlineBakerStarling/
+/baker-dx-mockup.html
+/baker-starling-mockup.html
 
 # OS / Editor files
 .DS_Store

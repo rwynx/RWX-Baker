@@ -17,6 +17,7 @@ This guide documents the design system, CSS custom properties (variables), layou
 9. [Interactive Buttons & Glow Effects](#interactive-buttons--glow-effects)
 10. [DOM Architecture & Component Reference](#dom-architecture--component-reference)
 11. [How to Apply Custom Styles](#how-to-apply-custom-styles)
+12. [Terminal Mode Variables](#terminal-mode-variables)
 
 ---
 
@@ -348,3 +349,16 @@ document.getElementById('phone-frame').style.setProperty('--message-width', '102
 // Example: Dim map decorations
 document.getElementById('phone-frame').style.setProperty('--chat-deco-opacity', '0.4');
 ```
+
+---
+
+## Terminal Mode Variables
+
+Layout and frame variables for the dedicated Terminal Mode (`terminal.html`) are isolated in [`rwxbaker-css/terminal.css`](rwxbaker-css/terminal.css) under `:root`:
+
+- `--terminal-frame-width` / `--terminal-frame-height`: Overall frame dimensions.
+- `--terminal-channels-width`: Width of the left channels sidebar.
+- `--terminal-chat-width`: Width of the conversation feed pane.
+- `--terminal-session-card-height`: Height of each channel card item.
+- `--terminal-notch-height`: Top frame notch and status color bars sizing.
+

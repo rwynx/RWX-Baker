@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RWX Baker • Full Terminal Mode</title>
+  <meta name="description" content="Arknights: Endfield BAKER screen, control different chats.">
+  <meta name="author" content="RWyn">
+  <meta name="theme-color" content="#121317">
+
+  <link rel="stylesheet" href="rwxbaker-css/style.css">
+  <link rel="stylesheet" href="rwxbaker-css/terminal.css">
+  <link rel="icon" type="image/png" sizes="192x192" href="favicon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+</head>
+<body class="terminal-standalone-page">
+
+  <video class="bg-video" src="rwxbaker-assets/ui/backgrounds/rwyn_nebula.mp4" muted loop autoplay playsinline aria-hidden="true"></video>
+  <div class="bg-tint" aria-hidden="true"></div>
+  <canvas id="field" aria-hidden="true"></canvas>
+
+  <div id="app-container" class="terminal-mode">
+    
+  <!-- i tried to keep everything clean as possible like the css, please if you send
+  a pr dont add inlinestyles or hardcoded values in html, use the css variables instead -->
+
+    <!-- top action bar -->
+    <header class="terminal-standalone-topbar">
+      <div class="terminal-standalone-left">
+        <button type="button" id="btn-return-studio" class="terminal-standalone-nav-btn" title="Return to RWX Baker Studio">
+          <span>&larr; RETURN TO STUDIO</span>
+        </button>
+
+        <div class="terminal-topbar-export-controls">
+          <div class="export-mode-group" role="group" aria-label="Export mode">
+            <button type="button" class="export-mode-btn active" data-export-mode="screen" title="Capture visible screen frame">Screen</button>
+            <button type="button" class="export-mode-btn" data-export-mode="terminal" title="Capture full terminal frame with channels">Full Terminal</button>
+            <button type="button" class="export-mode-btn" data-export-mode="paged" title="Capture multi-page slides">Multi-Page</button>
+          </div>
+          <button type="button" id="btn-export-png" class="export-png-btn" title="Download PNG screenshot">
+            <span class="export-btn-glow" aria-hidden="true"></span>
+            <span class="export-btn-content">
+              <img src="rwxbaker-assets/ui/export-btn.png" alt="" class="export-btn-icon">
+              <span id="export-btn-text">Export</span>
+            </span>
+          </button>
+        </div>
+
+                <div class="terminal-wip-notice-topbar">
+          <span class="wip-notice-text"><strong>NOTE:</strong> Terminal mode is still under development. Report bugs on Discord (<strong>@rwyn</strong>) or GitHub. Also in this mode you can use the<br> "Full Terminal" export option, it will draw and export the CHANNELS panel too so it will look more accurate to the in-game one!</span>
+        </div>
+      </div>
+
+      <div class="terminal-standalone-deco-hud" aria-hidden="true">
+        <img src="rwxbaker-assets/deco/header-mark.webp" alt="" class="terminal-topbar-deco-mark">
+      </div>
+    </header>
+
+        <main id="phone-frame" class="terminal-frame">
+
+      <!-- channels & controls -->
+      <aside id="terminal-sidebar" class="terminal-sidebar">
+                <div class="terminal-channels-panel">
+          <div class="terminal-session-header">
+            <span class="terminal-session-title">
+              <img src="rwxbaker-assets/deco/header-mark.webp" alt="" class="terminal-channel-mark" aria-hidden="true">
+              <span>CHANNELS \\</span>
+            </span>
+            <div class="terminal-channels-header-actions">
+
+                <!-- NOTE to myyself:: for now i deactived the CLEAR button since all conversations can be deleted separately now
+
+              <button type="button" id="btn-terminal-clear-channels" class="terminal-clear-channels-btn" title="Delete All Channels / Chats">
+                <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <polyline points="3 6 5 6 21 6"></polyline>
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                </svg>
+                <span>CLEAR</span>
+              </button> -->
+
+              <button type="button" id="btn-terminal-new-chat" class="terminal-new-chat-btn" title="Create New Channel / Chat">+ NEW</button>
+            </div>
+          </div>
+          <div class="terminal-session-scroll">
+            <div class="terminal-session-cards" id="terminal-session-cards">
+                          </div>
+          </div>
+        </div>
+
+                <div class="terminal-control-panel" id="terminal-control-panel">
+          <div class="terminal-control-header">
+            <span class="terminal-control-title">ACTIVE TRANSMITTER</span>
+          </div>
+
+                    <div class="terminal-speaker-split-grid">
+                        <div class="terminal-speaker-card is-active" id="speaker-card-endmin" title="Click to send messages as Endmin">
+              <div class="speaker-card-top">
+                <span class="speaker-freq-tag" id="speaker-freq-endmin">TX // USER</span>
+                <div class="terminal-gender-mini-toggle">
+                  <button type="button" class="gender-mini-btn active" id="terminal-user-endminf" data-user="endminf" title="Switch to Endmin Female">Female</button>
+                  <button type="button" class="gender-mini-btn" id="terminal-user-endminm" data-user="endminm" title="Switch to Endmin Male">Male</button>
+                </div>
+              </div>
+              <div class="speaker-card-body">
+                <div class="speaker-avatar-wrap">
+                  <img id="terminal-ctrl-endmin-avatar" src="rwxbaker-assets/avatars/operator/icon_round_chr_0003_endminf.png" alt="Endmin">
+                </div>
+                <div class="speaker-meta">
+                  <span class="speaker-name" id="terminal-ctrl-endmin-name">Endmin (F)</span>
+                  <span class="speaker-status" id="speaker-status-endmin">● ACTIVE</span>
+                </div>
+              </div>
+            </div>
+
+                        <div class="terminal-speaker-card" id="speaker-card-operator" title="Click to send messages as Operator">
+              <div class="speaker-card-top">
+                <span class="speaker-freq-tag" id="speaker-freq-operator">RX // OPERATOR</span>
+                <button type="button" id="btn-terminal-open-char-modal" class="speaker-change-btn" title="Choose another operator">CHANGE</button>
+              </div>
+              <div class="speaker-card-body">
+                <div class="speaker-avatar-wrap">
+                  <img id="terminal-ctrl-char-avatar" src="rwxbaker-assets/avatars/operator/icon_round_chr_0016_laevat.png" alt="Laevatain">
+                </div>
+                <div class="speaker-meta">
+                  <span class="speaker-name" id="terminal-ctrl-char-name">Laevatain</span>
+                  <span class="speaker-status" id="speaker-status-operator">STANDBY</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+                    <div class="terminal-squad-roster hidden" id="terminal-squad-roster">
+            <div class="terminal-squad-header">
+              <div class="terminal-squad-title-group">
+                <span class="terminal-squad-label">SQUAD FREQUENCIES</span>
+                <span class="terminal-squad-count" id="terminal-squad-count">(0)</span>
+              </div>
+              <button type="button" id="btn-terminal-add-squad-member" class="terminal-squad-add-btn" title="Add operator to group">+ ADD UNIT</button>
+            </div>
+            <div class="terminal-squad-members-strip" id="terminal-squad-members-strip">
+                          </div>
+          </div>
+
+          <!-- inline composer -->
+          <div class="terminal-compose-studio" id="terminal-compose-studio">
+            <div class="terminal-studio-header">
+              <span class="terminal-studio-title" id="terminal-studio-title">COMPOSE CONTEXT</span>
+            </div>
+
+                        <div class="terminal-context-tabs">
+              <button type="button" class="terminal-context-tab active" data-context-type="text">Text</button>
+              <button type="button" class="terminal-context-tab" data-context-type="image">Image</button>
+              <button type="button" class="terminal-context-tab" data-context-type="choices">Choices</button>
+              <button type="button" class="terminal-context-tab" data-context-type="reaction">Reaction</button>
+            </div>
+
+                        <div id="terminal-context-form-text" class="terminal-context-form">
+              <div class="terminal-context-input-wrap">
+                <div id="terminal-context-text-input" class="terminal-context-textarea editable-message-input" contenteditable="true" data-placeholder="Type transmission..."></div>
+                <button type="button" id="btn-terminal-inline-emoji-toggle" class="terminal-emoji-toggle-btn" title="Toggle Emojis">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+                    <line x1="9" y1="9" x2="9.01" y2="9"></line>
+                    <line x1="15" y1="9" x2="15.01" y2="9"></line>
+                  </svg>
+                </button>
+
+                <!-- Floating popup emoji picker panel like Tablet View -->
+                <div id="terminal-inline-emoji-bar" class="terminal-inline-emoji-bar hidden">
+                  <div class="terminal-emoji-picker-header">
+                    <span>EMOJIS</span>
+                    <button type="button" id="btn-close-terminal-emoji" class="terminal-emoji-picker-close" title="Close" aria-label="Close emoji picker">&times;</button>
+                  </div>
+                  <div id="terminal-context-emojis" class="terminal-quick-emoji-row"></div>
+                </div>
+              </div>
+
+              <div class="terminal-context-btn-row">
+                <button type="button" id="btn-terminal-context-send-text" class="terminal-action-btn primary">
+                  <span>Send Message</span>
+                </button>
+                <button type="button" id="btn-terminal-context-stickers-toggle" class="terminal-action-btn secondary">
+                  <span>Send Sticker</span>
+                </button>
+              </div>
+
+              <div id="terminal-stickers-palette" class="terminal-stickers-palette hidden">
+                              </div>
+            </div>
+
+                        <div id="terminal-context-form-image" class="terminal-context-form hidden">
+              <label class="terminal-file-upload-btn" for="terminal-context-image-file">
+                <span class="upload-icon">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                    <polyline points="21 15 16 10 5 21"></polyline>
+                  </svg>
+                </span>
+                <span id="terminal-file-upload-label">Choose Image File...</span>
+              </label>
+              <input type="file" id="terminal-context-image-file" accept="image/*" class="terminal-hidden-file-input">
+              <div id="terminal-context-img-preview" class="terminal-context-img-preview hidden">
+                <img id="terminal-context-img-tag" alt="Attachment preview">
+                <button type="button" id="btn-remove-context-img" class="context-remove-img-btn" title="Remove image">&times;</button>
+              </div>
+              <button type="button" id="btn-terminal-context-send-image" class="terminal-action-btn primary" disabled>
+                <span>Attach & Send Image</span>
+              </button>
+            </div>
+
+                        <div id="terminal-context-form-choices" class="terminal-context-form hidden">
+              <div class="terminal-choice-inputs-wrap">
+                <div class="terminal-choice-input-row">
+                  <span class="choice-num-tag">1</span>
+                  <input type="text" id="terminal-context-choice-1" class="terminal-choice-input" placeholder="First choice option...">
+                </div>
+                <div class="terminal-choice-input-row">
+                  <span class="choice-num-tag">2</span>
+                  <input type="text" id="terminal-context-choice-2" class="terminal-choice-input" placeholder="Second choice (optional)...">
+                </div>
+              </div>
+              <div class="terminal-context-btn-row">
+                <button type="button" id="btn-terminal-context-add-choices" class="terminal-action-btn primary">
+                  <span>Set Choices</span>
+                </button>
+                <button type="button" id="btn-terminal-context-clear-choices" class="terminal-action-btn secondary">
+                  <span>Clear Choices</span>
+                </button>
+              </div>
+            </div>
+
+                        <div id="terminal-context-form-reaction" class="terminal-context-form hidden">
+              <label class="terminal-form-mini-label" for="terminal-context-reaction-target">Target Message:</label>
+              <select id="terminal-context-reaction-target" class="terminal-select-target">
+                <option value="">-- Select a message --</option>
+              </select>
+
+              <label class="terminal-form-mini-label">Select Emoji Reaction:</label>
+              <div id="terminal-context-reaction-emojis" class="terminal-reaction-emoji-grid">
+                              </div>
+              <button type="button" id="btn-terminal-context-add-reaction" class="terminal-action-btn primary">
+                <span>Add Selected Reaction</span>
+              </button>
+            </div>
+
+                        <div id="terminal-context-edit-actions" class="terminal-context-edit-actions hidden">
+              <button type="button" id="btn-terminal-edit-update" class="terminal-action-btn primary">
+                <span>Update Message</span>
+              </button>
+              <div class="terminal-edit-sub-btns">
+                <button type="button" id="btn-terminal-edit-delete" class="terminal-action-btn danger">
+                  <span>Delete</span>
+                </button>
+                <button type="button" id="btn-terminal-edit-cancel" class="terminal-action-btn secondary">
+                  <span>Cancel Edit</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- chat pane -->
+      <section id="terminal-main-pane" class="terminal-main-pane">
+
+                <img id="live-watermark-stamp" class="rwx-export-watermark" src="rwxbaker-assets/watermarks/watermark-v1-telemetry.png" alt="RWX // BKR" aria-hidden="true">
+
+                <header id="terminal-chat-header" class="terminal-chat-header">
+          <img class="terminal-header-seg terminal-header-seg-left" src="rwxbaker-assets/deco/group-header-left.webp" alt="" aria-hidden="true">
+          <div class="terminal-header-center">
+            <img class="terminal-header-seg terminal-header-seg-center" src="rwxbaker-assets/deco/group-header-center.webp" alt="" aria-hidden="true">
+            <h2 id="terminal-chat-header-name" class="terminal-header-title">Connecting...</h2>
+          </div>
+          <img class="terminal-header-seg terminal-header-seg-right" src="rwxbaker-assets/deco/group-header-right.webp" alt="" aria-hidden="true">
+          <span class="terminal-header-marquee-viewport" aria-hidden="true">
+            <span class="terminal-header-marquee-content"></span>
+          </span>
+        </header>
+
+                <div id="terminal-window-body" class="terminal-window-body">
+
+                    <div class="terminal-frame-top" aria-hidden="true">
+            <svg class="terminal-frame-notch" viewBox="0 0 232 10" preserveAspectRatio="none">
+              <path d="M0 0 L16 6 L216 6 L232 0" />
+            </svg>
+            <span class="terminal-frame-bars">
+              <span class="terminal-frame-bar terminal-frame-bar-magenta"></span>
+              <span class="terminal-frame-bar terminal-frame-bar-yellow"></span>
+              <span class="terminal-frame-bar terminal-frame-bar-cyan"></span>
+            </span>
+          </div>
+
+                    <div id="chat-viewport">
+            <div id="message-list">
+                          </div>
+          </div>
+
+                    <div id="chat-choices-container" class="choice-container">
+                      </div>
+
+                    <footer id="input-footer">
+            <span class="terminal-input-decoration" aria-hidden="true"></span>
+
+            <div class="input-bar">
+              <div class="input-wrapper">
+                <input type="text" id="message-input" placeholder="Transmit message to channel..." autocomplete="off">
+              </div>
+              <button type="button" id="btn-send" class="send-btn" title="Send Transmission">
+                <img src="rwxbaker-assets/icons/icon_sns_message_02.png" alt="Send">
+              </button>
+            </div>
+          </footer>
+
+        </div>
+      </section>
+    </main>
+
+  </div>
+
+  <!-- new transmission modal -->
+  <div id="new-transmission-modal" class="transmission-modal-backdrop hidden" aria-hidden="true">
+    <div class="transmission-modal-card">
+      <div class="transmission-modal-header">
+        <div class="transmission-modal-title">
+          <span class="transmission-modal-icon">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M4.93 4.93a10 10 0 0 1 14.14 0"></path>
+              <path d="M7.76 7.76a6 6 0 0 1 8.48 0"></path>
+              <circle cx="12" cy="12" r="2" fill="currentColor"></circle>
+              <path d="M12 14v7"></path>
+              <path d="M9 21h6"></path>
+            </svg>
+          </span>
+          <h3 id="transmission-modal-heading">NEW TRANSMISSION</h3>
+        </div>
+        <button type="button" id="btn-close-transmission-modal" class="transmission-modal-close" aria-label="Close modal">&times;</button>
+      </div>
+
+      <div class="transmission-modal-body">
+                <div class="transmission-type-selector">
+          <button type="button" class="transmission-type-btn active" id="modal-tab-direct" data-mode="direct">
+            <span class="type-icon">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+            </span>
+            <span class="type-title">Direct Link</span>
+          </button>
+          <button type="button" class="transmission-type-btn" id="modal-tab-group" data-mode="group">
+            <span class="type-icon">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+            </span>
+            <span class="type-title">Group Channel</span>
+          </button>
+        </div>
+
+                <div id="transmission-group-config" class="transmission-group-config hidden">
+          <label class="transmission-field-label" for="transmission-group-name">CHANNEL / OPERATION NAME</label>
+          <input type="text" id="transmission-group-name" class="transmission-input" placeholder="e.g. AIC Sector 4 Recon blighted">
+          <div class="transmission-participants-summary">
+            <span class="transmission-field-label">SELECTED SQUAD OPERATORS:</span>
+            <div id="transmission-selected-chips" class="transmission-selected-chips">
+              <span class="no-participants-hint">Select operators from list below...</span>
+            </div>
+          </div>
+        </div>
+
+                <div class="transmission-characters-section">
+          <div class="transmission-search-bar">
+            <input type="search" id="transmission-character-search" class="transmission-search-input" placeholder="Search operator or NPC by name...">
+            <div class="transmission-filter-tabs">
+              <button type="button" class="transmission-filter-btn active" data-filter="all">All</button>
+              <button type="button" class="transmission-filter-btn" data-filter="operators">Operators</button>
+              <button type="button" class="transmission-filter-btn" data-filter="npcs">NPCs</button>
+            </div>
+          </div>
+
+          <div class="transmission-character-grid" id="transmission-character-grid">
+                      </div>
+        </div>
+      </div>
+
+      <div class="transmission-modal-footer">
+        <button type="button" id="btn-cancel-transmission" class="transmission-btn-cancel">CANCEL</button>
+        <button type="button" id="btn-submit-transmission" class="transmission-btn-submit">
+          <span class="submit-glow"></span>
+          <span id="transmission-submit-label">ESTABLISH LINK</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- character selection modal -->
+  <div id="terminal-character-modal" class="transmission-modal-backdrop hidden" aria-hidden="true">
+    <div class="transmission-modal-card">
+      <div class="transmission-modal-header">
+        <div class="transmission-modal-title">
+          <span class="transmission-modal-icon">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+          </span>
+          <h3>SELECT ACTIVE OPERATOR</h3>
+        </div>
+        <button type="button" id="btn-close-char-modal" class="transmission-modal-close" aria-label="Close modal">&times;</button>
+      </div>
+
+      <div class="transmission-modal-body">
+        <div class="transmission-characters-section">
+          <div class="transmission-search-bar">
+            <input type="search" id="terminal-char-search-input" class="transmission-search-input" placeholder="Search operator or NPC by name...">
+            <div class="transmission-filter-tabs">
+              <button type="button" class="transmission-filter-btn active" data-filter="all">All</button>
+              <button type="button" class="transmission-filter-btn" data-filter="operators">Operators</button>
+              <button type="button" class="transmission-filter-btn" data-filter="npcs">NPCs</button>
+            </div>
+          </div>
+          <div class="transmission-character-grid" id="terminal-char-modal-grid">
+          </div>
+        </div>
+      </div>
+
+      <div class="transmission-modal-footer">
+        <button type="button" id="btn-cancel-char-modal" class="transmission-btn-cancel">CLOSE</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="app-global-footer">
+    <div class="footer-legal-inner">
+      <a href="privacy.html" target="_blank" rel="noopener noreferrer" class="footer-legal-link" title="Privacy Policy">
+        <span>PRIVACY</span>
+      </a>
+      <span class="footer-legal-dot">&bull;</span>
+      <a href="notice.html" target="_blank" rel="noopener noreferrer" class="footer-legal-link" title="Notice &amp; Disclaimer">
+        <span>NOTICE</span>
+      </a>
+      <span class="footer-legal-dot">&bull;</span>
+      <a href="https://rwyn.ch/" target="_blank" rel="noopener noreferrer" class="footer-legal-link" title="Rwyn's Main Website">
+        <img src="rwxbaker-assets/ui/rwx-logo-R-mono.png" class="footer-rwx-icon" alt="RWX">
+        <span>RWYN.CH</span>
+      </a>
+      <span class="footer-legal-dot">&bull;</span>
+      <a href="https://github.com/rwynx/RWX-Baker" target="_blank" rel="noopener noreferrer" class="footer-legal-link footer-github-link" title="Contribute on GitHub">
+        <svg class="footer-github-icon" viewBox="0 0 16 16" width="13" height="13" fill="currentColor" aria-hidden="true">
+          <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+        </svg>
+        <span>GITHUB <span class="footer-github-subtext"></span></span>
+      </a>
+      <span class="footer-legal-dot footer-legal-dot-last">&bull;</span>
+      <span class="footer-legal-text">RWX Baker is an independent, non-commercial fan work. Free, no tracking, no ads. All game content, characters, and trademarks belong to HYPERGRYPH / GRYPHLINE.</span>
+    </div>
+  </footer>
+
+  <!-- scripts -->
+  <script src="rwxbaker-js/dom-to-image-more.min.js"></script>
+  <script src="rwxbaker-js/tutorial-template.js"></script>
+  <script src="rwxbaker-js/characters.js"></script>
+  <script src="rwxbaker-js/terminal.js"></script>
+</body>
+</html>
+
