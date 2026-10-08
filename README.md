@@ -73,8 +73,8 @@ First and foremost, GLORY TO HYPERGRYPH!<br>GLORY TO THE COMMUNITY OF PLAYERS WH
     
     **Example LIVE and exported render versions:**<br>
 <p align="center" style="display: flex; justify-content: center; align-items: center; gap: 10px;">
-<img src="showcase/terminal-showcase-full.png" width="35%" alt="terminal live full showcase"><br>
-<img src="showcase/terminal-view-export.png" width="35%" alt="terminal-view-export"><br>
+<img src="showcase/terminal-showcase-full.png" width="45%" alt="terminal live full showcase">
+<img src="showcase/terminal-view-export.png" width="45%" alt="terminal-view-export"><br>
 </p><br>
 
 - **100% Private & Client-Side:** No sign-ups, no cookies, no advertising, and no analytics. Every keystroke, every word and any image export is processed strictly within your local browser.
