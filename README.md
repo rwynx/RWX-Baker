@@ -42,21 +42,21 @@ First and foremost, GLORY TO HYPERGRYPH!<br>GLORY TO THE COMMUNITY OF PLAYERS WH
 - **Stickers & Emojis:**
   - Full collection of **168 game stickers** with searchable/grid picker (excluding skland stickers).
   - **38 game emojis** for in-text embedding and message reactions.<br><br>
-  <img src="showcase/emojis-stickers1.png" width="40%" alt="emojis-stickers1"><br><img src="showcase/emojis-stickers2.png" width="40%" alt="showcase/emojis-stickers2"><br><img src="showcase/stickers.png" width="40%" alt="sticker-levi"><br>
+  <img src="showcase/emojis-stickers1.png" width="40%" alt="emojis-stickers1"><br><img src="showcase/emojis-stickers2.png" width="40%" alt="showcase/emojis-stickers2"><br><img src="showcase/stickers_new.png" width="40%" alt="sticker-levi"><br>
 
 - **Single & Group Conversations:**
   - Toggle between 1-on-1 chats and multi-character group channels.
   - Custom group titles and dynamic speaker switching.<br><br><img src="showcase/chat-mode.png" width="30%" alt="chat-mode"><br>
   - Group chat example:<br><br>
-  <img src="showcase/group-chat.png" width="50%" alt="group-chat">
+  <img src="showcase/group-chat_new.png" width="50%" alt="group-chat">
 - **Interactive Dialogue Composer** *(Skuqre take notes)*:
   - Standard speech bubbles for incoming & outgoing.
-  - Image bubbles, yes you can send images with **real-time drag resizing**.<br><br><img src="showcase/image-msg.gif" width="40%" alt="image-msg"><br>
-  - Dialogue choices, you can add 1 or 2 choices like the in-game version.<br>Clicking on it will send it as a message/reply.<br><br><img src="showcase/choices.png" width="50%" alt="choices"><br>
-  - Emoji reactions attached to individual messages.<br>Yes you can react to messages just like in-game version of the app.<br><br><img src="showcase/reactions.png" width="40%" alt="reactions"><br>
+  - Image bubbles, yes you can send images with **real-time drag resizing**.<br><br><img src="showcase/image-msg_new.gif" width="40%" alt="image-msg"><br>
+  - Dialogue choices, you can add 1 or 2 choices like the in-game version.<br>Clicking on it will send it as a message/reply.<br><br><img src="showcase/choices_new.png" width="50%" alt="choices"><br>
+  - Emoji reactions attached to individual messages.<br>Yes you can react to messages just like in-game version of the app.<br><br><img src="showcase/reactions_new.png" width="40%" alt="reactions"><br>
   - Quick inline editing (click any message or layer to modify text or sender).<br>Compose Context mode automatically switches to Edit Mode when a message is selected.<br><br><img src="showcase/edit-mode.gif" width="40%" alt="edit-mode">
 - **Drag-and-Drop Reordering:**
-  - Reorder messages directly in the conversation viewport, click and hold the message bubble and move around,<br>Or via the **Conversation Layers** panel on bottom left, click and move the selected message.<br><br><img src="showcase/reorder-msg.gif" width="50%" alt="reorder-msg">
+  - Reorder messages directly in the conversation viewport, click and hold the message bubble and move around,<br>Or via the **Conversation Layers** panel on bottom left, click and move the selected message.<br><br><img src="showcase/reorder-msg_new.gif" width="50%" alt="reorder-msg">
 - **High-Resolution PNG Export:**
   - **Screen Mode:** Captures the current visible frame. Set as default, captures the render on the screen at that moment.
   - **Full Chat Mode:** Stitches the entire conversation from start to finish into a single continuous image.<br>Not recommended for very long conversations. For those try Multi-Page mode instead. 
