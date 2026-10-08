@@ -2286,9 +2286,16 @@ canvas#field {
 .empty-conversation-prompt {
   align-self: center;
   margin-top: 18vh;
-  color: var(--color-text-subtle);
+  color: var(--color-text-subtle, #8c8d94);
   font-size: 0.95rem;
   text-align: center;
+  pointer-events: none;
+  user-select: none;
+  letter-spacing: 0.3px;
+}
+
+.is-exporting .empty-conversation-prompt {
+  display: none !important;
 }
 
 /* message bubble layout */

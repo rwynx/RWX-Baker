@@ -53,8 +53,9 @@
   /* ========================================================================
      [RX 4: TERMINAL HEADER, NOTCH & STATUS COLOR BARS]
      ======================================================================== */
-  --terminal-header-height: 64px;             /* Segmented header bar height */
+  --terminal-header-height: 60px;             /* Segmented header bar height (58px clips dark bottom bar; set to 66px to restore full asset with dark bar) */
   --terminal-header-title-size: 20px;         /* Header operator title font size */
+  --terminal-header-title-shift-y: 0px;       /* Header operator title vertical optical offset (0px for 58px header, -3px for 66px header) */
   --terminal-header-marquee-opacity: 0.09;    /* Scrolling Endfield marquee background opacity */
   --terminal-notch-height: 10px;              /* Top right frame notch height */
   --terminal-status-bar-opacity: 1;           /* 3-color status indicator bar opacity */
@@ -135,6 +136,7 @@
 
   --btn-accent-color: #d0ff00;                /* Accent neon highlight (Modal active, chips, glow) */
   --btn-accent-glow: rgba(208, 255, 0, 0.4);
+  --btn-return-glow: rgba(0, 190, 255, 0.45); /* Return to Studio navigation button cyan glow */
 }
 
 /* terminal launcher */
@@ -307,14 +309,14 @@ body.terminal-standalone-page {
   letter-spacing: 0.5px;
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 0 12px var(--btn-accent-glow, rgba(208, 255, 0, 0.35));
+  box-shadow: 0 0 12px var(--btn-return-glow, rgba(0, 190, 255, 0.45));
   text-decoration: none;
 }
 
 .terminal-standalone-nav-btn:hover {
   transform: translateX(-2px) scale(1.02);
   background: #f7f6f4;
-  box-shadow: 0 0 18px var(--btn-accent-glow, rgba(208, 255, 0, 0.55));
+  box-shadow: 0 0 18px var(--btn-return-glow, rgba(0, 190, 255, 0.7));
 }
 
 .terminal-backup-controls {
@@ -1955,7 +1957,7 @@ body.terminal-standalone-page {
 
 .terminal-header-seg {
   display: block;
-  height: 100%;
+  height: 66px;
   pointer-events: none;
   user-select: none;
 }
@@ -1975,14 +1977,14 @@ body.terminal-standalone-page {
 
 .terminal-header-seg-center {
   width: 100%;
-  height: 100%;
+  height: 66px;
   object-fit: fill;
 }
 
 .terminal-header-title {
   position: absolute;
   z-index: 2;
-  top: 50%;
+  top: calc(50% + var(--terminal-header-title-shift-y, 0px));
   left: clamp(16px, 2.3vh, 26px);
   right: clamp(12px, 1.8vh, 20px);
   overflow: hidden;
@@ -1990,7 +1992,8 @@ body.terminal-standalone-page {
   font-size: var(--terminal-header-title-size, 20px);
   font-weight: 500;
   color: #ffffff;
-  line-height: 1;
+  line-height: 1.4;
+  padding: 4px 0;
   text-overflow: ellipsis;
   white-space: nowrap;
   transform: translateY(-50%);
@@ -2072,6 +2075,24 @@ body.terminal-standalone-page {
 
 .chat-bg-decorations,
 #terminal-window-body .chat-bg-decorations {
+  display: none !important;
+}
+
+.terminal-mode .empty-conversation-prompt {
+  align-self: center;
+  margin-top: 18vh;
+  color: #72737c;
+  font-size: 0.88rem;
+  font-family: 'Bender', var(--font-sans);
+  text-align: center;
+  letter-spacing: 0.6px;
+  pointer-events: none;
+  user-select: none;
+  opacity: 0.75;
+}
+
+.terminal-mode.is-exporting .empty-conversation-prompt,
+#phone-frame.is-exporting-terminal .empty-conversation-prompt {
   display: none !important;
 }
 

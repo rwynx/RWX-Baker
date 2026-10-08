@@ -3,11 +3,11 @@
 document.addEventListener("DOMContentLoaded", () => {
 
   const tutorial = window.RWX_TUTORIAL_TEMPLATE || null;
-  const CURRENT_TUTORIAL_VERSION = "20261008_v2";
+  const CURRENT_TUTORIAL_VERSION = "20261008_v3";
 
   const state = {
     activeUser: "endminf",
-    activeCharacterId: "laevatain",
+    activeCharacterId: null,
     contextSender: "incoming", 
     conversationMode: "direct",
     groupParticipantIds: [], 
@@ -586,6 +586,10 @@ document.addEventListener("DOMContentLoaded", () => {
     messageList.innerHTML = "";
 
     if (state.messages.length === 0) {
+      const emptyPrompt = document.createElement("div");
+      emptyPrompt.className = "empty-conversation-prompt";
+      emptyPrompt.textContent = "Select a character or make a group chat to begin...";
+      messageList.appendChild(emptyPrompt);
       return;
     }
 
@@ -3483,7 +3487,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       state.activeUser = (data.activeUser === "endminf" || data.activeUser === "endminm") ? data.activeUser : "endminf";
-      state.activeCharacterId = data.activeCharacterId || "laevatain";
+      state.activeCharacterId = (data.activeCharacterId && CHARACTERS[data.activeCharacterId]) ? data.activeCharacterId : null;
       state.conversationMode = data.conversationMode || "direct";
       state.groupParticipantIds = Array.isArray(data.groupParticipantIds) ? data.groupParticipantIds : [];
       state.groupName = data.groupName || "";

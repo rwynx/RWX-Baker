@@ -405,8 +405,9 @@ Terminal Mode layout, dimensions, offsets, and colors are defined at `:root` in 
 
 | Variable | Default Value | Description |
 | :--- | :--- | :--- |
-| `--terminal-header-height` | `64px` | Segmented header bar height. |
+| `--terminal-header-height` | `58px` | Segmented header bar height (`58px` cleanly clips the dark bottom baseline bar off; set to `66px` to restore the full asset with dark baseline). |
 | `--terminal-header-title-size` | `20px` | Header operator title font size. |
+| `--terminal-header-title-shift-y` | `0px` | Header operator title vertical optical offset (`0px` for 58px header; `-3px` when 66px baseline is active). |
 | `--terminal-header-marquee-opacity` | `0.09` | Scrolling Endfield marquee background watermark opacity. |
 | `--terminal-notch-height` | `10px` | Top-right angular frame notch accent height. |
 | `--terminal-status-bar-opacity` | `1` | 3-color status indicator bar opacity. |
@@ -472,6 +473,7 @@ Terminal Mode layout, dimensions, offsets, and colors are defined at `:root` in 
 | `--btn-new-chat-bg` | `#d0ff00` | Background color for `+ NEW` channel creation button. |
 | `--btn-accent-color` | `#d0ff00` | Global signature neon yellow/lime accent color. |
 | `--btn-accent-glow` | `rgba(208, 255, 0, 0.4)` | Global accent glow aura color for active buttons and badges. |
+| `--btn-return-glow` | `rgba(0, 190, 255, 0.45)` | Cyan accent glow aura for the RETURN navigation button. |
 
 ### 2. Multi-Channel Sessions & Group Sender Formatting
 

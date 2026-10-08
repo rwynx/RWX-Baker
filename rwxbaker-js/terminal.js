@@ -228,7 +228,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let modalFilter = "all";
 
   // storage & persistence
-  const CURRENT_TERMINAL_TEMPLATE_VERSION = "20261008_v2";
+  const CURRENT_TERMINAL_TEMPLATE_VERSION = "20261008_v3";
 
   function loadPersistentState() {
     const installedVersion = localStorage.getItem("rwx_terminal_template_version");
@@ -705,6 +705,10 @@ document.addEventListener("DOMContentLoaded", () => {
     messageList.innerHTML = "";
 
     if (!state.messages || state.messages.length === 0) {
+      const emptyPrompt = document.createElement("div");
+      emptyPrompt.className = "empty-conversation-prompt";
+      emptyPrompt.textContent = "Select a character or make a group chat to begin...";
+      messageList.appendChild(emptyPrompt);
       return;
     }
 
