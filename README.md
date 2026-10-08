@@ -63,15 +63,20 @@ First and foremost, GLORY TO HYPERGRYPH!<br>GLORY TO THE COMMUNITY OF PLAYERS WH
   - **Multi-Page Mode:** Automatically segments long conversations into sequential slides (`RWX-Baker-1.png`, `RWX-Baker-2.png`, etc.) with continuity overlap for social media carousels.
   - **Anti-Leak Telemetry Stamp:** Exports automatically include a subtle Endfield OS telemetry stamp (`// RWX.SYS-01` or `RWX // BKR ■ 01`) dynamically rendered during capture to verify fan/community origin.<br><br>Click on the HINTS button see more tips about these export options.<br><br>
   ![ExampleExportOptions](showcase/export-options.gif)
-- **Dual Viewports:** Switch seamlessly between **Tablet** and **Phone** aspect modes.<br>Note: Phone mode is currently a bit broken, since I initially started making this tool for the actual, in-game size of the Baker, not compact Phone version. But I will hopefully fix it in the future. For now, use it only for small 1 on 1 chats. That shouldn't break anything.<br><br><img src="showcase/switch-views.png" width="45%" alt="Description of image">
-- **Terminal Mode (In-Game BAKER Interface) with conversations menu:** *(WIP)*
-  - Full-screen recreation of the actual in-game terminal interface.
-  - Multi-channel session list (direct links & group channels) with fast channel switching.
-  - Quick transmitter controls, squad roster picking, and independent PNG exports.
-
-*Still VERY much a work in progress and a bit rough, expect bugs.* If something breaks or looks cursed, let me know on Discord (`@rwyn`) or open an issue here.<br>Accessible via the button in the editor or directly at [`terminal.html`](https://baker.rwyn.ch/terminal.html).
+- **Dual Viewports & Terminal Mode:**
+  - **Tablet & Phone Viewports:** Switch seamlessly between standard **Tablet** (default in-game aspect ratio) and compact **Phone** mode.
+  - **Full Terminal Mode [**`terminal.html`**](https://baker.rwyn.ch/terminal.html):** Full-screen *re-imagination* of the in-game Baker screen/terminal interface:
+    - **Channels Sidebar (460px):** Multi-channel session list supporting both direct 1-on-1 links and multi-operator group chats.
+    - **Independent Save / Load JSON Backups:** Export and import multi-channel terminal setups with drag-and-drop JSON file support, complete with cross-mode safeguards (prevents accidental imports between Tablet and Terminal JSON formats).
+    - **Full Terminal PNG Export:** Dedicated **Screen** and **Full Terminal** capture options rendering the complete Channels list and active dialogue window at crisp 2x resolution with zero capture darkening.<br>
+    <img src="showcase/terminal-export.png" width="50%" alt="terminal-export"><br>
+    - **Instant Cross-Mode Sync:** Effortlessly jump between Studio/Tablet view and Terminal Mode. Current conversation carries over automatically.
+    - Accessible directly via the Editor drawer or at [**`terminal.html`**](https://baker.rwyn.ch/terminal.html).
 
 - **100% Private & Client-Side:** No sign-ups, no cookies, no advertising, and no analytics. Every keystroke, every word and any image export is processed strictly within your local browser.
+
+- **Map Decorations (Archived):**
+  - Topographic map isoline decorations have been archived from the default toolbar toggle in favor of the new frosted glass backdrop filters (`backdrop-filter: blur()`), it was either this or map deco, and honestly this looks pretty neat so map deco goes to archive. All used CSS variables, assets, and JS handlers remain fully preserved in the code for custom forks and user styling (see the **[customization guide](CUSTOMIZATION.md)**).
 
 ---
 

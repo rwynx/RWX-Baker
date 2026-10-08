@@ -888,3 +888,38 @@
   }
 }
 
+@media (max-width: 768px) {
+  .terminal-announce-banner {
+    position: fixed !important;
+    top: 15px !important;
+    bottom: auto !important;
+    left: auto !important;
+    right: 14px !important;
+    width: auto !important;
+    padding: 5px 8px 5px 12px !important;
+    font-size: 0.72rem !important;
+    max-width: calc(100vw - 115px) !important;
+  }
+
+  .banner-extra {
+    display: none !important;
+  }
+
+  .terminal-announce-banner.banner-fade-out {
+    opacity: 0 !important;
+    transform: translateY(-8px) !important;
+  }
+
+  @keyframes terminalBannerFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+

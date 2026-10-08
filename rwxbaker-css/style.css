@@ -109,21 +109,20 @@ canvas#field {
 }
 
 .view-controls {
-  padding: 8px 16px;
+  padding: 8px 14px;
   background-color: #202125;
   border-bottom: 1px solid #2e2f34;
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  display: flex;
   align-items: center;
+  justify-content: flex-start;
   gap: 12px;
 }
 
 .view-control-group {
   display: flex;
   align-items: center;
-  justify-content: var(--view-group-justify, center);
   gap: 8px;
-  width: 100%;
+  width: auto;
 }
 
 .control-group-title {
@@ -139,7 +138,7 @@ canvas#field {
   width: 1px;
   height: 20px;
   background-color: #2e2f34;
-  justify-self: center;
+  flex-shrink: 0;
 }
 
 .view-mode-controls,
@@ -3715,3 +3714,279 @@ body.legal-page::-webkit-scrollbar-thumb:hover {
   top: 10px;
   bottom: 58px;
 }
+
+.terminal-session-card__sender {
+  font-weight: 700;
+  color: #ebece9;
+  margin-right: 3px;
+}
+
+/* ==========================================================================
+   TERMINAL MODE ANNOUNCEMENT BANNER (TABLET VIEW)
+   ========================================================================== */
+.terminal-announce-banner {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 0;
+  right: auto;
+  width: auto;
+  max-width: calc(100% - 20px);
+  box-sizing: border-box;
+  z-index: 50;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background:
+    linear-gradient(#0e1014, #0e1014) padding-box,
+    linear-gradient(135deg, #d0ff00 0%, #00beff 28%, #ff2a6d 55%, #00e5ff 78%, #d0ff00 100%) border-box;
+  border: 1.5px solid transparent;
+  background-size: 100% 100%, 250% 250%;
+  border-radius: 9999px;
+  padding: 9px 14px 9px 18px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: #dddee4;
+  font-family: inherit;
+  font-size: 0.88rem;
+  letter-spacing: 0.35px;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -webkit-touch-callout: none !important;
+  cursor: pointer !important;
+  overflow: hidden;
+  animation:
+    terminalBannerFadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards,
+    bannerBorderFlow 5s ease infinite alternate,
+    bannerCyberPulse 3.5s ease-in-out infinite alternate;
+  transition: opacity 0.24s ease, transform 0.24s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
+  pointer-events: auto;
+}
+
+.terminal-announce-banner *,
+.terminal-banner-cta,
+.terminal-banner-cta * {
+  cursor: pointer !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+}
+
+/* cyber ambient sheen sweep */
+.terminal-announce-banner::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -140%;
+  width: 70%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.12) 30%, rgba(0, 190, 255, 0.24) 50%, rgba(208, 255, 0, 0.2) 70%, transparent 100%);
+  transform: skewX(-25deg);
+  border-radius: 9999px;
+  pointer-events: none;
+  animation: bannerSheenSweep 3.8s infinite cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.terminal-announce-banner:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 36px rgba(0, 0, 0, 0.85), 0 0 26px rgba(208, 255, 0, 0.55), inset 0 0 16px rgba(0, 190, 255, 0.25);
+}
+
+.terminal-announce-banner.banner-fade-out {
+  opacity: 0 !important;
+  transform: translateY(-8px) scale(0.98) !important;
+  pointer-events: none !important;
+}
+
+.terminal-banner-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: inherit;
+  text-decoration: none;
+  padding: 0;
+  flex: 1 1 auto;
+}
+
+.terminal-banner-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #00beff;
+  filter: drop-shadow(0 0 6px rgba(0, 190, 255, 0.75));
+  transition: transform 0.25s ease, filter 0.25s ease, color 0.2s ease;
+}
+
+.terminal-announce-banner:hover .terminal-banner-icon {
+  transform: rotate(-6deg) scale(1.15);
+  filter: drop-shadow(0 0 9px rgba(0, 190, 255, 0.95));
+  color: #d0ff00;
+}
+
+.terminal-banner-badge {
+  background: #d0ff00;
+  color: #0e0f12;
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  box-shadow: 0 0 10px rgba(208, 255, 0, 0.55);
+  animation: terminalBadgePulse 2.4s ease-in-out infinite;
+}
+
+.terminal-banner-badge-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #0e0f12;
+  display: inline-block;
+  margin-right: 4px;
+  animation: badgeDotBlink 1.4s ease-in-out infinite alternate;
+}
+
+.terminal-banner-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.terminal-banner-title {
+  color: #ffffff;
+  font-weight: 800;
+  letter-spacing: 0.4px;
+  transition: color 0.2s ease, text-shadow 0.2s ease;
+}
+
+.terminal-announce-banner:hover .terminal-banner-title {
+  color: #d0ff00;
+  text-shadow: 0 0 10px rgba(208, 255, 0, 0.4);
+}
+
+.terminal-banner-desc {
+  color: #b1b5c4;
+  font-weight: 500;
+}
+
+.terminal-banner-arrow {
+  color: #00beff;
+  font-size: 0.95rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), color 0.2s ease;
+}
+
+.terminal-announce-banner:hover .terminal-banner-arrow {
+  transform: translateX(4px);
+  color: #d0ff00;
+}
+
+.terminal-banner-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border: none;
+  background: transparent;
+  color: #7b8091;
+  font-size: 1.25rem;
+  line-height: 1;
+  border-radius: 50%;
+  cursor: pointer !important;
+  padding: 0;
+  margin-left: 4px;
+  transition: color 0.18s ease, background-color 0.18s ease, transform 0.18s ease;
+  position: relative;
+  z-index: 2;
+}
+
+.terminal-banner-close:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.16);
+  transform: scale(1.15);
+}
+
+.terminal-banner-close:active {
+  transform: scale(0.9);
+}
+
+@keyframes terminalBannerFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bannerBorderFlow {
+  0% {
+    background-position: 0% 50%, 0% 50%;
+  }
+  50% {
+    background-position: 0% 50%, 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%, 0% 50%;
+  }
+}
+
+@keyframes bannerCyberPulse {
+  0% {
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.75), 0 0 16px rgba(208, 255, 0, 0.38), inset 0 0 12px rgba(208, 255, 0, 0.1);
+  }
+  45% {
+    box-shadow: 0 8px 34px rgba(0, 0, 0, 0.8), 0 0 22px rgba(0, 190, 255, 0.48), inset 0 0 12px rgba(0, 190, 255, 0.14);
+  }
+  80% {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.78), 0 0 18px rgba(255, 42, 109, 0.38), inset 0 0 12px rgba(255, 42, 109, 0.1);
+  }
+  100% {
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.75), 0 0 16px rgba(208, 255, 0, 0.38), inset 0 0 12px rgba(208, 255, 0, 0.1);
+  }
+}
+
+@keyframes bannerSheenSweep {
+  0% {
+    left: -140%;
+  }
+  30%, 100% {
+    left: 170%;
+  }
+}
+
+@keyframes terminalBadgePulse {
+  0%, 100% {
+    box-shadow: 0 0 8px rgba(208, 255, 0, 0.45);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 14px rgba(208, 255, 0, 0.75);
+    transform: scale(1.04);
+  }
+}
+
+@keyframes badgeDotBlink {
+  0% {
+    opacity: 0.35;
+    transform: scale(0.85);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+/* Guard: hide completely during export just in case */
+#phone-frame.is-exporting .terminal-announce-banner,
+.is-exporting .terminal-announce-banner {
+  display: none !important;
+}
+
+

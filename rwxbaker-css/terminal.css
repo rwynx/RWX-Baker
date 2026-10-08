@@ -15,16 +15,16 @@
   /* ========================================================================
      [RX 1: STANDALONE TERMINAL PAGE CANVAS (terminal.html)]
      ======================================================================== */
-  --terminal-frame-width: 1550px;             /* Total width of the combined Terminal frame (Channels + Chat) */
+  --terminal-frame-width: 1590px;             /* Total width of the combined Terminal frame (Channels + Chat) */
   --terminal-frame-height: 860px;             /* Height of Terminal frame */
   --terminal-frame-zoom: 1;                   /* Terminal UI scale zoom (default: 1) */
   --terminal-columns-gap: 16px;               /* Space between Channels sidebar and Main Chat window */
-  --terminal-topbar-max-width: 1550px;        /* Top navigation and sys status bar max width */
+  --terminal-topbar-max-width: 1590px;        /* Top navigation and sys status bar max width */
 
   /* ========================================================================
      [RX 2: CHANNELS SIDEBAR & QUICK CONTROLS (LEFT COLUMN)]
      ======================================================================== */
-  --terminal-channels-width: 420px;           /* Width of Channels column (widen towards left) */
+  --terminal-channels-width: 460px;           /* Width of Channels column (widen towards left) */
   --terminal-channels-gap: 10px;              /* Vertical spacing between channel session cards */
   --terminal-channels-bg-opacity: 0.55;       /* Background glass tint opacity for channels column */
   --terminal-channels-blur: 14px;             /* Channels column glass blur intensity */
@@ -129,38 +129,34 @@
 }
 
 /* terminal launcher */
-.terminal-launcher-section {
-  padding: 4px 16px 4px 16px;
-  background: var(--bg-panel-card);
-  border-bottom: 1px solid #232428;
-}
-
-.terminal-launcher-section + .backup-section {
-  padding-top: 6px;
+.terminal-control-group {
+  justify-content: flex-start;
+  flex: 0 0 auto;
 }
 
 .terminal-launcher-btn {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  padding: 6px 12px;
-  background: linear-gradient(135deg, rgba(255, 239, 0, 0.14) 0%, rgba(20, 21, 25, 0.95) 60%);
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  border-radius: 6px;
+  gap: 8px;
+  width: auto;
+  max-width: none;
+  padding: 4px 10px;
+  background: linear-gradient(135deg, rgba(208, 255, 0, 0.16) 0%, rgba(20, 21, 25, 0.95) 60%);
+  border: 1px solid rgba(208, 255, 0, 0.35);
+  border-radius: 5px;
   color: var(--color-text-white);
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3), inset 0 0 10px rgba(255, 239, 0, 0.06);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3), inset 0 0 10px rgba(208, 255, 0, 0.08);
   font-family: 'Bender', var(--font-sans);
   text-decoration: none;
   box-sizing: border-box;
 }
 
 .terminal-launcher-btn:hover {
-  background: linear-gradient(135deg, rgba(208, 255, 0, 0.562) 0%, rgba(28, 29, 35, 0.98) 60%);
-  border-color: #ffffff;
-  box-shadow: 0 4px 14px rgba(255, 238, 0, 0.466), inset 0 0 14px rgba(255, 238, 0, 0.897);
+  background: linear-gradient(135deg, rgba(208, 255, 0, 0.42) 0%, rgba(28, 29, 35, 0.98) 60%);
+  border-color: #d0ff00;
+  box-shadow: 0 3px 12px rgba(208, 255, 0, 0.35), inset 0 0 12px rgba(208, 255, 0, 0.3);
   transform: translateY(-1px);
 }
 
@@ -221,15 +217,17 @@
 }
 
 .terminal-launcher-badge {
+  font-family: 'Bender', var(--font-sans);
   font-size: 0.6rem;
-  font-weight: 700;
+  font-weight: 800;
   letter-spacing: 0.6px;
-  padding: 1px 5px;
-  background: rgba(208, 255, 0, 0.12);
-  color: var(--btn-accent-color, #d0ff00);
-  border: 1px solid rgba(208, 255, 0, 0.35);
+  padding: 1.5px 6px;
+  background: var(--btn-accent-color, #d0ff00);
+  color: #121315;
   border-radius: 3px;
   line-height: 1.2;
+  box-shadow: 0 0 6px rgba(208, 255, 0, 0.45);
+  white-space: nowrap;
 }
 
 .terminal-launcher-arrow {
@@ -308,6 +306,50 @@ body.terminal-standalone-page {
   transform: translateX(-2px) scale(1.02);
   background: #f7f6f4;
   box-shadow: 0 0 18px var(--btn-accent-glow, rgba(208, 255, 0, 0.55));
+}
+
+.terminal-backup-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.terminal-backup-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: rgba(18, 19, 23, 0.85);
+  color: #c4c5cc;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-family: 'Bender', var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.terminal-backup-btn:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--btn-accent-color, #d0ff00);
+  box-shadow: 0 0 10px var(--btn-accent-glow, rgba(208, 255, 0, 0.35));
+}
+
+.terminal-backup-btn .backup-btn-icon {
+  width: 15px;
+  height: 15px;
+  object-fit: contain;
+  flex-shrink: 0;
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.terminal-backup-btn:hover .backup-btn-icon {
+  filter: drop-shadow(0 0 5px var(--btn-accent-color, #d0ff00));
+  transform: scale(1.1);
 }
 
 .terminal-standalone-left {
@@ -1646,6 +1688,12 @@ body.terminal-standalone-page {
   max-width: 100%;
   padding-right: 28px;
   box-sizing: border-box;
+}
+
+.terminal-session-card__sender {
+  font-weight: 700;
+  color: #ebece9;
+  margin-right: 3px;
 }
 
 .terminal-session-card__underline {

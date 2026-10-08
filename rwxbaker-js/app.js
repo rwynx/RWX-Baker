@@ -1117,6 +1117,43 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
 
+    const announceBanner = document.getElementById("terminal-announce-banner");
+    const bannerCta = document.getElementById("terminal-banner-cta");
+    const btnDismissBanner = document.getElementById("btn-dismiss-terminal-banner");
+
+    if (announceBanner) {
+      try {
+        const isDismissed = localStorage.getItem("rwx_terminal_banner_dismissed") === "true";
+        if (!isDismissed) {
+          announceBanner.classList.remove("hidden");
+        }
+      } catch (_) {
+        announceBanner.classList.remove("hidden");
+      }
+
+      // Whole banner is clickable to launch Terminal Mode
+      announceBanner.addEventListener("click", (e) => {
+        if (e.target.closest("#btn-dismiss-terminal-banner")) return;
+        e.preventDefault();
+        savePersistentConversation();
+        window.location.href = "terminal.html";
+      });
+
+      if (btnDismissBanner) {
+        btnDismissBanner.addEventListener("click", (e) => {
+          e.stopPropagation();
+          announceBanner.classList.add("banner-fade-out");
+          setTimeout(() => {
+            announceBanner.classList.add("hidden");
+            announceBanner.classList.remove("banner-fade-out");
+          }, 240);
+          try {
+            localStorage.setItem("rwx_terminal_banner_dismissed", "true");
+          } catch (_) {}
+        });
+      }
+    }
+
     window.addEventListener("beforeunload", () => {
       savePersistentConversation();
     });
@@ -2024,14 +2061,28 @@ document.addEventListener("DOMContentLoaded", () => {
       let previewText = "No messages yet";
       if (ch.messages && ch.messages.length > 0) {
         const lastMsg = ch.messages[ch.messages.length - 1];
+        let content = "";
         if (lastMsg.type === "image") {
-          previewText = "[Image transmitted]";
+          content = "[Image transmitted]";
         } else if (lastMsg.type === "reaction") {
-          previewText = "[Reaction signal]";
+          content = "[Reaction signal]";
+        } else if (lastMsg.type === "sticker") {
+          content = "[Sticker]";
         } else {
           const cleanedText = (lastMsg.text || "").replace(/\[emoji:[^\]]+\]/g, "").trim();
-          previewText = cleanedText || "[Emoji]";
+          content = cleanedText || (lastMsg.text ? "[Emoji]" : "");
         }
+
+        const isGroup = ch.mode === "group" || (Array.isArray(ch.groupParticipantIds) && ch.groupParticipantIds.length > 0);
+        let senderName = "";
+        if (isGroup) {
+          senderName = "Endmin";
+          if (lastMsg.sender === "incoming") {
+            const charObj = CHARACTERS[lastMsg.characterId];
+            senderName = charObj ? charObj.name : "Operator";
+          }
+        }
+        previewText = content;
       }
 
       const frameImg = document.createElement("img");
@@ -2061,7 +2112,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const previewDiv = document.createElement("div");
       previewDiv.className = "terminal-session-card__preview";
-      previewDiv.textContent = previewText;
+      if (typeof senderName !== "undefined" && senderName) {
+        const senderSpan = document.createElement("span");
+        senderSpan.className = "terminal-session-card__sender";
+        senderSpan.textContent = `${senderName}: `;
+        previewDiv.appendChild(senderSpan);
+        previewDiv.appendChild(document.createTextNode(previewText));
+      } else {
+        previewDiv.textContent = previewText;
+      }
 
       const underlineImg = document.createElement("img");
       underlineImg.className = "terminal-session-card__underline";
@@ -3083,6 +3142,8 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       phoneFrame.classList.add("is-exporting");
       if (mainPane) mainPane.classList.add("is-exporting");
+      const announceBannerEl = document.getElementById("terminal-announce-banner");
+      if (announceBannerEl) announceBannerEl.style.setProperty("display", "none", "important");
       if (terminalWindowBody) {
         terminalWindowBody.style.removeProperty("background");
       }
@@ -3210,6 +3271,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       phoneFrame.classList.remove("is-exporting");
+      if (announceBannerEl) announceBannerEl.style.removeProperty("display");
       if (mainPane) {
         mainPane.classList.remove("is-exporting");
         if (mainPane !== phoneFrame) {
@@ -3267,6 +3329,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const exportData = {
       app: "RWX Baker",
+      mode: "tablet",
       version: "1.0",
       savedAt: now.toISOString(),
       activeUser: state.activeUser,
@@ -3297,7 +3360,18 @@ document.addEventListener("DOMContentLoaded", () => {
     reader.onload = (e) => {
       try {
         const data = JSON.parse(e.target.result);
-        if (!data || !Array.isArray(data.messages)) {
+        if (!data) {
+          alert("Invalid JSON file.");
+          return;
+        }
+
+        // Cross-mode check: if file is from Terminal mode
+        if (data.mode === "terminal" || (Array.isArray(data.terminalChannels) && !Array.isArray(data.messages))) {
+          alert("This JSON file was created in Terminal mode.\nPlease switch to Terminal mode to import this multi-channel scenario.");
+          return;
+        }
+
+        if (!Array.isArray(data.messages)) {
           alert("Invalid RWX Baker JSON file: 'messages' array not found.");
           return;
         }

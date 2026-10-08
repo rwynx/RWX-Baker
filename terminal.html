@@ -28,8 +28,20 @@
     <header class="terminal-standalone-topbar">
       <div class="terminal-standalone-left">
         <button type="button" id="btn-return-studio" class="terminal-standalone-nav-btn" title="Return to RWX Baker Studio">
-          <span>&larr; RETURN TO STUDIO</span>
+          <span>&larr; RETURN</span>
         </button>
+
+        <div class="terminal-backup-controls" role="group" aria-label="Scenario backup">
+          <button type="button" id="btn-terminal-save-json" class="terminal-backup-btn" title="Save entire scenario as JSON backup">
+            <img src="rwxbaker-assets/ui/save-btn.png" alt="" class="backup-btn-icon">
+            <span>SAVE</span>
+          </button>
+          <button type="button" id="btn-terminal-load-json" class="terminal-backup-btn" title="Load scenario from JSON backup">
+            <img src="rwxbaker-assets/ui/import-btn.png" alt="" class="backup-btn-icon">
+            <span>LOAD</span>
+          </button>
+          <input type="file" id="input-terminal-load-json" accept=".json,application/json" class="hidden" style="display:none">
+        </div>
 
         <div class="terminal-topbar-export-controls">
           <div class="export-mode-group" role="group" aria-label="Export mode">
@@ -432,6 +444,15 @@
       <div class="transmission-modal-footer">
         <button type="button" id="btn-cancel-char-modal" class="transmission-btn-cancel">CLOSE</button>
       </div>
+    </div>
+  </div>
+
+  <div id="json-drop-overlay" class="json-drop-overlay hidden" aria-hidden="true">
+    <div class="json-drop-card">
+      <div class="json-drop-deco-bar"></div>
+      <img src="rwxbaker-assets/ui/import-btn.png" alt="Import" class="json-drop-icon-img">
+      <div class="json-drop-title">DROP THE JSON HERE</div>
+      <div class="json-drop-subtitle">to load your terminal scenario into RWX Baker</div>
     </div>
   </div>
 

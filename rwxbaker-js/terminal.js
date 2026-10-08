@@ -44,6 +44,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const btnTerminalTutorial = document.getElementById("btn-terminal-tutorial");
   const btnTerminalClearChat = document.getElementById("btn-terminal-clear-chat");
   const btnReturnStudio = document.getElementById("btn-return-studio");
+  const btnSaveJson = document.getElementById("btn-terminal-save-json");
+  const btnLoadJson = document.getElementById("btn-terminal-load-json");
+  const inputLoadJson = document.getElementById("input-terminal-load-json");
+  const jsonDropOverlay = document.getElementById("json-drop-overlay");
   const terminalClock = document.getElementById("terminal-top-clock");
 
     const btnExportPng = document.getElementById("btn-export-png");
@@ -465,6 +469,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function renderTerminalChannels() {
     if (!sessionCardsContainer) return;
+    syncStateToActiveChannel();
     sessionCardsContainer.innerHTML = "";
 
     terminalChannels.forEach((ch) => {
@@ -473,13 +478,31 @@ document.addEventListener("DOMContentLoaded", () => {
       card.className = `terminal-session-card ${isSelected ? "terminal-session-card--selected" : ""}`;
       card.dataset.channelId = ch.id;
 
-      let previewText = "No transmissions yet";
+      let previewHtml = "No transmissions yet";
       if (ch.messages && ch.messages.length > 0) {
         const lastMsg = ch.messages[ch.messages.length - 1];
+        let content = "";
         if (lastMsg.type === "image") {
-          previewText = "[Image transmitted]";
+          content = "[Image transmitted]";
+        } else if (lastMsg.type === "reaction") {
+          content = "[Reaction signal]";
+        } else if (lastMsg.type === "sticker") {
+          content = "[Sticker]";
         } else {
-          previewText = lastMsg.text || "";
+          const cleanedText = (lastMsg.text || "").replace(/\[emoji:[^\]]+\]/g, "").trim();
+          content = cleanedText || (lastMsg.text ? "[Emoji]" : "");
+        }
+
+        const isGroup = ch.mode === "group" || (Array.isArray(ch.groupParticipantIds) && ch.groupParticipantIds.length > 0);
+        if (isGroup) {
+          let senderName = "Endmin";
+          if (lastMsg.sender === "incoming") {
+            const charObj = CHARACTERS[lastMsg.characterId];
+            senderName = charObj ? charObj.name : "Operator";
+          }
+          previewHtml = `<span class="terminal-session-card__sender">${escapeHtml(senderName)}:</span> ${escapeHtml(content)}`;
+        } else {
+          previewHtml = escapeHtml(content);
         }
       }
 
@@ -491,7 +514,7 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>
         <div class="terminal-session-card__content">
           <h3 class="terminal-session-card__title">${ch.name}</h3>
-          <p class="terminal-session-card__preview">${escapeHtml(previewText)}</p>
+          <p class="terminal-session-card__preview">${previewHtml}</p>
           <img class="terminal-session-card__underline" src="rwxbaker-assets/deco/session-card-underline.webp" alt="" aria-hidden="true">
         </div>
         <img class="terminal-session-card__detail" src="rwxbaker-assets/deco/session-card-detail.webp" alt="" aria-hidden="true">
@@ -1683,6 +1706,76 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
 
+    if (btnSaveJson) {
+      btnSaveJson.addEventListener("click", () => {
+        saveTerminalScenarioAsJson();
+      });
+    }
+
+    if (btnLoadJson && inputLoadJson) {
+      btnLoadJson.addEventListener("click", () => {
+        inputLoadJson.value = "";
+        inputLoadJson.click();
+      });
+
+      inputLoadJson.addEventListener("change", (e) => {
+        if (e.target.files && e.target.files.length > 0) {
+          loadTerminalScenarioFromJson(e.target.files[0]);
+        }
+      });
+    }
+
+    let dragCounter = 0;
+    function isJsonFileDrag(e) {
+      if (draggedMessageId) return false;
+      if (!e.dataTransfer) return false;
+      const types = Array.from(e.dataTransfer.types || []);
+      return types.includes("Files");
+    }
+
+    window.addEventListener("dragenter", (e) => {
+      if (!isJsonFileDrag(e)) return;
+      e.preventDefault();
+      dragCounter++;
+      if (jsonDropOverlay) jsonDropOverlay.classList.remove("hidden");
+      if (phoneFrame) phoneFrame.classList.add("drag-over-json");
+    });
+
+    window.addEventListener("dragover", (e) => {
+      if (!isJsonFileDrag(e)) return;
+      e.preventDefault();
+      e.dataTransfer.dropEffect = "copy";
+    });
+
+    window.addEventListener("dragleave", (e) => {
+      if (!isJsonFileDrag(e)) return;
+      e.preventDefault();
+      dragCounter--;
+      if (dragCounter <= 0) {
+        dragCounter = 0;
+        if (jsonDropOverlay) jsonDropOverlay.classList.add("hidden");
+        if (phoneFrame) phoneFrame.classList.remove("drag-over-json");
+      }
+    });
+
+    window.addEventListener("drop", (e) => {
+      if (!isJsonFileDrag(e)) return;
+      e.preventDefault();
+      dragCounter = 0;
+      if (jsonDropOverlay) jsonDropOverlay.classList.add("hidden");
+      if (phoneFrame) phoneFrame.classList.remove("drag-over-json");
+
+      const files = e.dataTransfer ? e.dataTransfer.files : null;
+      if (files && files.length > 0) {
+        const file = files[0];
+        if (file.name.endsWith(".json") || file.type === "application/json") {
+          loadTerminalScenarioFromJson(file);
+        } else {
+          alert("Please drop a valid .json scenario backup file.");
+        }
+      }
+    });
+
         if (btnCloseTransmissionModal) btnCloseTransmissionModal.addEventListener("click", closeTransmissionModal);
     if (btnCancelTransmission) btnCancelTransmission.addEventListener("click", closeTransmissionModal);
     if (btnSubmitTransmission) btnSubmitTransmission.addEventListener("click", handleCreateTransmission);
@@ -2559,6 +2652,82 @@ document.addEventListener("DOMContentLoaded", () => {
       requestAnimationFrame(tick);
     }
     tick();
+  }
+
+  // scenario JSON backup (SAVE & LOAD)
+  function saveTerminalScenarioAsJson() {
+    syncStateToActiveChannel();
+    const now = new Date();
+    const yyyy = now.getFullYear();
+    const mm = String(now.getMonth() + 1).padStart(2, "0");
+    const dd = String(now.getDate()).padStart(2, "0");
+    const dateStr = `${yyyy}-${mm}-${dd}`;
+    const filename = `RWX-Terminal-Scenario-${dateStr}.json`;
+
+    const exportData = {
+      app: "RWX Baker",
+      mode: "terminal",
+      version: "1.0",
+      savedAt: now.toISOString(),
+      activeUser: state.activeUser,
+      activeTerminalChannelId: activeTerminalChannelId,
+      terminalChannels: terminalChannels
+    };
+
+    const jsonString = JSON.stringify(exportData, null, 2);
+    const blob = new Blob([jsonString], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  }
+
+  function loadTerminalScenarioFromJson(file) {
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const data = JSON.parse(e.target.result);
+        if (!data) {
+          alert("Invalid JSON file.");
+          return;
+        }
+
+        // Cross-mode guard: if file was created in Tablet mode
+        if (data.mode === "tablet" || (!Array.isArray(data.terminalChannels) && Array.isArray(data.messages))) {
+          alert("This JSON file was created in Tablet mode.\nPlease use Tablet mode to load single-conversation backups.");
+          return;
+        }
+
+        if (!Array.isArray(data.terminalChannels) || data.terminalChannels.length === 0) {
+          alert("Invalid RWX Terminal JSON: 'terminalChannels' array not found or empty.");
+          return;
+        }
+
+        terminalChannels = data.terminalChannels;
+        if (data.activeUser && (data.activeUser === "endminf" || data.activeUser === "endminm")) {
+          state.activeUser = data.activeUser;
+        }
+
+        const targetChannelId = data.activeTerminalChannelId && terminalChannels.some((c) => c.id === data.activeTerminalChannelId)
+          ? data.activeTerminalChannelId
+          : terminalChannels[0].id;
+
+        selectTerminalChannel(targetChannelId);
+        renderTerminalChannels();
+        savePersistentState();
+        scrollToBottom();
+
+      } catch (err) {
+        console.error("Failed to parse Terminal JSON file:", err);
+        alert("Failed to load JSON file. Please ensure it is a valid RWX Terminal scenario backup.");
+      }
+    };
+    reader.readAsText(file);
   }
 
   // init

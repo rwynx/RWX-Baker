@@ -121,7 +121,10 @@ Fine-tuning for message spacing, avatar alignment, and media attachments:
 
 ## Topographic Map Decorations
 
-Controls for the optional in-game background topographic isoline patterns (`.chat-deco-wrapper`, `.chat-deco-tl`, `.chat-deco-br`):
+> [!NOTE]
+> **Archived Toolbar Controls:** In recent UI updates, the live conversation container adopted an authentic dark frosted glass canvas (`background: rgba(20, 20, 19, 0.78); backdrop-filter: blur(14px);`). Because this subtle dark blur naturally mutes underlying background graphics, the Map Deco On/Off toggle was archived from the default Editor toolbar to keep the header uncluttered. However, the DOM elements (`#chat-bg-decorations`), the CSS variables below, graphic assets (`rwxbaker-assets/deco/deco_sns_tweet_decorate_31.png`), and the JavaScript engine function (`setDecoVisibility(boolean)`) remain fully functional and can be toggled via console, custom script, or uncommented in `index.html`.
+
+Controls for the background topographic isoline patterns (`.chat-bg-decorations`, `.chat-bg-deco-tl`, `.chat-bg-deco-br`):
 
 | Variable | Default Value | Description |
 | :--- | :--- | :--- |
@@ -293,7 +296,7 @@ Hosts all controls, inputs, and conversation layers:
 
 | Selector | Component | Description |
 | :--- | :--- | :--- |
-| `.view-controls` | Display Toolbar | Unified row holding Tablet/Phone view mode toggles and Map Deco On/Off switches. |
+| `.view-controls` | Display Toolbar | Unified header row holding Tablet/Phone view mode toggles, divider, and the compact `#btn-launch-terminal` switch. |
 | `.backup-section` | Conversation Backup | Save and Load JSON backup buttons (`#btn-save-json`, `#btn-load-json`). |
 | `.user-section` | Sender Identity | Switches Endmin avatar gender (Female/Male) or toggles Operator identity. |
 | `.character-section`| Character Selector | Single vs. Group chat mode, channel name field, and scrollable operator list. |
@@ -306,13 +309,14 @@ The render surface captured by `dom-to-image` during exports:
 
 | Selector | Component | Description |
 | :--- | :--- | :--- |
+| `.terminal-announce-banner` | Announcement Pill | Floating animated pill aligned above `#phone-frame` linking to Terminal mode; auto-hidden during exports. |
 | `.chat-header` | Title Navigation | Displays current speaker/group title, back icon, and the "BAKER" background watermark. |
-| `.chat-deco-wrapper`| Map Contours | In-game topographic isoline graphics (`.chat-deco-tl`, `.chat-deco-br`). |
+| `#chat-bg-decorations` | Map Contours | In-game topographic isoline graphics (`.chat-bg-deco-tl`, `.chat-bg-deco-br`). |
 | `#chat-viewport` | Message Feed | Scrollable message canvas housing `#message-list` with draggable bubble nodes. |
-| `#quick-choices` | Choice Pills | Interactive dialogue options rendered inline below NPC messages. |
-| `.chat-input-footer`| Action Bar | Mock in-game chat typing bar, sticker/emoji triggers, and send button. |
-| `#sticker-picker-drawer`| Sticker Drawer | Popover grid containing 168 in-game Endfield stickers. |
-| `#emoji-picker-drawer` | Emoji Drawer | Popover grid containing 38 in-game Endfield reaction emojis. |
+| `#choice-container` | Choice Pills | Interactive dialogue options rendered inline below NPC messages. |
+| `#input-footer` | Action Bar | Mock in-game chat typing bar, sticker/emoji triggers, and send button. |
+| `#sticker-panel` | Sticker Drawer | Popover grid containing 168 in-game Endfield stickers. |
+| `#emoji-picker-panel` | Emoji Drawer | Popover grid containing 38 in-game Endfield reaction emojis. |
 
 ---
 
@@ -352,13 +356,70 @@ document.getElementById('phone-frame').style.setProperty('--chat-deco-opacity', 
 
 ---
 
-## Terminal Mode Variables
+## Terminal Mode Architecture & Variables
 
-Layout and frame variables for the dedicated Terminal Mode (`terminal.html`) are isolated in [`rwxbaker-css/terminal.css`](rwxbaker-css/terminal.css) under `:root`:
+The in-game Endfield J-Screen Baker Terminal interface is implemented in [`terminal.html`](terminal.html) with styles isolated in [`rwxbaker-css/terminal.css`](rwxbaker-css/terminal.css) and application state in [`rwxbaker-js/terminal.js`](rwxbaker-js/terminal.js).
 
-- `--terminal-frame-width` / `--terminal-frame-height`: Overall frame dimensions.
-- `--terminal-channels-width`: Width of the left channels sidebar.
-- `--terminal-chat-width`: Width of the conversation feed pane.
-- `--terminal-session-card-height`: Height of each channel card item.
-- `--terminal-notch-height`: Top frame notch and status color bars sizing.
+### 1. Layout & Dimension Variables
+
+Defined at `:root` level in [`rwxbaker-css/terminal.css`](rwxbaker-css/terminal.css):
+
+| Variable | Default Value | Description |
+| :--- | :--- | :--- |
+| `--terminal-frame-width` | `1590px` | Total width of the combined Terminal frame (Channels + Chat). |
+| `--terminal-frame-height` | `860px` | Base height of the Terminal viewport frame. |
+| `--terminal-frame-zoom` | `1` | Global UI scale multiplier for Terminal Mode. |
+| `--terminal-columns-gap` | `16px` | Horizontal space between Channels sidebar and Main Chat window. |
+| `--terminal-topbar-max-width` | `1590px` | Max width for the top navigation bar and system status controls. |
+| `--terminal-channels-width` | `460px` | Width of the left Channels / transmissions sidebar. |
+| `--terminal-channels-gap` | `10px` | Vertical spacing between session cards in the channels list. |
+| `--terminal-channels-bg-opacity` | `0.55` | Background glass tint opacity for the channels column. |
+| `--terminal-channels-blur` | `14px` | Backdrop blur intensity for the channels column. |
+| `--terminal-chat-bg-opacity` | `0.78` | Dark background glass tint opacity for active chat viewport. |
+| `--terminal-chat-blur` | `14px` | Backdrop blur intensity for active chat viewport. |
+| `--btn-accent-color` | `#d0ff00` | Signature Endfield neon lime/yellow accent color. |
+| `--btn-accent-glow` | `rgba(208, 255, 0, 0.4)` | Outer glow aura color for active buttons and badges. |
+
+### 2. Multi-Channel Sessions & Group Sender Formatting
+
+- **Channel Types:** Supports direct 1-on-1 operator transmissions and multi-operator group channels with custom group names and squad avatars (`rwxbaker-assets/deco/group-channel.webp`).
+- **Last Sender Indicator:** For group channels, the session card automatically prepends the last message sender in bold font (`.terminal-session-card__sender`):
+  ```css
+  .terminal-session-card__sender {
+    font-weight: 700;
+    color: #ebece9;
+    margin-right: 3px;
+  }
+  ```
+
+### 3. JSON Backup Schema & Cross-Mode Safeguards
+
+Terminal Mode includes dedicated **Save JSON** and **Load JSON** backup capabilities (`#btn-terminal-save-json`, `#btn-terminal-load-json`) as well as drag-and-drop file import (`#json-drop-overlay`).
+
+- **Format Distinction:** Terminal backup files include `mode: "terminal"` and export the complete multi-channel roster array alongside all message histories.
+- **Cross-Mode Guards:**
+  - If a user attempts to load a Terminal Mode JSON into Studio/Tablet view (`index.html`), the parser detects `mode === "terminal"` and prompts the user to open `terminal.html`.
+  - Conversely, attempting to import a single-conversation Tablet JSON into Terminal Mode notifies the user of the format mismatch, preventing corrupted session states.
+
+### 4. Export Engine & Anti-Darkening Architecture
+
+Terminal exports support both **Screen Mode** (captures the active chat viewport) and **Full Terminal Mode** (captures the complete Channels list and active dialogue window together at 2x resolution):
+
+- **Zero Darkening:** When `dom-to-image` renders elements with CSS `backdrop-filter: blur()`, browsers often multiply backdrop layers causing exported images to appear much darker than live screens. Both Studio view and Terminal Mode inject `.is-exporting` rules that temporarily swap `backdrop-filter` with solid linear gradients during capture:
+  ```css
+  #terminal-main-pane.is-exporting #terminal-window-body {
+    background: linear-gradient(180deg, rgba(16, 17, 20, 0.94) 0%, rgba(12, 13, 16, 0.98) 100%) !important;
+    backdrop-filter: none !important;
+    box-shadow: none !important;
+  }
+  ```
+
+### 5. Floating Announcement Banner (`.terminal-announce-banner`)
+
+Located in `index.html` directly above `#phone-frame`:
+
+- **Positioning:** Anchored with `position: absolute; bottom: calc(100% + 8px); left: 0; right: auto;`, aligning its left boundary with the blue title stripes of the chat header while hugging its contents.
+- **Cyber Animations:** Features dual-layer animated gradient borders (`bannerBorderFlow`), breathing neon aura (`bannerCyberPulse`), and angled ambient sheen sweeps (`bannerSheenSweep`).
+- **Dismissal & Persistence:** Clicking the `&times;` close button smoothly fades the banner out and sets `localStorage.setItem("rwx_terminal_banner_dismissed", "true")`.
+- **Export Guard:** Automatically hidden during image generation via `.is-exporting .terminal-announce-banner { display: none !important; }`.
 

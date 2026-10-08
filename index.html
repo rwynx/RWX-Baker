@@ -138,6 +138,7 @@
 
         <div class="control-divider" aria-hidden="true"></div>
 
+        <!-- [ARCHIVED: MAP DECO (preserved for future customization - with the new ui revamp this doesnt work anymore)
         <div class="view-control-group">
           <span class="control-group-title">MAP DECORATION</span>
           <div class="deco-mode-controls" role="group" aria-label="Map decoration visibility">
@@ -145,29 +146,29 @@
             <button type="button" class="deco-toggle-btn active" id="btn-deco-off" data-deco="off" title="Hide Topographic Map Contours">Off</button>
           </div>
         </div>
-      </section>
+        -->
 
-      <!-- terminal launcher -->
-      <section class="terminal-launcher-section" aria-label="Terminal Mode switch">
-        <button type="button" id="btn-launch-terminal" class="terminal-launcher-btn" title="Open full Terminal Mode (In-Game full Baker UI)">
-          <div class="terminal-launcher-content">
-            <span class="terminal-launcher-icon">
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <rect x="2" y="3" width="20" height="14" rx="2"></rect>
-                <line x1="8" y1="21" x2="16" y2="21"></line>
-                <line x1="12" y1="17" x2="12" y2="21"></line>
-                <polyline points="7 8 9.5 10 7 12"></polyline>
-                <line x1="11.5" y1="12" x2="15.5" y2="12"></line>
-              </svg>
-            </span>
-            <div class="terminal-launcher-title-row">
-              <span class="terminal-launcher-title">TERMINAL MODE</span>
-              <span class="terminal-launcher-badge-new">NEW!</span>
-              <span class="terminal-launcher-badge">Still in BETA!</span>
+        <!-- terminal launcher placed directly in view-controls header -->
+        <div class="view-control-group terminal-control-group">
+          <button type="button" id="btn-launch-terminal" class="terminal-launcher-btn" title="Open full Terminal Mode (In-Game full Baker UI)">
+            <div class="terminal-launcher-content">
+              <span class="terminal-launcher-icon">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <rect x="2" y="3" width="20" height="14" rx="2"></rect>
+                  <line x1="8" y1="21" x2="16" y2="21"></line>
+                  <line x1="12" y1="17" x2="12" y2="21"></line>
+                  <polyline points="7 8 9.5 10 7 12"></polyline>
+                  <line x1="11.5" y1="12" x2="15.5" y2="12"></line>
+                </svg>
+              </span>
+              <div class="terminal-launcher-title-row">
+                <span class="terminal-launcher-title">TERMINAL</span>
+                <span class="terminal-launcher-badge">NEW! BETA</span>
+              </div>
             </div>
-          </div>
-          <span class="terminal-launcher-arrow" aria-hidden="true">&#x2794;</span>
-        </button>
+            <span class="terminal-launcher-arrow" aria-hidden="true">&#x2794;</span>
+          </button>
+        </div>
       </section>
 
       <section class="backup-section" aria-label="Conversation backup controls">
@@ -373,6 +374,31 @@
     <div id="editor-backdrop" class="editor-backdrop" aria-hidden="true"></div>
 
     <main id="phone-frame" class="hide-chat-deco">
+      <!-- top announcement banner for terminal mode (equalized with message panel) -->
+      <div id="terminal-announce-banner" class="terminal-announce-banner hidden" role="region" aria-label="Terminal Mode announcement">
+        <a href="terminal.html" id="terminal-banner-cta" class="terminal-banner-cta" title="Launch full in-game Terminal Mode">
+          <span class="terminal-banner-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="3" width="20" height="14" rx="2"></rect>
+              <line x1="8" y1="21" x2="16" y2="21"></line>
+              <line x1="12" y1="17" x2="12" y2="21"></line>
+              <polyline points="7 8 9.5 10 7 12"></polyline>
+              <line x1="11.5" y1="12" x2="15.5" y2="12"></line>
+            </svg>
+          </span>
+          <span class="terminal-banner-badge">
+            <span class="terminal-banner-badge-dot" aria-hidden="true"></span>
+            NEW!
+          </span>
+          <span class="terminal-banner-text">
+            <strong class="terminal-banner-title">TERMINAL MODE:</strong>
+            <span class="terminal-banner-desc">In-game fullscreen Baker UI<span class="banner-extra">, with channels &amp; groups layout</span></span>
+          </span>
+          <span class="terminal-banner-arrow" aria-hidden="true">&#x2794;</span>
+        </a>
+        <button type="button" id="btn-dismiss-terminal-banner" class="terminal-banner-close" title="Dismiss announcement" aria-label="Dismiss announcement">&times;</button>
+      </div>
+
       <img id="live-watermark-stamp" class="rwx-export-watermark" src="rwxbaker-assets/watermarks/watermark-v1-telemetry.png" alt="RWX // BKR" aria-hidden="true">
 
       <header id="chat-header" aria-hidden="true">
