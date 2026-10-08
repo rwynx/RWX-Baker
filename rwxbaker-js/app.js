@@ -3,7 +3,7 @@
 document.addEventListener("DOMContentLoaded", () => {
 
   const tutorial = window.RWX_TUTORIAL_TEMPLATE || null;
-  const CURRENT_TUTORIAL_VERSION = "20261008_v3";
+  const CURRENT_TUTORIAL_VERSION = "20261008_v4";
 
   const state = {
     activeUser: "endminf",

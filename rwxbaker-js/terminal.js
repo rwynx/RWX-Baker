@@ -228,7 +228,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let modalFilter = "all";
 
   // storage & persistence
-  const CURRENT_TERMINAL_TEMPLATE_VERSION = "20261008_v3";
+  const CURRENT_TERMINAL_TEMPLATE_VERSION = "20261008_v4";
 
   function loadPersistentState() {
     const installedVersion = localStorage.getItem("rwx_terminal_template_version");

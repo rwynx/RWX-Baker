@@ -69,9 +69,13 @@ First and foremost, GLORY TO HYPERGRYPH!<br>GLORY TO THE COMMUNITY OF PLAYERS WH
     - **Channels Sidebar (460px):** Multi-channel session list supporting both direct 1-on-1 links and multi-operator group chats.
     - **Independent Save / Load JSON Backups:** Export and import multi-channel terminal setups with drag-and-drop JSON file support, complete with cross-mode safeguards (prevents accidental imports between Tablet and Terminal JSON formats).
     - **Full Terminal PNG Export:** Dedicated **Screen** and **Full Terminal** capture options rendering the complete Channels list and active dialogue window at crisp 2x resolution with zero capture darkening.<br>
-    <img src="showcase/terminal-view-export.png" width="50%" alt="terminal-view-export"><br>
-    - **Instant Cross-Mode Sync:** Effortlessly jump between Studio/Tablet view and Terminal Mode. Current conversation carries over automatically.
-    - Accessible directly via the Editor drawer or at [**`terminal.html`**](https://baker.rwyn.ch/terminal.html).
+    - Accessible directly via the Editor drawer on top or at [**`terminal.html`**](https://baker.rwyn.ch/terminal.html).<br>
+    
+    **Example LIVE and exported render versions:**<br>
+<p align="center" style="display: flex; justify-content: center; align-items: center; gap: 10px;">
+<img src="showcase/terminal-showcase-full.png" width="45%" alt="terminal live full showcase"><br>
+<img src="showcase/terminal-view-export.png" width="45%" alt="terminal-view-export"><br>
+</p><br>
 
 - **100% Private & Client-Side:** No sign-ups, no cookies, no advertising, and no analytics. Every keystroke, every word and any image export is processed strictly within your local browser.
 
