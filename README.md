@@ -89,7 +89,7 @@ First and foremost, GLORY TO HYPERGRYPH!<br>GLORY TO THE COMMUNITY OF PLAYERS WH
 
 RWX Baker has **zero build dependencies**, it runs directly out of the box using vanilla HTML, CSS, and JS.<br>I wanted it to be this way from the start. Anyone can easily run it.
 
-**NOTE:** If you want to make adjustments for the actual LIVE version, dont hardcode values<br> in html or js because everything in css file is tuned for easy pixel-perfect adjustments.
+**NOTE:** If you want to make adjustments for the actual LIVE version *(by sending PRs)*, don't hardcode any values in html<br> or js because everything in css file is tuned for easy pixel-perfect adjustments. You can use the same for your local fork as well.
 
 1. **Clone the repository:**
    ```bash
