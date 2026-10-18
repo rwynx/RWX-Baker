@@ -2527,7 +2527,7 @@ document.addEventListener("DOMContentLoaded", () => {
           }
         });
 
-        downloadDataUrl(dataUrl, "RWX-Terminal-Desktop.png");
+        downloadDataUrl(dataUrl, "RWX-Terminal-Full.png");
 
       } else if (state.exportMode === "full") {
         mainPane.style.width = origPaneWidth + "px";
@@ -2587,7 +2587,7 @@ document.addEventListener("DOMContentLoaded", () => {
             onclone: (cloned) => { cloned.style.transform = "none"; }
           });
 
-          downloadDataUrl(dataUrl, `RWX-Terminal-${i + 1}.png`);
+          downloadDataUrl(dataUrl, `RWX-Terminal-Multi-${i + 1}.png`);
 
           if (i < pages.length - 1) {
             await new Promise((resolve) => setTimeout(resolve, 300));

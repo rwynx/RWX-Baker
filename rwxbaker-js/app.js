@@ -3022,6 +3022,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const mainPane = document.getElementById("terminal-main-pane") || phoneFrame;
     const terminalWindowBody = document.getElementById("terminal-window-body");
+    const announceBannerEl = document.getElementById("terminal-announce-banner");
 
     if (stickerPanel) stickerPanel.classList.add("hidden");
     if (emojiPickerPanel) emojiPickerPanel.classList.add("hidden");
@@ -3159,8 +3160,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     try {
       phoneFrame.classList.add("is-exporting");
+      if (document.body.classList.contains("terminal-mode") || phoneFrame.classList.contains("terminal-frame") || (appContainer && appContainer.classList.contains("terminal-mode"))) {
+        phoneFrame.classList.add("is-exporting-terminal");
+      }
       if (mainPane) mainPane.classList.add("is-exporting");
-      const announceBannerEl = document.getElementById("terminal-announce-banner");
       if (announceBannerEl) announceBannerEl.style.setProperty("display", "none", "important");
       if (terminalWindowBody) {
         terminalWindowBody.style.removeProperty("background");
@@ -3194,10 +3197,6 @@ document.addEventListener("DOMContentLoaded", () => {
             transform: "none",
             margin: "0",
             zoom: "1"
-          },
-          onclone: (cloned) => {
-            cloned.style.transform = "none";
-            cloned.style.zoom = "1";
           }
         });
 
@@ -3215,17 +3214,13 @@ document.addEventListener("DOMContentLoaded", () => {
             transform: "none",
             margin: "0",
             zoom: "1"
-          },
-          onclone: (cloned) => {
-            cloned.style.transform = "none";
-            cloned.style.zoom = "1";
           }
         });
 
         downloadDataUrl(dataUrl, "RWX-Baker-Screen.png");
 
       } else if (state.exportMode === "paged") {
-        // Multi-page export (renders viewport chunks by calculated scroll positions)
+        // multi-page export (renders the port chunks by calculated scroll positions)
         const pages = calculatePageScrollPositions();
 
         for (let i = 0; i < pages.length; i++) {
@@ -3243,14 +3238,10 @@ document.addEventListener("DOMContentLoaded", () => {
               transform: "none",
               margin: "0",
               zoom: "1"
-            },
-            onclone: (cloned) => {
-              cloned.style.transform = "none";
-              cloned.style.zoom = "1";
             }
           });
 
-          downloadDataUrl(dataUrl, `RWX-Baker-${i + 1}.png`);
+          downloadDataUrl(dataUrl, `RWX-Baker-Multi-${i + 1}.png`);
 
           if (i < pages.length - 1) {
             await new Promise((resolve) => setTimeout(resolve, 300));
@@ -3288,7 +3279,7 @@ document.addEventListener("DOMContentLoaded", () => {
         element.style.transform = transform;
       });
 
-      phoneFrame.classList.remove("is-exporting");
+      phoneFrame.classList.remove("is-exporting", "is-exporting-terminal");
       if (announceBannerEl) announceBannerEl.style.removeProperty("display");
       if (mainPane) {
         mainPane.classList.remove("is-exporting");
