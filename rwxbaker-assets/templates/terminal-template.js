@@ -1,8 +1,8 @@
 window.RWX_TERMINAL_TEMPLATE = {
   "app": "RWX Baker",
   "mode": "terminal",
-  "version": "1.0",
-  "savedAt": "2026-10-08T15:32:37.747Z",
+  "version": "1.1",
+  "savedAt": "2026-10-18T21:09:00.000Z",
   "activeUser": "endminf",
   "activeTerminalChannelId": "channel_1791470713337",
   "terminalChannels": [
@@ -21,15 +21,6 @@ window.RWX_TERMINAL_TEMPLATE = {
           "characterId": "laevatain",
           "type": "text",
           "text": "Hey there, Endmin. Are you busy? [emoji:rwxbaker-assets/emoji/sns_emoji_018.png]",
-          "imageSrc": null,
-          "reactions": []
-        },
-        {
-          "id": "term_m_1791471083575",
-          "sender": "outgoing",
-          "characterId": "laevatain",
-          "type": "text",
-          "text": "Hey! No, I'm free. What's up?",
           "imageSrc": null,
           "reactions": []
         },

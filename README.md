@@ -66,11 +66,10 @@ First and foremost, GLORY TO HYPERGRYPH!<br>GLORY TO THE COMMUNITY OF PLAYERS WH
   ![ExampleExportOptions](showcase/export-options.gif)
 - **Dual Viewports & Terminal Mode:**
   - **Tablet & Phone Viewports:** Switch seamlessly between standard **Tablet** (default in-game aspect ratio) and compact **Phone** mode.
-  - **Full Terminal Mode [**`terminal.html`**](https://baker.rwyn.ch/terminal.html):** Full-screen *re-imagination* of the in-game Baker screen/terminal interface:
+  - **Full Terminal Mode (Default Homepage):** Full-screen *re-imagination* of the in-game Baker screen/terminal interface:
     - **Channels Sidebar (460px):** Multi-channel session list supporting both direct 1-on-1 links and multi-operator group chats.
     - **Independent Save / Load JSON Backups:** Export and import multi-channel terminal setups with drag-and-drop JSON file support, complete with cross-mode safeguards (prevents accidental imports between Tablet and Terminal JSON formats).
     - **Full Terminal PNG Export:** Dedicated **Screen** and **Full Terminal** capture options rendering the complete Channels list and active dialogue window at crisp 2x resolution with zero capture darkening.<br>
-    - Accessible directly via the Editor drawer on top or at [**`terminal.html`**](https://baker.rwyn.ch/terminal.html).<br>
     
     **Example LIVE and exported render versions:**<br>
 <p align="center" style="display: flex; justify-content: center; align-items: center; gap: 10px;">
@@ -122,8 +121,9 @@ RWX Baker has **zero build dependencies**, it runs directly out of the box using
 ## Repository Structure
 
 ```
-├── index.html                           # main editor
-├── terminal.html                        # in-game fullscreen Baker terminal mode (WIP)
+├── index.html                           # in-game fullscreen Baker terminal mode (homepage)
+├── classic.html                         # classic tablet & phone studio mode
+├── terminal.html                        # redirect to index.html (legacy bookmark compatibility)
 ├── watermark-styles.html                # interactive watermark lab & code generator
 ├── CUSTOMIZATION.md                     # CSS variables, offsets & styling guide
 ├── privacy.html                         

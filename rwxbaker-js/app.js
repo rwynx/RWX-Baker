@@ -3,7 +3,7 @@
 document.addEventListener("DOMContentLoaded", () => {
 
   const tutorial = window.RWX_TUTORIAL_TEMPLATE || null;
-  const CURRENT_TUTORIAL_VERSION = "20261008_v4";
+  const CURRENT_TUTORIAL_VERSION = "20261018_v2";
 
   const state = {
     activeUser: "endminf",
@@ -56,36 +56,36 @@ document.addEventListener("DOMContentLoaded", () => {
     purrche: { id: "purrche", name: "Purrche", avatar: "rwxbaker-assets/avatars/operator/icon_round_chr_0038_purrche.png", isNpc: false },
 
     // NPCs
-    npc_ailaizha: { id: "npc_ailaizha", name: "Eliza", avatar: "rwxbaker-assets/avatars/npc/icon_sns_npc_ailaizha_01.png", isNpc: true },
-    npc_aliya: { id: "npc_aliya", name: "Aliya", avatar: "rwxbaker-assets/avatars/npc/icon_sns_npc_aliya_01.png", isNpc: true },
-    npc_andrew: { id: "npc_andrew", name: "Andrew", avatar: "rwxbaker-assets/avatars/npc/icon_sns_npc_andrew_01.png", isNpc: true },
-    npc_angelu: { id: "npc_angelu", name: "Angelu", avatar: "rwxbaker-assets/avatars/npc/icon_sns_npc_angelu_01.png", isNpc: true },
-    npc_buyuan: { id: "npc_buyuan", name: "Buyuan", avatar: "rwxbaker-assets/avatars/npc/icon_sns_npc_buyuan_01.png", isNpc: true },
-    npc_dannier: { id: "npc_dannier", name: "Dannier", avatar: "rwxbaker-assets/avatars/npc/icon_sns_npc_dannier_01.png", isNpc: true },
-    npc_fabian: { id: "npc_fabian", name: "Fabian", avatar: "rwxbaker-assets/avatars/npc/icon_sns_npc_fabian_01.png", isNpc: true },
-    npc_geyipu: { id: "npc_geyipu", name: "Geyipu", avatar: "rwxbaker-assets/avatars/npc/icon_sns_npc_geyipu_01.png", isNpc: true },
-    npc_hanfang: { id: "npc_hanfang", name: "Hanfang", avatar: "rwxbaker-assets/avatars/npc/icon_sns_npc_hanfang_01.png", isNpc: true },
-    npc_hansi: { id: "npc_hansi", name: "Hansi", avatar: "rwxbaker-assets/avatars/npc/icon_sns_npc_hansi_01.png", isNpc: true },
-    npc_hateman: { id: "npc_hateman", name: "Hateman", avatar: "rwxbaker-assets/avatars/npc/icon_sns_npc_hateman_01.png", isNpc: true },
-    npc_helao: { id: "npc_helao", name: "Helao", avatar: "rwxbaker-assets/avatars/npc/icon_sns_npc_helao_01.png", isNpc: true },
-    npc_hongbo: { id: "npc_hongbo", name: "Hongbo", avatar: "rwxbaker-assets/avatars/npc/icon_sns_npc_hongbo_01.png", isNpc: true },
-    npc_kelao: { id: "npc_kelao", name: "Kelao", avatar: "rwxbaker-assets/avatars/npc/icon_sns_npc_kelao_01.png", isNpc: true },
-    npc_lakuier: { id: "npc_lakuier", name: "Lakuier", avatar: "rwxbaker-assets/avatars/npc/icon_sns_npc_lakuier_01.png", isNpc: true },
-    npc_lameng: { id: "npc_lameng", name: "Lameng", avatar: "rwxbaker-assets/avatars/npc/icon_sns_npc_lameng_01.png", isNpc: true },
-    npc_liushuyun: { id: "npc_liushuyun", name: "Liu Shuyun", avatar: "rwxbaker-assets/avatars/npc/icon_sns_npc_liushuyun_01.png", isNpc: true },
-    npc_luoman: { id: "npc_luoman", name: "Luoman", avatar: "rwxbaker-assets/avatars/npc/icon_sns_npc_luoman_01.png", isNpc: true },
-    npc_madina: { id: "npc_madina", name: "Madina", avatar: "rwxbaker-assets/avatars/npc/icon_sns_npc_madina_01.png", isNpc: true },
-    npc_muhui: { id: "npc_muhui", name: "Muhui", avatar: "rwxbaker-assets/avatars/npc/icon_sns_npc_muhui_01.png", isNpc: true },
-    npc_nufuman: { id: "npc_nufuman", name: "Nufuman", avatar: "rwxbaker-assets/avatars/npc/icon_sns_npc_nufuman_01.png", isNpc: true },
-    npc_qinjc: { id: "npc_qinjc", name: "Qin Jingcheng", avatar: "rwxbaker-assets/avatars/npc/icon_sns_npc_qinjc_01.png", isNpc: true },
-    npc_shenjiaoe: { id: "npc_shenjiaoe", name: "Shenjiaoe", avatar: "rwxbaker-assets/avatars/npc/icon_sns_npc_shenjiaoe_01.png", isNpc: true },
-    npc_fiona: { id: "npc_fiona", name: "Fiona", avatar: "rwxbaker-assets/avatars/npc/icon_sns_npc_spl_fiona_01.png", isNpc: true },
-    npc_suosi: { id: "npc_suosi", name: "Suosi", avatar: "rwxbaker-assets/avatars/npc/icon_sns_npc_suosi_01.png", isNpc: true },
-    npc_swordmaster: { id: "npc_swordmaster", name: "Swordmaster", avatar: "rwxbaker-assets/avatars/npc/icon_sns_npc_swordmaster_01.png", isNpc: true },
-    npc_weixidong: { id: "npc_weixidong", name: "Wei Xidong", avatar: "rwxbaker-assets/avatars/npc/icon_sns_npc_weixidong_01.png", isNpc: true },
-    npc_wuduanxue: { id: "npc_wuduanxue", name: "Wu Duanxue", avatar: "rwxbaker-assets/avatars/npc/icon_sns_npc_wuduanxue_01.png", isNpc: true },
-    npc_xiaona: { id: "npc_xiaona", name: "Xiaona", avatar: "rwxbaker-assets/avatars/npc/icon_sns_npc_xiaona_01.png", isNpc: true },
-    npc_yalishanda: { id: "npc_yalishanda", name: "Alexander", avatar: "rwxbaker-assets/avatars/npc/icon_sns_npc_yalishanda_01.png", isNpc: true },
+    npc_ailaizha: { id: "npc_ailaizha", name: "Eliza", avatar: "rwxbaker-assets/avatars/npc/icon_npc_ailaizha_01.png", isNpc: true },
+    npc_aliya: { id: "npc_aliya", name: "Aliya", avatar: "rwxbaker-assets/avatars/npc/icon_npc_aliya_01.png", isNpc: true },
+    npc_andrew: { id: "npc_andrew", name: "Andrew", avatar: "rwxbaker-assets/avatars/npc/icon_npc_andrew_01.png", isNpc: true },
+    npc_angelu: { id: "npc_angelu", name: "Angelu", avatar: "rwxbaker-assets/avatars/npc/icon_npc_angelu_01.png", isNpc: true },
+    npc_buyuan: { id: "npc_buyuan", name: "Buyuan", avatar: "rwxbaker-assets/avatars/npc/icon_npc_buyuan_01.png", isNpc: true },
+    npc_dannier: { id: "npc_dannier", name: "Dannier", avatar: "rwxbaker-assets/avatars/npc/icon_npc_dannier_01.png", isNpc: true },
+    npc_fabian: { id: "npc_fabian", name: "Fabian", avatar: "rwxbaker-assets/avatars/npc/icon_npc_fabian_01.png", isNpc: true },
+    npc_geyipu: { id: "npc_geyipu", name: "Geyipu", avatar: "rwxbaker-assets/avatars/npc/icon_npc_geyipu_01.png", isNpc: true },
+    npc_hanfang: { id: "npc_hanfang", name: "Hanfang", avatar: "rwxbaker-assets/avatars/npc/icon_npc_hanfang_01.png", isNpc: true },
+    npc_hansi: { id: "npc_hansi", name: "Hansi", avatar: "rwxbaker-assets/avatars/npc/icon_npc_hansi_01.png", isNpc: true },
+    npc_hateman: { id: "npc_hateman", name: "Hateman", avatar: "rwxbaker-assets/avatars/npc/icon_npc_hateman_01.png", isNpc: true },
+    npc_helao: { id: "npc_helao", name: "Helao", avatar: "rwxbaker-assets/avatars/npc/icon_npc_helao_01.png", isNpc: true },
+    npc_hongbo: { id: "npc_hongbo", name: "Hongbo", avatar: "rwxbaker-assets/avatars/npc/icon_npc_hongbo_01.png", isNpc: true },
+    npc_kelao: { id: "npc_kelao", name: "Kelao", avatar: "rwxbaker-assets/avatars/npc/icon_npc_kelao_01.png", isNpc: true },
+    npc_lakuier: { id: "npc_lakuier", name: "Lakuier", avatar: "rwxbaker-assets/avatars/npc/icon_npc_lakuier_01.png", isNpc: true },
+    npc_lameng: { id: "npc_lameng", name: "Lameng", avatar: "rwxbaker-assets/avatars/npc/icon_npc_lameng_01.png", isNpc: true },
+    npc_liushuyun: { id: "npc_liushuyun", name: "Liu Shuyun", avatar: "rwxbaker-assets/avatars/npc/icon_npc_liushuyun_01.png", isNpc: true },
+    npc_luoman: { id: "npc_luoman", name: "Luoman", avatar: "rwxbaker-assets/avatars/npc/icon_npc_luoman_01.png", isNpc: true },
+    npc_madina: { id: "npc_madina", name: "Madina", avatar: "rwxbaker-assets/avatars/npc/icon_npc_madina_01.png", isNpc: true },
+    npc_muhui: { id: "npc_muhui", name: "Muhui", avatar: "rwxbaker-assets/avatars/npc/icon_npc_muhui_01.png", isNpc: true },
+    npc_nufuman: { id: "npc_nufuman", name: "Nufuman", avatar: "rwxbaker-assets/avatars/npc/icon_npc_nufuman_01.png", isNpc: true },
+    npc_qinjc: { id: "npc_qinjc", name: "Qin Jingcheng", avatar: "rwxbaker-assets/avatars/npc/icon_npc_qinjc_01.png", isNpc: true },
+    npc_shenjiaoe: { id: "npc_shenjiaoe", name: "Shenjiaoe", avatar: "rwxbaker-assets/avatars/npc/icon_npc_shenjiaoe_01.png", isNpc: true },
+    npc_fiona: { id: "npc_fiona", name: "Fiona", avatar: "rwxbaker-assets/avatars/npc/icon_npc_spl_fiona_01.png", isNpc: true },
+    npc_suosi: { id: "npc_suosi", name: "Suosi", avatar: "rwxbaker-assets/avatars/npc/icon_npc_suosi_01.png", isNpc: true },
+    npc_swordmaster: { id: "npc_swordmaster", name: "Swordmaster", avatar: "rwxbaker-assets/avatars/npc/icon_npc_swordmaster_01.png", isNpc: true },
+    npc_weixidong: { id: "npc_weixidong", name: "Wei Xidong", avatar: "rwxbaker-assets/avatars/npc/icon_npc_weixidong_01.png", isNpc: true },
+    npc_wuduanxue: { id: "npc_wuduanxue", name: "Wu Duanxue", avatar: "rwxbaker-assets/avatars/npc/icon_npc_wuduanxue_01.png", isNpc: true },
+    npc_xiaona: { id: "npc_xiaona", name: "Xiaona", avatar: "rwxbaker-assets/avatars/npc/icon_npc_xiaona_01.png", isNpc: true },
+    npc_yalishanda: { id: "npc_yalishanda", name: "Alexander", avatar: "rwxbaker-assets/avatars/npc/icon_npc_yalishanda_01.png", isNpc: true },
   };
 
   const USERS = {
@@ -1131,7 +1131,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (btnLaunchTerminal) {
       btnLaunchTerminal.addEventListener("click", () => {
         savePersistentConversation();
-        window.location.href = "terminal.html";
+        window.location.href = "index.html";
       });
     }
 

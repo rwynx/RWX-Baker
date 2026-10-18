@@ -190,6 +190,10 @@ Four authentic Endfield OS styled watermark stamps are bundled in `rwxbaker-asse
 | **V2: Corner HUD** | `watermark-v2-corner-hud.png` | `[RWX.OS // TELEMETRY]` | 240 × 48 px | Bundled in assets |
 | **V3: R Glass Badge** | `watermark-v3-badge.png` | `[R] RWX BAKER // GEN` | 260 × 36 px | Bundled in assets |
 | **V4: Minimal Stencil** | `watermark-v4-minimal.png` | `RWX // BKR ■ 01` | 180 × 30 px | Active (Randomized 50%) |
+| **V5: Live Comms GIF** | `freq-panel.gif` | `FREQ // 142.85 MHz [LIVE]` | 247 × 43 px | Animated GIF (Cycles telemetry every 3-4s) |
+
+> [!NOTE]
+> **Design V5 (Live Comms Telemetry):** Unlike the static watermark stamps, `freq-panel.gif` is an animated GIF that dynamically cycles radio transceiver frequencies (`142.85 MHz`, `218.40 MHz`, etc.), channels (`CH-01 // ALPHA`, `CH-04 // ENDMIN`, `OPERATOR`, `TALOS-RELAY`), and animated signal meter bars every 3-4 seconds. Ideal for animated previews or live screen mockups.
 
 ### Anti-Tamper Dynamic Injection Architecture
 
@@ -358,13 +362,13 @@ document.getElementById('phone-frame').style.setProperty('--chat-deco-opacity', 
 
 ## Terminal Mode Architecture & Variables
 
-The in-game fullscreen Baker Terminal interface is implemented in [`terminal.html`](terminal.html) with styles isolated in [`rwxbaker-css/terminal.css`](rwxbaker-css/terminal.css) and application state in [`rwxbaker-js/terminal.js`](rwxbaker-js/terminal.js).
+The in-game fullscreen Baker Terminal interface is implemented in [`index.html`](index.html) (default homepage) with styles isolated in [`rwxbaker-css/terminal.css`](rwxbaker-css/terminal.css) and application state in [`rwxbaker-js/terminal.js`](rwxbaker-js/terminal.js). The classic tablet & phone studio mode is available at [`classic.html`](classic.html).
 
 ### 1. RX Controller & CSS Variable Reference
 
 Terminal Mode layout, dimensions, offsets, and colors are defined at `:root` in [`rwxbaker-css/terminal.css`](rwxbaker-css/terminal.css) using modular RX groups designed for quick, zero-build customization:
 
-#### [RX 1] Standalone Terminal Page Canvas (`terminal.html`)
+#### [RX 1] Standalone Terminal Page Canvas (`index.html`)
 
 | Variable | Default Value | Description |
 | :--- | :--- | :--- |
@@ -493,7 +497,7 @@ Terminal Mode includes dedicated **Save JSON** and **Load JSON** backup capabili
 
 - **Format Distinction:** Terminal backup files include `mode: "terminal"` and export the complete multi-channel roster array alongside all message histories.
 - **Cross-Mode Guards:**
-  - If a user attempts to load a Terminal Mode JSON into Studio/Tablet view (`index.html`), the parser detects `mode === "terminal"` and prompts the user to open `terminal.html`.
+  - If a user attempts to load a Terminal Mode JSON into Studio/Tablet view (`classic.html`), the parser detects `mode === "terminal"` and prompts the user to open Terminal Mode (`index.html`).
   - Conversely, attempting to import a single-conversation Tablet JSON into Terminal Mode notifies the user of the format mismatch, preventing corrupted session states.
 
 ### 4. Export Engine & Anti-Darkening Architecture

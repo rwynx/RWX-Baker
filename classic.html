@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RWX Baker • Arknights Endfield Message Generator</title>
-  <meta name="description" content="Create direct/group chats with your favorite Arknights: Endfield operators. Free, private, and runs directly in your browser.">
+  <title>RWX Baker • Classic Studio Mode</title>
+  <meta name="description" content="Create direct/group chats with your favorite Arknights: Endfield operators in Classic Studio mode. Free, private, and runs directly in your browser.">
   <meta name="keywords" content="Arknights Endfield, Baker SNS, Baker, endfield baker generator, Endfield Baker, endfield message generator, endfield fake message, endfield chat generator, dialogue generator, Endfield fan tool, Hypergryph, Gryphline, rwx baker">
   <meta name="author" content="RWyn">
   <meta name="theme-color" content="#121317">
-  <link rel="canonical" href="https://baker.rwyn.ch/">
+  <link rel="canonical" href="https://baker.rwyn.ch/classic.html">
 
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://baker.rwyn.ch/">
@@ -73,9 +73,9 @@
   }
   </script>
 
-  <link rel="stylesheet" href="rwxbaker-css/style.css?v=20261008_v4">
-  <link rel="stylesheet" href="rwxbaker-css/mobile.css?v=20261008_v4">
-  <link rel="stylesheet" href="rwxbaker-css/terminal.css?v=20261008_v4">
+  <link rel="stylesheet" href="rwxbaker-css/style.css?v=20261018_v2">
+  <link rel="stylesheet" href="rwxbaker-css/mobile.css?v=20261018_v2">
+  <link rel="stylesheet" href="rwxbaker-css/terminal.css?v=20261018_v2">
   <link rel="icon" type="image/png" sizes="192x192" href="favicon.png">
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 </head>
@@ -163,7 +163,6 @@
               </span>
               <div class="terminal-launcher-title-row">
                 <span class="terminal-launcher-title">TERMINAL</span>
-                <span class="terminal-launcher-badge">NEW! BETA</span>
               </div>
             </div>
             <span class="terminal-launcher-arrow" aria-hidden="true">&#x2794;</span>
@@ -339,7 +338,7 @@
           <div id="context-sticker-picker" class="context-sticker-picker hidden">
             <div class="context-sticker-header">
               <div class="context-sticker-header-left">
-                <img src="rwxbaker-assets/icons/icon_sns_chat_emoticon.png" alt="" class="picker-header-icon">
+                <img src="rwxbaker-assets/icons/icon_chat_emoticon.png" alt="" class="picker-header-icon">
                 <span>Game Stickers</span>
               </div>
               <button type="button" id="btn-close-context-sticker" class="context-sticker-close" title="Close" aria-label="Close sticker picker">&times;</button>
@@ -374,31 +373,6 @@
     <div id="editor-backdrop" class="editor-backdrop" aria-hidden="true"></div>
 
     <main id="phone-frame" class="hide-chat-deco">
-      <!-- top announcement banner for terminal mode (equalized with message panel) -->
-      <div id="terminal-announce-banner" class="terminal-announce-banner hidden" role="region" aria-label="Terminal Mode announcement">
-        <a href="terminal.html" id="terminal-banner-cta" class="terminal-banner-cta" title="Launch full in-game Terminal Mode">
-          <span class="terminal-banner-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="2" y="3" width="20" height="14" rx="2"></rect>
-              <line x1="8" y1="21" x2="16" y2="21"></line>
-              <line x1="12" y1="17" x2="12" y2="21"></line>
-              <polyline points="7 8 9.5 10 7 12"></polyline>
-              <line x1="11.5" y1="12" x2="15.5" y2="12"></line>
-            </svg>
-          </span>
-          <span class="terminal-banner-badge">
-            <span class="terminal-banner-badge-dot" aria-hidden="true"></span>
-            NEW!
-          </span>
-          <span class="terminal-banner-text">
-            <strong class="terminal-banner-title">TERMINAL MODE:</strong>
-            <span class="terminal-banner-desc">In-game fullscreen Baker UI<span class="banner-extra">, with channels &amp; groups layout</span></span>
-          </span>
-          <span class="terminal-banner-arrow" aria-hidden="true">&#x2794;</span>
-        </a>
-        <button type="button" id="btn-dismiss-terminal-banner" class="terminal-banner-close" title="Dismiss announcement" aria-label="Dismiss announcement">&times;</button>
-      </div>
-
       <img id="live-watermark-stamp" class="rwx-export-watermark" src="rwxbaker-assets/watermarks/watermark-v1-telemetry.png" alt="RWX // BKR" aria-hidden="true">
 
       <header id="chat-header" aria-hidden="true">
@@ -492,7 +466,7 @@
 
             <div class="input-bar">
               <button type="button" id="btn-emoticon" class="input-btn" title="Stickers">
-                <img src="rwxbaker-assets/icons/icon_sns_chat_emoticon.png" alt="Stickers">
+                <img src="rwxbaker-assets/icons/icon_chat_emoticon.png" alt="Stickers">
               </button>
               <div class="input-wrapper">
                 <div id="message-input" class="editable-message-input bottom-input" contenteditable="true" data-placeholder="Type a message..."></div>
@@ -501,7 +475,7 @@
                 <img src="rwxbaker-assets/emoji/sns_emoji_011.png" alt="Emoji Picker">
               </button>
               <button type="button" id="btn-send" class="send-btn" title="Send">
-                <img src="rwxbaker-assets/icons/icon_sns_message_02.png" alt="Send">
+                <img src="rwxbaker-assets/icons/icon_chat_message.png" alt="Send">
               </button>
             </div>
           </footer>
@@ -681,9 +655,9 @@
     </div>
   </footer>
 
-  <script src="rwxbaker-js/characters.js?v=20261008_v4"></script>
-  <script src="rwxbaker-js/dom-to-image-more.min.js?v=20261008_v4"></script>
-  <script src="rwxbaker-js/tutorial-template.js?v=20261008_v4"></script>
-  <script src="rwxbaker-js/app.js?v=20261008_v4"></script>
+  <script src="rwxbaker-js/characters.js?v=20261018_v2"></script>
+  <script src="rwxbaker-js/dom-to-image-more.min.js?v=20261018_v2"></script>
+  <script src="rwxbaker-js/tutorial-template.js?v=20261018_v2"></script>
+  <script src="rwxbaker-js/app.js?v=20261018_v2"></script>
 </body>
 </html>

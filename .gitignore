@@ -4,7 +4,11 @@ _OnlineBakerStarling/
 /baker-dx-mockup.html
 /baker-starling-mockup.html
 
-# OS / Editor files
+# OS / editor files
 .DS_Store
 Thumbs.db
 .vscode/
+
+# isolated local test 
+rwxbaker-testEnvironment/
+

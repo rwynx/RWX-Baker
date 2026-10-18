@@ -228,7 +228,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let modalFilter = "all";
 
   // storage & persistence
-  const CURRENT_TERMINAL_TEMPLATE_VERSION = "20261008_v4";
+  const CURRENT_TERMINAL_TEMPLATE_VERSION = "20261018_v2";
 
   function loadPersistentState() {
     const installedVersion = localStorage.getItem("rwx_terminal_template_version");
@@ -1698,7 +1698,31 @@ document.addEventListener("DOMContentLoaded", () => {
       btnReturnStudio.addEventListener("click", (e) => {
         e.preventDefault();
         savePersistentState();
-        window.location.href = "index.html";
+        window.location.href = "classic.html";
+      });
+    }
+
+    const btnHelpModal = document.getElementById("btn-help-modal");
+    const helpModal = document.getElementById("help-modal");
+    const btnCloseHelp = document.getElementById("btn-close-help");
+
+    if (btnHelpModal && helpModal) {
+      btnHelpModal.addEventListener("click", () => {
+        helpModal.classList.remove("hidden");
+      });
+    }
+
+    if (btnCloseHelp && helpModal) {
+      btnCloseHelp.addEventListener("click", () => {
+        helpModal.classList.add("hidden");
+      });
+    }
+
+    if (helpModal) {
+      helpModal.addEventListener("click", (e) => {
+        if (e.target === helpModal) {
+          helpModal.classList.add("hidden");
+        }
       });
     }
 

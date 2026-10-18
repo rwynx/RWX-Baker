@@ -1,0 +1,45 @@
+name: Sync Endfield Characters
+
+on:
+  schedule:
+    # Runs at 04:00 UTC every Sunday and Thursday
+    - cron: '0 4 * * 0,4'
+  workflow_dispatch: # Allows manual trigger via GitHub Actions tab
+
+permissions:
+  contents: write
+
+jobs:
+  sync-operators:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Run character sync script
+        run: node scripts/sync-characters.mjs
+
+      - name: Verify adblock-safe filenames (uBlock Origin protection)
+        run: |
+          if git status --porcelain | grep -E "(icon_sns_|sns_icon_)"; then
+            echo "Error: Detected adblock-triggering filenames! Check scripts/sync-characters.mjs"
+            exit 1
+          fi
+
+      - name: Commit and push changes
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            git config --global user.name "github-actions[bot]"
+            git config --global user.email "github-actions[bot]@users.noreply.github.com"
+            git add .
+            git commit -m "chore(auto-sync): add new Endfield operators from wiki"
+            git push
+          else
+            echo "No new operators found. Roster is up to date."
+          fi
+

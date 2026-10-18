@@ -3,13 +3,78 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RWX Baker • Full Terminal Mode</title>
-  <meta name="description" content="Arknights: Endfield BAKER screen, control different chats.">
+  <title>RWX Baker • Arknights Endfield Message Generator</title>
+  <meta name="description" content="Create authentic Arknights: Endfield Baker terminal transmissions and multi-channel dialogues. Free, private, and runs directly in your browser.">
+  <meta name="keywords" content="Arknights Endfield, Baker SNS, Baker, endfield baker generator, Endfield Baker, endfield message generator, endfield terminal generator, endfield dialogue generator, Endfield fan tool, Hypergryph, Gryphline, rwx baker">
   <meta name="author" content="RWyn">
   <meta name="theme-color" content="#121317">
+  <link rel="canonical" href="https://baker.rwyn.ch/">
 
-  <link rel="stylesheet" href="rwxbaker-css/style.css?v=20261008_v4">
-  <link rel="stylesheet" href="rwxbaker-css/terminal.css?v=20261008_v4">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://baker.rwyn.ch/">
+  <meta property="og:site_name" content="RWX Baker">
+  <meta property="og:title" content="RWX Baker • Arknights Endfield Message Generator">
+  <meta property="og:description" content="Create authentic Arknights: Endfield Baker terminal transmissions and multi-channel dialogues. Free, private, and runs directly in your browser.">
+  <meta property="og:image" content="https://baker.rwyn.ch/showcase/og-preview.png?v=2">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:alt" content="RWX Baker • Arknights Endfield Terminal Preview">
+  <meta property="og:locale" content="en_US">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://baker.rwyn.ch/">
+  <meta name="twitter:title" content="RWX Baker • Arknights Endfield Message Generator">
+  <meta name="twitter:description" content="Create authentic Arknights: Endfield Baker terminal transmissions and multi-channel dialogues. Free, private, and runs directly in your browser.">
+  <meta name="twitter:image" content="https://baker.rwyn.ch/showcase/og-preview.png?v=2">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://baker.rwyn.ch/#website",
+        "url": "https://baker.rwyn.ch/",
+        "name": "RWX Baker",
+        "alternateName": [
+          "RWX Baker • Rwyn",
+          "RWX Baker - Arknights Endfield Message Generator",
+          "RWX Baker Terminal"
+        ]
+      },
+      {
+        "@type": "WebApplication",
+        "@id": "https://baker.rwyn.ch/#app",
+        "name": "RWX Baker",
+        "alternateName": [
+          "Endfield Baker Generator",
+          "Arknights Endfield Message Generator",
+          "Endfield Terminal Generator"
+        ],
+        "url": "https://baker.rwyn.ch/",
+        "description": "An in-browser fan tool to generate, customize, and export authentic Arknights: Endfield Baker terminal chats, dialogues, and channels.",
+        "applicationCategory": "EntertainmentApplication, MultimediaApplication",
+        "operatingSystem": "All",
+        "browserRequirements": "Requires JavaScript. Requires HTML5 Canvas.",
+        "image": "https://baker.rwyn.ch/showcase/og-preview.png",
+        "author": {
+          "@type": "Person",
+          "name": "Rwyn",
+          "url": "https://rwyn.ch"
+        },
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        }
+      }
+    ]
+  }
+  </script>
+
+  <link rel="stylesheet" href="rwxbaker-css/style.css?v=20261018_v2">
+  <link rel="stylesheet" href="rwxbaker-css/terminal.css?v=20261018_v2">
   <link rel="icon" type="image/png" sizes="192x192" href="favicon.png">
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 </head>
@@ -24,47 +89,108 @@
   <!-- i tried to keep everything clean as possible like the css, please if you send
   a pr dont add inlinestyles or hardcoded values in html, use the css variables instead -->
 
-    <!-- top action bar -->
-    <header class="terminal-standalone-topbar">
-      <div class="terminal-standalone-left">
-        <button type="button" id="btn-return-studio" class="terminal-standalone-nav-btn" title="Return to RWX Baker Studio">
-          <span>&larr; RETURN</span>
-        </button>
+    <!-- Unified Top Command Deck -->
+    <header class="terminal-unified-top-panel">
+      <!-- Upper Row: Brand, Classic Mode button, NOTE, Hints & GitHub -->
+      <div class="terminal-unified-row-top">
+        <div class="terminal-brand-left">
+          <!-- Classic Mode redirect button on far left -->
+          <a href="classic.html" id="btn-return-studio" class="terminal-switch-classic-btn" title="Switch to Classic Studio (Tablet / Phone Mode)">
+            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="terminal-btn-arrow-icon" aria-hidden="true">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="terminal-btn-device-icon" aria-hidden="true">
+              <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect>
+              <line x1="12" y1="18" x2="12.01" y2="18"></line>
+            </svg>
+            <span>Classic</span>
+          </a>
 
-        <div class="terminal-backup-controls" role="group" aria-label="Scenario backup">
-          <button type="button" id="btn-terminal-save-json" class="terminal-backup-btn" title="Save entire scenario as JSON backup">
-            <img src="rwxbaker-assets/ui/save-btn.png" alt="" class="backup-btn-icon">
-            <span>SAVE</span>
-          </button>
-          <button type="button" id="btn-terminal-load-json" class="terminal-backup-btn" title="Load scenario from JSON backup">
-            <img src="rwxbaker-assets/ui/import-btn.png" alt="" class="backup-btn-icon">
-            <span>LOAD</span>
-          </button>
-          <input type="file" id="input-terminal-load-json" accept=".json,application/json" class="hidden" style="display:none">
-        </div>
+          <!-- Vertical Separator -->
+          <div class="terminal-brand-separator" aria-hidden="true"></div>
 
-        <div class="terminal-topbar-export-controls">
-          <div class="export-mode-group" role="group" aria-label="Export mode">
-            <button type="button" class="export-mode-btn active" data-export-mode="screen" title="Capture visible screen frame">Screen</button>
-            <button type="button" class="export-mode-btn" data-export-mode="terminal" title="Capture full terminal frame with channels">Full Terminal</button>
-            <button type="button" class="export-mode-btn" data-export-mode="paged" title="Capture multi-page slides">Multi-Page</button>
+          <!-- Brand Logo and Titles with tactical hazard accent -->
+          <a href="https://baker.rwyn.ch/" class="terminal-brand-logo-link" title="RWX Baker • Home">
+            <img src="rwxbaker-assets/ui/rwx-logo.png" alt="RWX Logo" class="terminal-brand-logo-img">
+          </a>
+          <span class="terminal-brand-hazard-stripes" aria-hidden="true">///</span>
+          <div class="terminal-brand-titles">
+            <h1 class="terminal-brand-title">RWX BAKER</h1>
+            <span class="terminal-brand-subtitle">Arknights: Endfield Message Generator</span>
           </div>
-          <button type="button" id="btn-export-png" class="export-png-btn" title="Download PNG screenshot">
-            <span class="export-btn-glow" aria-hidden="true"></span>
-            <span class="export-btn-content">
-              <img src="rwxbaker-assets/ui/export-btn.png" alt="" class="export-btn-icon">
-              <span id="export-btn-text">Export</span>
-            </span>
-          </button>
         </div>
 
-                <div class="terminal-wip-notice-topbar">
-          <span class="wip-notice-text"><strong>NOTE:</strong> Terminal mode is still under development. Report bugs on Discord (<strong>@rwyn</strong>) or GitHub. Also in this mode you can use the<br> "Full Terminal" export option, it will draw and export the CHANNELS panel too so it will look more accurate to the in-game one!</span>
+        <!-- Right section: Tricolor bar + Square HINTS & GitHub -->
+        <div class="terminal-landing-header-right">
+          <div class="terminal-hud-tricolor" aria-hidden="true">
+            <span class="hud-bar hud-bar-pink"></span>
+            <span class="hud-bar hud-bar-yellow"></span>
+            <span class="hud-bar hud-bar-cyan"></span>
+          </div>
+          <span class="terminal-hud-crosshair" aria-hidden="true">+</span>
+
+          <div class="terminal-landing-header-actions">
+            <button type="button" id="btn-help-modal" class="terminal-hints-square-btn" title="Editor Tips & Shortcuts" aria-label="Editor Tips & Shortcuts">
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M9 18h6"></path>
+                <path d="M10 22h4"></path>
+                <path d="M12 2a7 7 0 0 0-7 7c0 2.38 1.19 4.47 3 5.74V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 0 0-7-7z"></path>
+              </svg>
+            </button>
+            <a href="https://github.com/rwynx/RWX-Baker" target="_blank" rel="noopener noreferrer" class="terminal-nav-icon-link" title="View Source on GitHub">
+              <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden="true">
+                <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+              </svg>
+            </a>
+          </div>
         </div>
       </div>
 
-      <div class="terminal-standalone-deco-hud" aria-hidden="true">
-        <img src="rwxbaker-assets/deco/header-mark.webp" alt="" class="terminal-topbar-deco-mark">
+      <!-- Long horizontal separator with 7px insets & end fades -->
+      <div class="terminal-unified-separator" aria-hidden="true"></div>
+
+      <!-- Lower Row: Backup & Export Actions + NOTE + HUD Mark -->
+      <div class="terminal-unified-row-bottom">
+        <div class="terminal-standalone-left">
+          <div class="terminal-backup-controls" role="group" aria-label="Scenario backup">
+            <span class="terminal-control-group-title">BACKUP</span>
+            <div class="terminal-control-divider" aria-hidden="true"></div>
+            <button type="button" id="btn-terminal-save-json" class="terminal-backup-btn" title="Save entire scenario as JSON backup">
+              <img src="rwxbaker-assets/ui/save-btn.png" alt="" class="backup-btn-icon">
+              <span>SAVE</span>
+            </button>
+            <button type="button" id="btn-terminal-load-json" class="terminal-backup-btn" title="Load scenario from JSON backup">
+              <img src="rwxbaker-assets/ui/import-btn.png" alt="" class="backup-btn-icon">
+              <span>LOAD</span>
+            </button>
+            <input type="file" id="input-terminal-load-json" accept=".json,application/json" class="hidden" style="display:none">
+          </div>
+
+          <div class="terminal-topbar-export-controls">
+            <div class="export-mode-group" role="group" aria-label="Export mode">
+              <button type="button" class="export-mode-btn active" data-export-mode="screen" title="Capture visible screen frame">Screen</button>
+              <button type="button" class="export-mode-btn" data-export-mode="terminal" title="Capture full terminal frame with channels">Full Terminal</button>
+              <button type="button" class="export-mode-btn" data-export-mode="paged" title="Capture multi-page slides">Multi-Page</button>
+            </div>
+            <button type="button" id="btn-export-png" class="export-png-btn" title="Download PNG screenshot">
+              <span class="export-btn-glow" aria-hidden="true"></span>
+              <span class="export-btn-content">
+                <img src="rwxbaker-assets/ui/export-btn.png" alt="" class="export-btn-icon">
+                <span id="export-btn-text">Export</span>
+              </span>
+            </button>
+          </div>
+        </div>
+
+        <!-- NOTE notification box placed in the lower row -->
+        <div class="terminal-wip-notice-topbar">
+          <span class="wip-notice-text">Something is broken? Report bugs <br>on Discord (<strong>@rwyn</strong>) or GitHub.</span>
+        </div>
+
+        <div class="terminal-standalone-deco-hud" aria-hidden="true">
+          <img src="rwxbaker-assets/deco/header-mark.webp" alt="" class="terminal-topbar-deco-mark">
+        </div>
       </div>
     </header>
 
@@ -339,7 +465,7 @@
                 <input type="text" id="message-input" placeholder="Transmit message to channel..." autocomplete="off">
               </div>
               <button type="button" id="btn-send" class="send-btn" title="Send Transmission">
-                <img src="rwxbaker-assets/icons/icon_sns_message_02.png" alt="Send">
+                <img src="rwxbaker-assets/icons/icon_chat_message.png" alt="Send">
               </button>
             </div>
           </footer>
@@ -464,6 +590,70 @@
         <button type="button" id="btn-cancel-char-modal" class="transmission-btn-cancel">CLOSE</button>
       </div>
     </div>
+  <!-- HINTS Modal -->
+  <div id="help-modal" class="help-modal-backdrop hidden">
+    <div class="help-modal-card">
+      <div class="help-modal-header">
+        <div class="help-modal-title">
+          <span class="help-modal-icon">💡</span>
+          <h3>TERMINAL TIPS &amp; SHORTCUTS</h3>
+        </div>
+        <button type="button" id="btn-close-help" class="help-modal-close" aria-label="Close tips">&times;</button>
+      </div>
+      <div class="help-modal-content">
+        <div class="help-tip-item help-tip-item-mobile-only">
+          <span class="help-tip-badge">DESKTOP</span>
+          <div class="help-tip-text">
+            <strong>Desktop Recommended:</strong> Terminal mode is an authentic, fullscreen Endfield OS layout optimized for larger screens. For compact mobile editing, switch to Classic Studio via the top bar!
+          </div>
+        </div>
+        <div class="help-tip-item">
+          <span class="help-tip-badge">CHANNELS</span>
+          <div class="help-tip-text">
+            <strong>Multi-Channel Sessions:</strong> Create multiple direct lines or squad operations using the <code>+ NEW</code> button. Each channel keeps its own independent message history.
+          </div>
+        </div>
+        <div class="help-tip-item">
+          <span class="help-tip-badge">RESIZE</span>
+          <div class="help-tip-text">
+            <strong>Resize Images:</strong> Drag the corner handle on any image message in the conversation preview to freely adjust its display size (120px &ndash; 480px).
+          </div>
+        </div>
+        <div class="help-tip-item">
+          <span class="help-tip-badge">REORDER</span>
+          <div class="help-tip-text">
+            <strong>Drag &amp; Drop anywhere:</strong> Grab message bubbles directly on the chat preview and drag across rows to reorder them in real-time.
+          </div>
+        </div>
+        <div class="help-tip-item">
+          <span class="help-tip-badge">SQUAD</span>
+          <div class="help-tip-text">
+            <strong>Group Operations:</strong> In group channels, click <code>+ ADD UNIT</code> to assign operators. Click any squad member chip in the top strip to set them as the active transmitter!
+          </div>
+        </div>
+        <div class="help-tip-item">
+          <span class="help-tip-badge">SEND</span>
+          <div class="help-tip-text">
+            <strong>Quick Send:</strong> Press <code>Enter</code> in the message input bar to send outgoing messages instantly.
+          </div>
+        </div>
+        <div class="help-tip-item">
+          <span class="help-tip-badge">BACKUP</span>
+          <div class="help-tip-text">
+            <strong>Backup All Channels:</strong> Use the <code>SAVE</code> button to download a JSON file containing all your channels and messages. Drag and drop any saved JSON file into the window to restore.
+          </div>
+        </div>
+        <div class="help-tip-item">
+          <span class="help-tip-badge">EXPORT</span>
+          <div class="help-tip-text">
+            <strong>PNG Export Modes:</strong><br>
+            • <em>Screen:</em> Saves only the active conversation viewport.<br>
+            • <em>Full Terminal:</em> Captures the entire combined screen including the Channels list at crisp 2x resolution.<br>
+            • <em>Multi-Page:</em> Breaks long chats into sequential slides with continuity overlap.
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div id="json-drop-overlay" class="json-drop-overlay hidden" aria-hidden="true">
@@ -502,11 +692,11 @@
   </footer>
 
   <!-- scripts -->
-  <script src="rwxbaker-js/dom-to-image-more.min.js?v=20261008_v4"></script>
-  <script src="rwxbaker-assets/templates/terminal-template.js?v=20261008_v4"></script>
-  <script src="rwxbaker-js/tutorial-template.js?v=20261008_v4"></script>
-  <script src="rwxbaker-js/characters.js?v=20261008_v4"></script>
-  <script src="rwxbaker-js/terminal.js?v=20261008_v4"></script>
+  <script src="rwxbaker-js/dom-to-image-more.min.js?v=20261018_v2"></script>
+  <script src="rwxbaker-assets/templates/terminal-template.js?v=20261018_v2"></script>
+  <script src="rwxbaker-js/tutorial-template.js?v=20261018_v2"></script>
+  <script src="rwxbaker-js/characters.js?v=20261018_v2"></script>
+  <script src="rwxbaker-js/terminal.js?v=20261018_v2"></script>
 </body>
 </html>
 
