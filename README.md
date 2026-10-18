@@ -10,7 +10,7 @@
 
 First and foremost, GLORY TO HYPERGRYPH!<br>GLORY TO THE COMMUNITY OF PLAYERS WHO MAKE THIS UNIVERSE THRIVE.
 
-**RWX Baker** is a lightweight and pixel-faithful *(god it was painful)* web tool that lets you craft mock conversations, roleplay dialogues, and story scenarios using the in-game *Baker* SNS app styling from **Arknights: Endfield**. In short, an **Arknights: Endfield** message generator.
+**RWX Baker** is a lightweight and pixel-faithful *(god it was painful)* web tool that lets you craft mock conversations, roleplay dialogues, and story scenarios using the in-game *Baker* SNS app styling from **Arknights: Endfield**. In short, an **Arknights: Endfield** message generator & Baker maker.
 
 *RWX (ar-vi-ex) comes from RWyn (ar-win) eXperiments, like any other tool, app or bot of mine.*
 
