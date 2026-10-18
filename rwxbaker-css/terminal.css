@@ -142,9 +142,14 @@
 }
 
 /* terminal launcher */
+.view-controls .control-group-title {
+  margin-right: 8px;
+}
+
 .terminal-control-group {
   justify-content: flex-start;
   flex: 0 0 auto;
+  margin-left: 4px;
 }
 
 .terminal-launcher-btn {
@@ -180,7 +185,7 @@
 .terminal-launcher-content {
   display: flex;
   align-items: center;
-  gap: 9px;
+  gap: 10px;
 }
 
 .terminal-launcher-icon {
