@@ -1277,9 +1277,52 @@ document.addEventListener("DOMContentLoaded", () => {
     const btnHelpModal = document.getElementById("btn-help-modal");
     const helpModal = document.getElementById("help-modal");
     const btnCloseHelp = document.getElementById("btn-close-help");
+    const btnHelpPrev = document.getElementById("btn-help-prev");
+    const btnHelpNext = document.getElementById("btn-help-next");
+    const helpPageIndicator = document.getElementById("help-page-indicator");
+    const helpPage1 = helpModal ? helpModal.querySelector(".help-page-1") : null;
+    const helpPage2 = helpModal ? helpModal.querySelector(".help-page-2") : null;
+    const helpDots = helpModal ? helpModal.querySelectorAll(".help-page-dot") : [];
+
+    let currentHelpPage = 1;
+    const totalHelpPages = 2;
+
+    function setHelpPage(page) {
+      currentHelpPage = page;
+      if (helpPage1) helpPage1.classList.toggle("hidden", currentHelpPage !== 1);
+      if (helpPage2) helpPage2.classList.toggle("hidden", currentHelpPage !== 2);
+      if (btnHelpPrev) btnHelpPrev.disabled = (currentHelpPage === 1);
+      if (btnHelpNext) btnHelpNext.disabled = (currentHelpPage === totalHelpPages);
+      if (helpPageIndicator) helpPageIndicator.textContent = `PAGE ${currentHelpPage} / ${totalHelpPages}`;
+      helpDots.forEach((dot) => {
+        dot.classList.toggle("active", parseInt(dot.dataset.page, 10) === currentHelpPage);
+      });
+      const contentEl = helpModal ? helpModal.querySelector(".help-modal-content") : null;
+      if (contentEl) contentEl.scrollTop = 0;
+    }
+
+    if (btnHelpPrev) {
+      btnHelpPrev.addEventListener("click", () => {
+        if (currentHelpPage > 1) setHelpPage(currentHelpPage - 1);
+      });
+    }
+
+    if (btnHelpNext) {
+      btnHelpNext.addEventListener("click", () => {
+        if (currentHelpPage < totalHelpPages) setHelpPage(currentHelpPage + 1);
+      });
+    }
+
+    helpDots.forEach((dot) => {
+      dot.addEventListener("click", () => {
+        const p = parseInt(dot.dataset.page, 10);
+        if (!isNaN(p)) setHelpPage(p);
+      });
+    });
 
     if (btnHelpModal && helpModal) {
       btnHelpModal.addEventListener("click", () => {
+        setHelpPage(1);
         helpModal.classList.remove("hidden");
       });
     }
@@ -1312,6 +1355,13 @@ document.addEventListener("DOMContentLoaded", () => {
           editorPanel.classList.remove("open");
           const editorBackdrop = document.getElementById("editor-backdrop");
           if (editorBackdrop) editorBackdrop.classList.remove("active");
+        }
+      }
+      if (helpModal && !helpModal.classList.contains("hidden")) {
+        if (e.key === "ArrowLeft" && currentHelpPage > 1) {
+          setHelpPage(currentHelpPage - 1);
+        } else if (e.key === "ArrowRight" && currentHelpPage < totalHelpPages) {
+          setHelpPage(currentHelpPage + 1);
         }
       }
       if ((e.key === "j" || e.key === "J") && !e.target.matches("input, textarea, select, [contenteditable]")) {

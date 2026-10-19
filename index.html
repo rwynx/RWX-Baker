@@ -81,8 +81,8 @@
   }
   </script>
 
-  <link rel="stylesheet" href="rwxbaker-css/style.css?v=20261018_v2">
-  <link rel="stylesheet" href="rwxbaker-css/terminal.css?v=20261018_v2">
+  <link rel="stylesheet" href="rwxbaker-css/style.css?v=20261019_v3">
+  <link rel="stylesheet" href="rwxbaker-css/terminal.css?v=20261019_v3">
   <link rel="icon" type="image/png" sizes="192x192" href="favicon.png">
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 </head>
@@ -598,68 +598,92 @@
         <button type="button" id="btn-cancel-char-modal" class="transmission-btn-cancel">CLOSE</button>
       </div>
     </div>
+  </div>
+
   <!-- HINTS Modal -->
-  <div id="help-modal" class="help-modal-backdrop hidden">
+  <div id="help-modal" class="help-modal-backdrop hidden" aria-hidden="true">
     <div class="help-modal-card">
       <div class="help-modal-header">
         <div class="help-modal-title">
           <span class="help-modal-icon">💡</span>
-          <h3>TERMINAL TIPS &amp; SHORTCUTS</h3>
+          <h3>TIPS &amp; TRANSMISSION SHORTCUTS</h3>
         </div>
         <button type="button" id="btn-close-help" class="help-modal-close" aria-label="Close tips">&times;</button>
       </div>
+
       <div class="help-modal-content">
-        <div class="help-tip-item help-tip-item-mobile-only">
-          <span class="help-tip-badge">DESKTOP</span>
-          <div class="help-tip-text">
-            <strong>Desktop Recommended:</strong> Terminal mode is an authentic, fullscreen Endfield OS layout optimized for larger screens. For compact mobile editing, switch to Classic Studio via the top bar!
+        <div class="help-page help-page-1">
+          <div class="help-tip-item">
+            <span class="help-tip-badge">CHANNELS</span>
+            <div class="help-tip-text">
+              <strong>Multi-Channel Sessions:</strong> Switch between active channels on the left or click <code>+ NEW</code> to start a new direct line or squad operation. In Classic mode, toggle Direct/Group anytime from the view panel.
+            </div>
+          </div>
+          <div class="help-tip-item">
+            <span class="help-tip-badge">EDIT</span>
+            <div class="help-tip-text">
+              <strong>Edit Messages &amp; Layers:</strong> Click any message bubble directly on the chat preview (or in the Classic layers list) to change its text, swap the speaker character, or delete it.
+            </div>
+          </div>
+          <div class="help-tip-item">
+            <span class="help-tip-badge">REORDER</span>
+            <div class="help-tip-text">
+              <strong>Drag &amp; Drop Anywhere:</strong> Grab any message bubble directly on the conversation preview and drag across rows to reorder them in real-time.
+            </div>
+          </div>
+          <div class="help-tip-item">
+            <span class="help-tip-badge">RESIZE</span>
+            <div class="help-tip-text">
+              <strong>Resize Image Messages:</strong> Drag the corner resize handle on any image message in the conversation preview to freely scale its display size (120px &ndash; 480px).
+            </div>
+          </div>
+          <div class="help-tip-item">
+            <span class="help-tip-badge">SEND</span>
+            <div class="help-tip-text">
+              <strong>Quick Send &amp; Input:</strong> Press <code>Enter</code> in the message input bar to send outgoing messages instantly. Use the bottom dock to attach stickers and Baker emojis.
+            </div>
           </div>
         </div>
-        <div class="help-tip-item">
-          <span class="help-tip-badge">CHANNELS</span>
-          <div class="help-tip-text">
-            <strong>Multi-Channel Sessions:</strong> Create multiple direct lines or squad operations using the <code>+ NEW</code> button. Each channel keeps its own independent message history.
+
+        <div class="help-page help-page-2 hidden">
+          <div class="help-tip-item">
+            <span class="help-tip-badge">SQUAD</span>
+            <div class="help-tip-text">
+              <strong>Squad Group Channels:</strong> In group channels, click <code>+ ADD UNIT</code> to assign operators. Click any squad member chip in the top strip to set them as the active transmitter.
+            </div>
+          </div>
+          <div class="help-tip-item">
+            <span class="help-tip-badge">BACKUP</span>
+            <div class="help-tip-text">
+              <strong>Backup &amp; Restore:</strong> Click <code>SAVE</code> (or <code>Save JSON</code> in Classic) to download a full backup of all your channels and messages. Simply drag &amp; drop any <code>.json</code> file anywhere onto the window to restore.
+            </div>
+          </div>
+          <div class="help-tip-item">
+            <span class="help-tip-badge">EXPORT</span>
+            <div class="help-tip-text">
+              <strong>High-Res 2x PNG Export:</strong><br>
+              • <em>Screen:</em> Saves the current visible conversation viewport.<br>
+              • <em>Full Terminal / Full Chat:</em> Captures the complete combined canvas (including the Channels sidebar in Terminal) at crisp 2x resolution.<br>
+              • <em>Multi-Page:</em> Splits long dialogues into sequential numbered slides with continuity overlap.
+            </div>
+          </div>
+          <div class="help-tip-item">
+            <span class="help-tip-badge">MODES</span>
+            <div class="help-tip-text">
+              <strong>Switch Views Anytime:</strong> Jump between the immersive fullscreen Terminal layout and the compact Classic Studio (Phone / Tablet views) via the top command bar.
+            </div>
           </div>
         </div>
-        <div class="help-tip-item">
-          <span class="help-tip-badge">RESIZE</span>
-          <div class="help-tip-text">
-            <strong>Resize Images:</strong> Drag the corner handle on any image message in the conversation preview to freely adjust its display size (120px &ndash; 480px).
-          </div>
+      </div>
+
+      <div class="help-modal-footer">
+        <button type="button" id="btn-help-prev" class="help-nav-btn" disabled title="Previous page">‹ PREV</button>
+        <div class="help-pagination">
+          <span class="help-page-dot active" data-page="1" title="Page 1: Transmissions &amp; Editing"></span>
+          <span class="help-page-dot" data-page="2" title="Page 2: Squad, Backup &amp; Exports"></span>
+          <span id="help-page-indicator" class="help-page-indicator">PAGE 1 / 2</span>
         </div>
-        <div class="help-tip-item">
-          <span class="help-tip-badge">REORDER</span>
-          <div class="help-tip-text">
-            <strong>Drag &amp; Drop anywhere:</strong> Grab message bubbles directly on the chat preview and drag across rows to reorder them in real-time.
-          </div>
-        </div>
-        <div class="help-tip-item">
-          <span class="help-tip-badge">SQUAD</span>
-          <div class="help-tip-text">
-            <strong>Group Operations:</strong> In group channels, click <code>+ ADD UNIT</code> to assign operators. Click any squad member chip in the top strip to set them as the active transmitter!
-          </div>
-        </div>
-        <div class="help-tip-item">
-          <span class="help-tip-badge">SEND</span>
-          <div class="help-tip-text">
-            <strong>Quick Send:</strong> Press <code>Enter</code> in the message input bar to send outgoing messages instantly.
-          </div>
-        </div>
-        <div class="help-tip-item">
-          <span class="help-tip-badge">BACKUP</span>
-          <div class="help-tip-text">
-            <strong>Backup All Channels:</strong> Use the <code>SAVE</code> button to download a JSON file containing all your channels and messages. Drag and drop any saved JSON file into the window to restore.
-          </div>
-        </div>
-        <div class="help-tip-item">
-          <span class="help-tip-badge">EXPORT</span>
-          <div class="help-tip-text">
-            <strong>PNG Export Modes:</strong><br>
-            • <em>Screen:</em> Saves only the active conversation viewport.<br>
-            • <em>Full Terminal:</em> Captures the entire combined screen including the Channels list at crisp 2x resolution.<br>
-            • <em>Multi-Page:</em> Breaks long chats into sequential slides with continuity overlap.
-          </div>
-        </div>
+        <button type="button" id="btn-help-next" class="help-nav-btn" title="Next page">NEXT ›</button>
       </div>
     </div>
   </div>
@@ -704,7 +728,7 @@
   <script src="rwxbaker-assets/templates/terminal-template.js?v=20261018_v2"></script>
   <script src="rwxbaker-js/tutorial-template.js?v=20261018_v2"></script>
   <script src="rwxbaker-js/characters.js?v=20261018_v2"></script>
-  <script src="rwxbaker-js/terminal.js?v=20261019_v1"></script>
+  <script src="rwxbaker-js/terminal.js?v=20261019_v2"></script>
 </body>
 </html>
 

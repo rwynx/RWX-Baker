@@ -3128,7 +3128,8 @@ body.is-resizing-image {
   height: 100vh;
   background: rgba(0, 0, 0, 0.75);
   backdrop-filter: blur(4px);
-  z-index: 1000;
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 1200;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -3136,12 +3137,12 @@ body.is-resizing-image {
 }
 
 .help-modal-backdrop.hidden {
-  display: none;
+  display: none !important;
 }
 
 .help-modal-card {
   width: 100%;
-  max-width: 500px;
+  max-width: 530px;
   max-height: 82vh;
   background: #1e1f23;
   border: 1px solid #3d3f47;
@@ -3236,7 +3237,7 @@ body.is-resizing-image {
 .help-tip-item {
   display: flex;
   gap: 12px;
-  align-items: flex-start;
+  align-items: stretch;
   background: #17181b;
   border: 1px solid #2b2c31;
   border-radius: 6px;
@@ -3244,6 +3245,9 @@ body.is-resizing-image {
 }
 
 .help-tip-badge {
+  width: 76px;
+  min-width: 76px;
+  box-sizing: border-box;
   font-size: 0.65rem;
   font-weight: bold;
   letter-spacing: 0.5px;
@@ -3251,8 +3255,13 @@ body.is-resizing-image {
   background: rgba(0, 220, 255, 0.1);
   border: 1px solid rgba(0, 220, 255, 0.3);
   border-radius: 4px;
-  padding: 2px 6px;
+  padding: 2.5px 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
   flex-shrink: 0;
+  align-self: flex-start;
   margin-top: 1px;
 }
 
@@ -3260,6 +3269,9 @@ body.is-resizing-image {
   font-size: 0.8rem;
   color: #c8c9ce;
   line-height: 1.4;
+  flex: 1;
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  padding-left: 12px;
 }
 
 .help-tip-text strong {
@@ -3278,6 +3290,85 @@ body.is-resizing-image {
   color: var(--color-accent-cyan);
   font-size: 0.75rem;
 }
+
+.help-modal-footer {
+  padding: 10px 18px;
+  background: #25272c;
+  border-top: 1px solid #33353c;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.help-nav-btn {
+  background: #17181b;
+  border: 1px solid #3d3f47;
+  color: #c8c9ce;
+  font-family: "Bender", "HarmonyOS Sans", sans-serif;
+  font-size: 0.75rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+  padding: 6px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.help-nav-btn:hover:not(:disabled) {
+  background: rgba(0, 220, 255, 0.15);
+  border-color: var(--color-accent-cyan, #00dcff);
+  color: #ffffff;
+}
+
+.help-nav-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  border-color: #2b2c31;
+}
+
+.help-pagination {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.help-page-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #3d3f47;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.help-page-dot.active {
+  background: var(--color-accent-cyan, #00dcff);
+  transform: scale(1.2);
+  box-shadow: 0 0 8px rgba(0, 220, 255, 0.6);
+}
+
+.help-page-indicator {
+  font-family: "Bender", "HarmonyOS Sans", sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 1px;
+  color: #9ba0aa;
+  margin-left: 6px;
+}
+
+.help-page {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.help-page.hidden {
+  display: none !important;
+}
+
 
 /* legal footer bar */
 .app-global-footer {
