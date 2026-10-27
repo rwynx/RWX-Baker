@@ -1,4 +1,4 @@
-# RWX Baker • Arknights: Endfield Message Generator/Dialogue Maker
+# RWX Baker • Arknights: Endfield Message Generator/Custom Baker Maker
 
 > **An in-browser recreation of the "Baker" messaging app and a message generator for *Arknights: Endfield*.**
 
@@ -10,7 +10,7 @@
 
 First and foremost, GLORY TO HYPERGRYPH!<br>GLORY TO THE COMMUNITY OF PLAYERS WHO MAKE THIS UNIVERSE THRIVE.
 
-**RWX Baker** is a lightweight and pixel-faithful *(god it was painful)* web tool that lets you craft mock conversations, roleplay dialogues, and story scenarios using the in-game *Baker* SNS app styling from **Arknights: Endfield**. In short, an **Arknights: Endfield** message generator & Baker maker.
+**RWX Baker** is a lightweight and pixel-faithful *(god it was painful)* web tool that lets you craft mock conversations, roleplay dialogues, and story scenarios using the in-game **Baker** SNS app styling from **Arknights: Endfield**. In short, an authentic **Arknights: Endfield Message Generator** & **Endfield Custom Baker Maker**.
 
 *RWX (ar-vi-ex) comes from RWyn (ar-win) eXperiments, like any other tool, app or bot of mine.*
 
@@ -28,6 +28,7 @@ First and foremost, GLORY TO HYPERGRYPH!<br>GLORY TO THE COMMUNITY OF PLAYERS WH
 - [Repository Structure](#repository-structure)
 - [Customization & Theming](#customization--theming)
 - [Contributing](#contributing)
+- [Creator's Note](#creators-note)
 - [Disclaimer & Intellectual Property](#disclaimer--intellectual-property)
 
 ## Features
@@ -175,6 +176,14 @@ Contributions are welcomed. If you'd like to help:
 Feel free to open an **issue** or submit a **pull request**.
 
 **NOTE:** If you want to make adjustments for the actual LIVE version, dont hardcode values<br> in html or js because everything in css file is tuned for easy pixel-perfect adjustments.
+
+---
+
+## Creator's Note
+
+> *"RWX Baker is a project born out of my eternal love for Arknights: Endfield. As a day 1 player, it’s fair to say that Endfield is my comfort game at this point. The Arknights universe had a big impact on me, just as it did on everyone else, but Endfield’s environment design, music, everything about it... brings me such peace that I constantly feel the urge to do something for the community, as if I should give something back for this game I received for free. It’s truly a unique kind of love... I did my best and created a Baker interface that’s an exact replica of the one in the game. I hope you’ll create your own dialogues and have fun with it.<br><br> I’d like to extend my eternal gratitude to everyone who uses RWX Baker, speaks highly of it on platforms like Reddit and Discord, and shares their memes and mock-up conversations with the entire community... and of course, to HYPERGRYPH for creating this universe, that I hold so dear in my heart."*
+>
+> &mdash; **Rwyn**
 
 ---
 
