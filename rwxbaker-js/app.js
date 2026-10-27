@@ -1320,6 +1320,40 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
 
+    // HOW IT WORKS & FAQ Modal
+    const btnHowItWorks = document.getElementById("btn-how-it-works");
+    const howItWorksModal = document.getElementById("how-it-works-modal");
+    const btnCloseHowItWorks = document.getElementById("btn-close-how-it-works");
+    const btnCloseHowItWorksBottom = document.getElementById("btn-close-how-it-works-bottom");
+
+    if (btnHowItWorks && howItWorksModal) {
+      btnHowItWorks.addEventListener("click", () => {
+        howItWorksModal.classList.remove("hidden");
+        const content = howItWorksModal.querySelector(".how-it-works-content");
+        if (content) content.scrollTop = 0;
+      });
+    }
+
+    if (btnCloseHowItWorks && howItWorksModal) {
+      btnCloseHowItWorks.addEventListener("click", () => {
+        howItWorksModal.classList.add("hidden");
+      });
+    }
+
+    if (btnCloseHowItWorksBottom && howItWorksModal) {
+      btnCloseHowItWorksBottom.addEventListener("click", () => {
+        howItWorksModal.classList.add("hidden");
+      });
+    }
+
+    if (howItWorksModal) {
+      howItWorksModal.addEventListener("click", (e) => {
+        if (e.target === howItWorksModal) {
+          howItWorksModal.classList.add("hidden");
+        }
+      });
+    }
+
     if (btnHelpModal && helpModal) {
       btnHelpModal.addEventListener("click", () => {
         setHelpPage(1);
@@ -1342,6 +1376,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     document.addEventListener("keydown", (e) => {
+      if (howItWorksModal && !howItWorksModal.classList.contains("hidden") && e.key === "Escape") { howItWorksModal.classList.add("hidden"); return; }
       if (e.key === "Escape") {
         const transModal = document.getElementById("new-transmission-modal");
         if (transModal && !transModal.classList.contains("hidden")) {
