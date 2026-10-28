@@ -51,6 +51,12 @@ First and foremost, GLORY TO HYPERGRYPH!<br>GLORY TO THE COMMUNITY OF PLAYERS WH
 
   **Group chat example:**<br>
   <img src="showcase/group-chat_new.png" width="60%" alt="group-chat">
+
+- **System Status & Transmission Events:**
+  - Replicates Baker's in-game connection and session status banners (`went offline.`, `is now online.`, `joined the group.`, `left the group.`).
+  - Quick 1-click presets or custom status events with full click-to-edit and drag-and-drop reordering support.<br><br>
+  <img src="showcase/system-status-offlineOnline.png" width="55%" alt="system-status-offline-online"><br>
+
 - **Interactive Dialogue Composer** *(Skuqre take notes)*:
   - Standard speech bubbles for incoming & outgoing.
   - Image bubbles, yes you can send images with **real-time drag resizing**.<br><br><img src="showcase/image-msg_new.gif" width="40%" alt="image-msg"><br>

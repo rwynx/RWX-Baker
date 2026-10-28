@@ -109,6 +109,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const contextEmojisRow = document.getElementById("terminal-context-emojis");
   const btnContextSendText = document.getElementById("btn-terminal-context-send-text");
   const btnContextStickersToggle = document.getElementById("btn-terminal-context-stickers-toggle");
+  const btnTerminalStatusToggle = document.getElementById("btn-terminal-status-toggle");
+  const terminalStatusPopoverMenu = document.getElementById("terminal-status-popover-menu");
+  const terminalStatusPresetsList = document.getElementById("terminal-status-presets-list");
+  const inputTerminalCustomStatus = document.getElementById("input-terminal-custom-status");
+  const btnTerminalSendCustomStatus = document.getElementById("btn-terminal-send-custom-status");
+  const btnCloseTerminalStatusPopover = document.getElementById("btn-close-terminal-status-popover");
+  const terminalStatusPopoverContainer = document.getElementById("terminal-status-popover-container");
   const stickersPalette = document.getElementById("terminal-stickers-palette");
 
   const contextImageFile = document.getElementById("terminal-context-image-file");
@@ -640,13 +647,15 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function enterEditMode(msg) {
-    state.currentSender = msg.sender;
-    if (msg.sender === "incoming" && msg.characterId) {
-      state.activeCharacterId = msg.characterId;
-      updateControlCharDisplay();
+    if (msg.type !== "status") {
+      state.currentSender = msg.sender;
+      if (msg.sender === "incoming" && msg.characterId) {
+        state.activeCharacterId = msg.characterId;
+        updateControlCharDisplay();
+      }
+      updateSenderIndicator();
+      updateActiveSpeakerCards();
     }
-    updateSenderIndicator();
-    updateActiveSpeakerCards();
 
     if (terminalStudioTitle) {
       terminalStudioTitle.textContent = "EDIT MODE // TRANSMISSION";
@@ -678,6 +687,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function exitEditMode() {
     state.selectedMessageId = null;
+    if (state.currentSender === "system" || !["incoming", "outgoing"].includes(state.currentSender)) {
+      state.currentSender = "incoming";
+      updateSenderIndicator();
+      updateActiveSpeakerCards();
+    }
+    switchContextTab("text");
+
     if (terminalStudioTitle) {
       terminalStudioTitle.textContent = "COMPOSE CONTEXT";
       terminalStudioTitle.classList.remove("neon-flash");
@@ -715,6 +731,51 @@ document.addEventListener("DOMContentLoaded", () => {
     let currentGroup = null;
 
     state.messages.forEach((msg, idx) => {
+      if (msg.type === "status") {
+        if (currentGroup) {
+          messageList.appendChild(currentGroup);
+          currentGroup = null;
+        }
+
+        const statusRow = document.createElement("div");
+        statusRow.dataset.id = msg.id;
+        statusRow.className = "message-status-row";
+        if (msg.id === state.selectedMessageId) {
+          statusRow.classList.add("selected");
+        }
+
+        statusRow.addEventListener("click", (e) => {
+          e.stopPropagation();
+          selectMessageForEdit(msg.id);
+        });
+
+        attachMessageDragListeners(statusRow, msg.id);
+
+        const leftLine = document.createElement("span");
+        leftLine.className = "status-line status-line-left";
+        leftLine.setAttribute("aria-hidden", "true");
+
+        const pill = document.createElement("div");
+        pill.className = "status-pill";
+
+        const textSpan = document.createElement("span");
+        textSpan.className = "status-text";
+        renderMessageContentWithEmojis(textSpan, msg.text || "");
+
+        pill.appendChild(textSpan);
+
+        const rightLine = document.createElement("span");
+        rightLine.className = "status-line status-line-right";
+        rightLine.setAttribute("aria-hidden", "true");
+
+        statusRow.appendChild(leftLine);
+        statusRow.appendChild(pill);
+        statusRow.appendChild(rightLine);
+
+        messageList.appendChild(statusRow);
+        return;
+      }
+
       const prevMsg = state.messages[idx - 1];
       const isNewRow =
         !prevMsg ||
@@ -1409,9 +1470,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function appendMessage(msgData) {
     const newId = "term_m_" + Date.now();
+    const safeSender = msgData.type === "status"
+      ? "system"
+      : ((msgData.sender || state.currentSender) === "outgoing" ? "outgoing" : "incoming");
+
     const newMsg = {
       id: newId,
-      sender: msgData.sender || state.currentSender,
+      sender: safeSender,
       characterId: msgData.characterId || state.activeCharacterId || "pelica",
       type: msgData.type || "text",
       text: msgData.text || "",
@@ -2219,6 +2284,13 @@ document.addEventListener("DOMContentLoaded", () => {
         const msg = state.messages.find((m) => m.id === state.selectedMessageId);
         if (!msg) return;
 
+        if (msg.type === "status") {
+          msg.text = getInputValueAsStructuredText(contextTextInput).trim();
+          savePersistentState();
+          exitEditMode();
+          return;
+        }
+
         msg.sender = state.currentSender;
         msg.characterId = state.activeCharacterId;
 
@@ -2912,6 +2984,126 @@ document.addEventListener("DOMContentLoaded", () => {
     initLiveClock();
     initParticleField();
   }
+
+
+  // Status and System Events Popover
+  function getTerminalStatusActorName() {
+    if (state.currentSender === "outgoing") {
+      return "Endministrator";
+    }
+    const charObj = CHARACTERS[state.activeCharacterId];
+    if (!charObj) return "Endministrator";
+    const name = charObj.name || "Operator";
+    if (/^endmin/i.test(name) || /^endministrator/i.test(name)) {
+      return "Endministrator";
+    }
+    return name;
+  }
+
+  function renderTerminalStatusPresets() {
+    if (!terminalStatusPresetsList) return;
+    terminalStatusPresetsList.innerHTML = "";
+    const actorName = getTerminalStatusActorName();
+    const isGroup = state.conversationMode === "group";
+
+    const presets = isGroup
+      ? [
+          { icon: '<svg viewBox="0 0 16 16" width="14" height="14" fill="none" class="status-preset-svg"><circle cx="8" cy="8" r="6" stroke="#8b949e" stroke-width="1.6" stroke-dasharray="2.5 1.5"></circle><circle cx="8" cy="8" r="2.5" fill="#f85149"></circle></svg>', text: `${actorName} went offline.` },
+          { icon: '<svg viewBox="0 0 16 16" width="14" height="14" fill="none" class="status-preset-svg"><circle cx="8" cy="8" r="6" stroke="#2ea043" stroke-width="1.6"></circle><circle cx="8" cy="8" r="2.6" fill="#3fb950"></circle></svg>', text: `${actorName} is now online.` },
+          { icon: '<svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="#00d2ff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="status-preset-svg"><path d="M10 13a4 4 0 0 0-8 0"></path><circle cx="6" cy="5" r="3"></circle><line x1="12" y1="5" x2="12" y2="9"></line><line x1="10" y1="7" x2="14" y2="7"></line></svg>', text: `${actorName} joined the group.` },
+          { icon: '<svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="#e3b341" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="status-preset-svg"><path d="M10 13a4 4 0 0 0-8 0"></path><circle cx="6" cy="5" r="3"></circle><line x1="10" y1="7" x2="14" y2="7"></line></svg>', text: `${actorName} left the group.` },
+        ]
+      : [
+          { icon: '<svg viewBox="0 0 16 16" width="14" height="14" fill="none" class="status-preset-svg"><circle cx="8" cy="8" r="6" stroke="#8b949e" stroke-width="1.6" stroke-dasharray="2.5 1.5"></circle><circle cx="8" cy="8" r="2.5" fill="#f85149"></circle></svg>', text: `${actorName} went offline.` },
+          { icon: '<svg viewBox="0 0 16 16" width="14" height="14" fill="none" class="status-preset-svg"><circle cx="8" cy="8" r="6" stroke="#2ea043" stroke-width="1.6"></circle><circle cx="8" cy="8" r="2.6" fill="#3fb950"></circle></svg>', text: `${actorName} is now online.` },
+        ];
+
+    presets.forEach((p) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "status-preset-btn";
+      btn.innerHTML = `<span class="status-preset-icon">${p.icon}</span><span>${p.text}</span>`;
+      btn.addEventListener("click", () => {
+        appendMessage({
+          type: "status",
+          text: p.text,
+          sender: "system",
+        });
+        closeTerminalStatusPopover();
+        scrollToBottom();
+      });
+      terminalStatusPresetsList.appendChild(btn);
+    });
+  }
+
+  function openTerminalStatusPopover() {
+    if (!terminalStatusPopoverMenu) return;
+    renderTerminalStatusPresets();
+    terminalStatusPopoverMenu.classList.remove("hidden");
+    if (terminalStatusPopoverContainer) terminalStatusPopoverContainer.classList.add("open");
+    if (inputTerminalCustomStatus) {
+      inputTerminalCustomStatus.value = "";
+      setTimeout(() => inputTerminalCustomStatus.focus(), 50);
+    }
+  }
+
+  function closeTerminalStatusPopover() {
+    if (!terminalStatusPopoverMenu) return;
+    terminalStatusPopoverMenu.classList.add("hidden");
+    if (terminalStatusPopoverContainer) terminalStatusPopoverContainer.classList.remove("open");
+  }
+
+  function sendTerminalCustomStatus() {
+    if (!inputTerminalCustomStatus) return;
+    const text = inputTerminalCustomStatus.value.trim();
+    if (text) {
+      appendMessage({
+        type: "status",
+        text: text,
+        sender: "system",
+      });
+      inputTerminalCustomStatus.value = "";
+      closeTerminalStatusPopover();
+      scrollToBottom();
+    }
+  }
+
+  if (btnTerminalStatusToggle) {
+    btnTerminalStatusToggle.addEventListener("click", (e) => {
+      e.stopPropagation();
+      if (terminalStatusPopoverMenu.classList.contains("hidden")) {
+        openTerminalStatusPopover();
+      } else {
+        closeTerminalStatusPopover();
+      }
+    });
+  }
+
+  if (btnCloseTerminalStatusPopover) {
+    btnCloseTerminalStatusPopover.addEventListener("click", (e) => {
+      e.stopPropagation();
+      closeTerminalStatusPopover();
+    });
+  }
+
+  if (btnTerminalSendCustomStatus) {
+    btnTerminalSendCustomStatus.addEventListener("click", sendTerminalCustomStatus);
+  }
+
+  if (inputTerminalCustomStatus) {
+    inputTerminalCustomStatus.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        sendTerminalCustomStatus();
+      }
+    });
+  }
+
+  document.addEventListener("click", (e) => {
+    if (terminalStatusPopoverContainer && !terminalStatusPopoverContainer.contains(e.target)) {
+      closeTerminalStatusPopover();
+    }
+  });
 
   init();
 });

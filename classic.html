@@ -160,7 +160,7 @@
   }
   </script>
 
-  <link rel="stylesheet" href="rwxbaker-css/style.css?v=20261027_v6">
+  <link rel="stylesheet" href="rwxbaker-css/style.css?v=20261028_v6">
   <link rel="stylesheet" href="rwxbaker-css/mobile.css?v=20261027_v1">
   <link rel="stylesheet" href="rwxbaker-css/terminal.css?v=20261027_v1">
   <link rel="icon" type="image/png" sizes="192x192" href="favicon.png">
@@ -375,8 +375,28 @@
               <div id="context-text-input" class="editable-message-input" contenteditable="true" data-placeholder="Type a message..."></div>
               <button type="button" class="context-emoji-btn" data-emoji-target="context-text-input" title="Add emoji" aria-label="Add emoji">&#9786;</button>
             </div>
-            <button type="button" id="btn-context-send-text" class="panel-action-btn">Send Message</button>
-            <button type="button" id="btn-context-open-stickers" class="panel-action-btn" title="Pick and send an in-game sticker">Send Sticker</button>
+            <div class="compose-actions-grid">
+              <button type="button" id="btn-context-send-text" class="panel-action-btn">Send Message</button>
+              <button type="button" id="btn-context-open-stickers" class="panel-action-btn" title="Pick and send an in-game sticker">Send Sticker</button>
+            </div>
+            <div class="status-popover-container" id="status-popover-container">
+              <button type="button" id="btn-context-status-toggle" class="panel-action-btn status-trigger-btn" title="Insert an Online/Offline or Group status event">
+                <span class="status-trigger-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="status-btn-svg"><path d="M4.93 19.07a10 10 0 0 1 0-14.14"></path><path d="M7.76 16.24a6 6 0 0 1 0-8.48"></path><circle cx="12" cy="12" r="2" fill="currentColor"></circle><path d="M16.24 7.76a6 6 0 0 1 0 8.48"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg></span>
+                <span>System Status Event</span>
+                <span class="status-trigger-arrow">&#x25BE;</span>
+              </button>
+              <div id="status-popover-menu" class="status-popover-menu hidden">
+                <div class="status-popover-header">
+                  <span class="status-popover-title">SYSTEM STATUS // TRANSMISSION</span>
+                  <button type="button" id="btn-close-status-popover" class="status-popover-close" title="Close" aria-label="Close status menu">&times;</button>
+                </div>
+                <div id="status-presets-list" class="status-presets-list"></div>
+                <div class="status-custom-row">
+                  <input type="text" id="input-custom-status" class="status-custom-input" placeholder="Type custom status..." autocomplete="off">
+                  <button type="button" id="btn-send-custom-status" class="status-custom-send-btn">SEND</button>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div id="context-form-image" class="context-form hidden">
@@ -897,6 +917,6 @@
   <script src="rwxbaker-js/characters.js?v=20261018_v2"></script>
   <script src="rwxbaker-js/dom-to-image-more.min.js?v=20261019_v1"></script>
   <script src="rwxbaker-js/tutorial-template.js?v=20261018_v2"></script>
-  <script src="rwxbaker-js/app.js?v=20261027_v1"></script>
+  <script src="rwxbaker-js/app.js?v=20261028_v6"></script>
 </body>
 </html>

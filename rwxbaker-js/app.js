@@ -165,6 +165,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const contextTextInput = document.getElementById("context-text-input");
   const btnContextSendText = document.getElementById("btn-context-send-text");
+  const btnContextStatusToggle = document.getElementById("btn-context-status-toggle");
+  const statusPopoverMenu = document.getElementById("status-popover-menu");
+  const statusPresetsList = document.getElementById("status-presets-list");
+  const inputCustomStatus = document.getElementById("input-custom-status");
+  const btnSendCustomStatus = document.getElementById("btn-send-custom-status");
+  const btnCloseStatusPopover = document.getElementById("btn-close-status-popover");
+  const statusPopoverContainer = document.getElementById("status-popover-container");
 
   const contextImageFile = document.getElementById("context-image-file");
   const imagePreviewContainer = document.getElementById("context-image-preview-container");
@@ -596,6 +603,53 @@ document.addEventListener("DOMContentLoaded", () => {
     let currentGroup = null;
 
     state.messages.forEach((msg, idx) => {
+      if (msg.type === "status") {
+        if (currentGroup) {
+          const rowMsgIds = Array.from(currentGroup.querySelectorAll(".message-item")).map((el) => el.dataset.id);
+          attachRowDragListeners(currentGroup, rowMsgIds);
+          messageList.appendChild(currentGroup);
+          currentGroup = null;
+        }
+
+        const statusRow = document.createElement("div");
+        statusRow.dataset.id = msg.id;
+        statusRow.classList.add("message-status-row");
+        if (msg.id === state.selectedMessageId) {
+          statusRow.classList.add("selected");
+        }
+
+        statusRow.addEventListener("click", (e) => {
+          e.stopPropagation();
+          selectMessageForEdit(msg.id);
+        });
+
+        attachMessageDragListeners(statusRow, msg.id);
+
+        const leftLine = document.createElement("span");
+        leftLine.classList.add("status-line", "status-line-left");
+        leftLine.setAttribute("aria-hidden", "true");
+
+        const pill = document.createElement("div");
+        pill.classList.add("status-pill");
+
+        const textSpan = document.createElement("span");
+        textSpan.classList.add("status-text");
+        renderMessageContentWithEmojis(textSpan, msg.text || "");
+
+        pill.appendChild(textSpan);
+
+        const rightLine = document.createElement("span");
+        rightLine.classList.add("status-line", "status-line-right");
+        rightLine.setAttribute("aria-hidden", "true");
+
+        statusRow.appendChild(leftLine);
+        statusRow.appendChild(pill);
+        statusRow.appendChild(rightLine);
+
+        messageList.appendChild(statusRow);
+        return;
+      }
+
       const prevMsg = state.messages[idx - 1];
 
       const isNewRow =
@@ -836,7 +890,9 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       let senderTag;
-      if (msg.sender === "incoming") {
+      if (msg.type === "status") {
+        senderTag = "Status";
+      } else if (msg.sender === "incoming") {
         const charObj = CHARACTERS[msg.characterId];
         senderTag = charObj ? charObj.name : "Char";
       } else {
@@ -958,17 +1014,19 @@ document.addEventListener("DOMContentLoaded", () => {
     void contextSectionTitle.offsetWidth; // trigger reflow
     contextSectionTitle.classList.add("neon-flash");
 
-    state.contextSender = msg.sender;
-    if (msg.sender === "incoming") {
-      btnSenderChar.classList.add("active");
-      btnSenderUser.classList.remove("active");
-      if (msg.characterId) {
-        state.activeCharacterId = msg.characterId;
-        renderCharacterList();
+    if (msg.type !== "status") {
+      state.contextSender = msg.sender;
+      if (msg.sender === "incoming") {
+        btnSenderChar.classList.add("active");
+        btnSenderUser.classList.remove("active");
+        if (msg.characterId) {
+          state.activeCharacterId = msg.characterId;
+          renderCharacterList();
+        }
+      } else {
+        btnSenderUser.classList.add("active");
+        btnSenderChar.classList.remove("active");
       }
-    } else {
-      btnSenderUser.classList.add("active");
-      btnSenderChar.classList.remove("active");
     }
 
     state.contextType = msg.type || "text";
@@ -1533,9 +1591,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     btnContextSendText.addEventListener("click", () => {
       const text = getInputValueAsStructuredText(contextTextInput).trim();
-      if (text && (state.contextSender === "outgoing" || state.activeCharacterId)) {
+      const validSender = state.contextSender === "outgoing" ? "outgoing" : "incoming";
+      if (text && (validSender === "outgoing" || state.activeCharacterId)) {
         addMessage({
-          sender: state.contextSender,
+          sender: validSender,
           characterId: state.activeCharacterId,
           type: "text",
           text: text,
@@ -1543,6 +1602,132 @@ document.addEventListener("DOMContentLoaded", () => {
         setInputValueFromStructuredText(contextTextInput, "");
       }
     });
+
+    // Status System Events in Classic
+    function getActiveStatusActorName() {
+      if (state.contextSender === "outgoing") {
+        return "Endministrator";
+      }
+      const charObj = CHARACTERS[state.activeCharacterId];
+      if (!charObj) return "Endministrator";
+      const name = charObj.name || "Operator";
+      if (/^endmin/i.test(name) || /^endministrator/i.test(name)) {
+        return "Endministrator";
+      }
+      return name;
+    }
+
+    function renderStatusPresets() {
+      if (!statusPresetsList) return;
+      statusPresetsList.innerHTML = "";
+      const actorName = getActiveStatusActorName();
+      const isGroup = isGroupConversation();
+
+      const presets = isGroup
+        ? [
+            { icon: '<svg viewBox="0 0 16 16" width="14" height="14" fill="none" class="status-preset-svg"><circle cx="8" cy="8" r="6" stroke="#8b949e" stroke-width="1.6" stroke-dasharray="2.5 1.5"></circle><circle cx="8" cy="8" r="2.5" fill="#f85149"></circle></svg>', text: `${actorName} went offline.` },
+            { icon: '<svg viewBox="0 0 16 16" width="14" height="14" fill="none" class="status-preset-svg"><circle cx="8" cy="8" r="6" stroke="#2ea043" stroke-width="1.6"></circle><circle cx="8" cy="8" r="2.6" fill="#3fb950"></circle></svg>', text: `${actorName} is now online.` },
+            { icon: '<svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="#00d2ff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="status-preset-svg"><path d="M10 13a4 4 0 0 0-8 0"></path><circle cx="6" cy="5" r="3"></circle><line x1="12" y1="5" x2="12" y2="9"></line><line x1="10" y1="7" x2="14" y2="7"></line></svg>', text: `${actorName} joined the group.` },
+            { icon: '<svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="#e3b341" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="status-preset-svg"><path d="M10 13a4 4 0 0 0-8 0"></path><circle cx="6" cy="5" r="3"></circle><line x1="10" y1="7" x2="14" y2="7"></line></svg>', text: `${actorName} left the group.` },
+          ]
+        : [
+            { icon: '<svg viewBox="0 0 16 16" width="14" height="14" fill="none" class="status-preset-svg"><circle cx="8" cy="8" r="6" stroke="#8b949e" stroke-width="1.6" stroke-dasharray="2.5 1.5"></circle><circle cx="8" cy="8" r="2.5" fill="#f85149"></circle></svg>', text: `${actorName} went offline.` },
+            { icon: '<svg viewBox="0 0 16 16" width="14" height="14" fill="none" class="status-preset-svg"><circle cx="8" cy="8" r="6" stroke="#2ea043" stroke-width="1.6"></circle><circle cx="8" cy="8" r="2.6" fill="#3fb950"></circle></svg>', text: `${actorName} is now online.` },
+          ];
+
+      presets.forEach((p) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "status-preset-btn";
+        btn.innerHTML = `<span class="status-preset-icon">${p.icon}</span><span>${p.text}</span>`;
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          addMessage({
+            type: "status",
+            text: p.text,
+            sender: "system",
+          });
+          closeStatusPopover();
+          scrollToBottom();
+        });
+        statusPresetsList.appendChild(btn);
+      });
+    }
+
+    function openStatusPopover() {
+      if (!statusPopoverMenu) return;
+      renderStatusPresets();
+      statusPopoverMenu.classList.remove("hidden");
+      if (statusPopoverContainer) statusPopoverContainer.classList.add("open");
+      if (inputCustomStatus) {
+        inputCustomStatus.value = "";
+        setTimeout(() => inputCustomStatus.focus(), 50);
+      }
+    }
+
+    function closeStatusPopover() {
+      if (!statusPopoverMenu) return;
+      statusPopoverMenu.classList.add("hidden");
+      if (statusPopoverContainer) statusPopoverContainer.classList.remove("open");
+    }
+
+    function sendCustomStatus() {
+      if (!inputCustomStatus) return;
+      const text = inputCustomStatus.value.trim();
+      if (text) {
+        addMessage({
+          type: "status",
+          text: text,
+          sender: "system",
+        });
+        inputCustomStatus.value = "";
+        closeStatusPopover();
+        scrollToBottom();
+      }
+    }
+
+    if (btnContextStatusToggle) {
+      btnContextStatusToggle.addEventListener("click", (e) => {
+        e.stopPropagation();
+        if (!statusPopoverMenu) return;
+        if (statusPopoverMenu.classList.contains("hidden")) {
+          openStatusPopover();
+        } else {
+          closeStatusPopover();
+        }
+      });
+    }
+
+    if (btnCloseStatusPopover) {
+      btnCloseStatusPopover.addEventListener("click", (e) => {
+        e.stopPropagation();
+        closeStatusPopover();
+      });
+    }
+
+    if (btnSendCustomStatus) {
+      btnSendCustomStatus.addEventListener("click", (e) => {
+        e.stopPropagation();
+        sendCustomStatus();
+      });
+    }
+
+    if (inputCustomStatus) {
+      inputCustomStatus.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          e.stopPropagation();
+          sendCustomStatus();
+        }
+      });
+    }
+
+    document.addEventListener("click", (e) => {
+      if (statusPopoverContainer && !statusPopoverContainer.contains(e.target)) {
+        closeStatusPopover();
+      }
+    });
+
 
     function optimizeImageUpload(file, maxDimension = 640) {
       return new Promise((resolve, reject) => {
@@ -1770,6 +1955,12 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!state.selectedMessageId) return;
       const selectedMsg = state.messages.find((m) => m.id === state.selectedMessageId);
       if (selectedMsg) {
+        if (selectedMsg.type === "status") {
+          selectedMsg.text = getInputValueAsStructuredText(contextTextInput).trim();
+          exitEditMode();
+          return;
+        }
+
         // guard--- only text and image can be updated as messages
         if (state.contextType !== "text" && state.contextType !== "image") return;
 
