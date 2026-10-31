@@ -57,6 +57,9 @@ First and foremost, GLORY TO HYPERGRYPH!<br>GLORY TO THE COMMUNITY OF PLAYERS WH
   - Quick 1-click presets or custom status events with full click-to-edit and drag-and-drop reordering support.<br><br>
   <img src="showcase/system-status-offlineOnline.png" width="55%" alt="system-status-offline-online"><br>
 
+- **Mission & Quest Directive Events:**
+  - Custom mission title and location inputs just like in-game version. `mission_name` & `location_name`. Example below: <br><br>
+  <img src="showcase/mission-event-example.png" width="60%" alt="mission-event-example">
 - **Interactive Dialogue Composer** *(Skuqre take notes)*:
   - Standard speech bubbles for incoming & outgoing.
   - Image bubbles, yes you can send images with **real-time drag resizing**.<br><br><img src="showcase/image-msg_new.gif" width="40%" alt="image-msg"><br>
@@ -80,8 +83,8 @@ First and foremost, GLORY TO HYPERGRYPH!<br>GLORY TO THE COMMUNITY OF PLAYERS WH
     
     **Example LIVE and exported render versions:**<br>
 <p align="center" style="display: flex; justify-content: center; align-items: center; gap: 10px;">
-<img src="showcase/terminal-showcase-full.png" width="45%" alt="terminal live full showcase">
-<img src="showcase/terminal-view-export.png" width="45%" alt="terminal-view-export"><br>
+<img src="showcase/terminal-showcase-new.png" width="45%" alt="terminal live full showcase">
+<img src="showcase/terminal-showcase-export.png" width="45%" alt="terminal-view-export"><br>
 </p>
 
 - **100% Private & Client-Side:** No sign-ups, no cookies, no advertising, and no analytics. Every keystroke, every word and any image export is processed strictly within your local browser.

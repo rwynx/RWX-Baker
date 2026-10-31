@@ -1,8 +1,8 @@
 window.RWX_TERMINAL_TEMPLATE = {
   "app": "RWX Baker",
   "mode": "terminal",
-  "version": "1.1",
-  "savedAt": "2026-10-18T21:09:00.000Z",
+  "version": "1.2",
+  "savedAt": "2026-10-31T15:25:00.000Z",
   "activeUser": "endminf",
   "activeTerminalChannelId": "channel_1791470713337",
   "terminalChannels": [
@@ -20,16 +20,16 @@ window.RWX_TERMINAL_TEMPLATE = {
           "sender": "incoming",
           "characterId": "laevatain",
           "type": "text",
-          "text": "Hey there, Endmin. Are you busy? [emoji:rwxbaker-assets/emoji/sns_emoji_018.png]",
+          "text": "Hey, you busy? Check this terminal view with the channels panel and all, cool isn't it? [emoji:rwxbaker-assets/emoji/sns_emoji_004.png]",
           "imageSrc": null,
           "reactions": []
         },
         {
-          "id": "term_m_1791471101207",
-          "sender": "incoming",
-          "characterId": "laevatain",
-          "type": "text",
-          "text": "Check this terminal view with the channels panel and all that, cool isn't it? [emoji:rwxbaker-assets/emoji/sns_emoji_004.png]",
+          "id": "term_m_1791471105001",
+          "sender": "system",
+          "characterId": null,
+          "type": "status",
+          "text": "Endministrator is now online.",
           "imageSrc": null,
           "reactions": []
         },
@@ -60,11 +60,22 @@ window.RWX_TERMINAL_TEMPLATE = {
           "imageSrc": "rwxbaker-assets/templates/terminal-template-attachment_meme.png",
           "reactions": [],
           "imageWidth": 185
+        },
+        {
+          "id": "term_m_1791471155001",
+          "sender": "system",
+          "characterId": null,
+          "type": "mission",
+          "title": "Tickle Laevatain",
+          "location": "OMV Dijiang, Endmin's Room",
+          "text": "",
+          "imageSrc": null,
+          "reactions": []
         }
       ],
       "choices": [
-        "This is a test/tutorial conversation. You can delete messages individually on the CHANNELS tab to start clean.",
-        "Or select an option from here. CLEAR deletes this chat only. START CLEAN deletes all chats/groups."
+        "Hey there! This is a test/tutorial conversation.",
+        "Or select an option from here. CLEAR deletes this chat only! START CLEAN deletes all groups and chats."
       ]
     },
     {
@@ -318,4 +329,3 @@ window.RWX_TERMINAL_TEMPLATE = {
     }
   ]
 };
-

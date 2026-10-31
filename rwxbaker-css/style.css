@@ -4591,7 +4591,7 @@ body.legal-page::-webkit-scrollbar-thumb:hover {
   align-items: center;
   justify-content: center;
   width: 100%;
-  margin: 12px 0;
+  margin: 2px 0 -14px 0;
   padding: 0 14px;
   box-sizing: border-box;
   user-select: none;
@@ -4690,6 +4690,194 @@ body.legal-page::-webkit-scrollbar-thumb:hover {
 }
 
 /* ==========================================================================
+   MISSION EVENT CARDS (In-Game Quest & Directive Banners)
+   ========================================================================== */
+
+.message-mission-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin: 10px 0 2px 0;
+  padding: 0 calc(var(--terminal-message-avatar-size, var(--message-avatar-size, 56px)) + var(--message-avatar-gap, 10px) + 2px);
+  box-sizing: border-box;
+  user-select: none;
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+@media (max-width: 600px) {
+  .message-mission-row {
+    padding: 0 10px;
+    margin: 10px 0;
+  }
+}
+
+.message-mission-row.drop-above::before {
+  content: "";
+  position: absolute;
+  top: -6px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: #b8f900;
+  border-radius: 2px;
+  box-shadow: 0 0 10px #b8f900;
+  pointer-events: none;
+  z-index: 30;
+}
+
+.message-mission-row.drop-below::after {
+  content: "";
+  position: absolute;
+  bottom: -6px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: #b8f900;
+  border-radius: 2px;
+  box-shadow: 0 0 10px #b8f900;
+  pointer-events: none;
+  z-index: 30;
+}
+
+.mission-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 100%;
+  min-height: 66px;
+  height: 66px;
+  background-color: #2b2b2b;
+  background-image: url('../rwxbaker-assets/deco/task_uncompleted.webp?v=20261031_v8');
+  background-repeat: no-repeat;
+  background-position: right center;
+  background-size: auto 100%;
+  border-radius: 7px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.38);
+  overflow: hidden;
+  box-sizing: border-box;
+  transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.message-mission-row:hover .mission-card {
+  border-color: rgba(184, 249, 0, 0.45);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.45);
+  transform: translateY(-1px);
+}
+
+.message-mission-row.selected .mission-card {
+  border-color: #b8f900;
+  box-shadow: 0 0 14px rgba(184, 249, 0, 0.38);
+}
+
+.is-exporting .message-mission-row.selected .mission-card,
+#phone-frame.is-exporting .message-mission-row.selected .mission-card {
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.38) !important;
+}
+
+.mission-accent-bar {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 5px;
+  background: #b8f900;
+  box-shadow: 0 0 10px rgba(184, 249, 0, 0.5);
+}
+
+.mission-icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 16px;
+  margin-right: 14px;
+  flex-shrink: 0;
+  width: 48px;
+  height: 42px;
+}
+
+.mission-card-svg {
+  width: 48px;
+  height: 42px;
+  display: block;
+}
+
+.mission-divider {
+  width: 1px;
+  height: 32px;
+  background-color: rgba(255, 255, 255, 0.22);
+  margin-right: 16px;
+  flex-shrink: 0;
+}
+
+.mission-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  flex: 1;
+  padding-right: 78px;
+  overflow: hidden;
+}
+
+.mission-title {
+  font-family: 'HarmonyOS Sans', 'Bender', var(--font-sans);
+  color: #f4f6f9;
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.35px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.25;
+}
+
+.mission-location {
+  font-family: 'HarmonyOS Sans', 'Bender', var(--font-sans);
+  color: #929ba8;
+  font-size: 0.82rem;
+  font-weight: 400;
+  letter-spacing: 0.25px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 4px;
+  line-height: 1.2;
+}
+
+@media (max-width: 600px) {
+  .mission-card {
+    min-height: 58px;
+    height: 58px;
+  }
+  .mission-icon-wrap,
+  .mission-card-svg {
+    width: 40px;
+    height: 36px;
+    margin-left: 12px;
+    margin-right: 10px;
+  }
+  .mission-divider {
+    height: 26px;
+    margin-right: 12px;
+  }
+  .mission-title {
+    font-size: 0.94rem;
+  }
+  .mission-location {
+    font-size: 0.76rem;
+    margin-top: 2px;
+  }
+}
+
+
+
+/* ==========================================================================
    COMPOSE ACTIONS GRID & STATUS POPOVER (Classic & Terminal)
    ========================================================================== */
 
@@ -4700,11 +4888,54 @@ body.legal-page::-webkit-scrollbar-thumb:hover {
   width: 100%;
 }
 
-.status-popover-container,
-.terminal-status-popover-container {
+.compose-status-grid,
+.terminal-events-grid {
   position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
   width: 100%;
   margin-top: 5px;
+}
+
+.status-popover-container,
+.terminal-status-popover-container,
+.mission-popover-container,
+.terminal-mission-popover-container {
+  position: static;
+  width: 100%;
+}
+
+.compose-status-grid .status-popover-menu,
+.terminal-events-grid .status-popover-menu {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.status-popover-container .status-popover-menu::before,
+.terminal-status-popover-container .status-popover-menu::before,
+.status-popover-container .status-popover-menu::after,
+.terminal-status-popover-container .status-popover-menu::after {
+  left: 25% !important;
+}
+
+.mission-popover-container .status-popover-menu::before,
+.terminal-mission-popover-container .status-popover-menu::before {
+  left: 75% !important;
+  border-color: rgba(184, 249, 0, 0.4) transparent transparent transparent !important;
+}
+
+.mission-popover-container .status-popover-menu::after,
+.terminal-mission-popover-container .status-popover-menu::after {
+  left: 75% !important;
+}
+
+.mission-popover-menu {
+  border-color: rgba(184, 249, 0, 0.4) !important;
+  box-shadow: 0 -8px 28px rgba(0, 0, 0, 0.8), 0 0 16px rgba(184, 249, 0, 0.22) !important;
 }
 
 /* Classic & Base Status Trigger Button (Unified Cyan-Blue) */
@@ -4713,18 +4944,79 @@ body.legal-page::-webkit-scrollbar-thumb:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  padding: 8px 12px;
+  gap: 6px;
+  padding: 8px 8px;
   background-color: var(--color-accent-cyan, #00d2ff);
   color: #0d1117;
   font-family: var(--font-sans);
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   font-weight: bold;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  letter-spacing: 0.4px;
+  letter-spacing: 0.3px;
   transition: opacity 0.15s ease, box-shadow 0.15s ease;
+  white-space: nowrap;
+}
+
+.mission-trigger-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 8px;
+  background-color: var(--color-accent-cyan, #00d2ff);
+  color: #0d1117;
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  letter-spacing: 0.3px;
+  box-sizing: border-box;
+  transition: opacity 0.15s ease, box-shadow 0.15s ease;
+  white-space: nowrap;
+}
+
+.mission-trigger-btn:hover {
+  opacity: 0.92;
+  box-shadow: 0 0 12px rgba(0, 210, 255, 0.45);
+}
+
+.terminal-mission-popover-container .mission-trigger-btn {
+  background: rgba(0, 210, 255, 0.12);
+  border: 1px solid rgba(0, 210, 255, 0.38);
+  color: #00d2ff;
+  font-family: 'Bender', var(--font-sans);
+  border-radius: 5px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  padding: 6px 8px;
+}
+
+.terminal-mission-popover-container .mission-trigger-btn:hover {
+  background: rgba(0, 210, 255, 0.22);
+  border-color: #00d2ff;
+  color: #ffffff;
+  box-shadow: 0 0 12px rgba(0, 210, 255, 0.35);
+}
+
+.mission-trigger-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  position: relative;
+  top: 0.8px;
+}
+
+.mission-btn-svg {
+  width: 13px;
+  height: 13px;
+  display: block;
 }
 
 .status-trigger-btn:hover {
@@ -4771,7 +5063,9 @@ body.legal-page::-webkit-scrollbar-thumb:hover {
 }
 
 .status-popover-container.open .status-trigger-arrow,
-.terminal-status-popover-container.open .status-trigger-arrow {
+.terminal-status-popover-container.open .status-trigger-arrow,
+.mission-popover-container.open .status-trigger-arrow,
+.terminal-mission-popover-container.open .status-trigger-arrow {
   transform: rotate(180deg);
 }
 
@@ -4960,7 +5254,120 @@ body.legal-page::-webkit-scrollbar-thumb:hover {
   display: block;
 }
 
-.terminal-compose-studio.is-editing .terminal-status-popover-container,
-.context-edit-mode .status-popover-container {
+.mission-inputs-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mission-input-field {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.mission-input-label {
+  font-family: 'Bender', var(--font-sans);
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: #9aa0aa;
+  letter-spacing: 0.5px;
+}
+
+.status-popover-section-label {
+  font-family: 'Bender', var(--font-sans);
+  font-size: 0.62rem;
+  font-weight: 800;
+  color: #7b818c;
+  letter-spacing: 0.6px;
+  margin-top: 2px;
+}
+
+.mission-presets-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  max-height: 155px;
+  overflow-y: auto;
+}
+
+.mission-preset-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  padding: 6px 10px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 5px;
+  color: #d6d7e0;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s ease;
+  box-sizing: border-box;
+}
+
+.mission-preset-btn:hover {
+  background: rgba(184, 249, 0, 0.12);
+  border-color: rgba(184, 249, 0, 0.4);
+  color: #ffffff;
+  transform: translateX(2px);
+}
+
+.mission-preset-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #c8ff00;
+  flex-shrink: 0;
+}
+
+.mission-preset-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+
+.preset-title {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #f3f4f6;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.preset-loc {
+  font-size: 0.68rem;
+  color: #8c92a0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 1px;
+}
+
+.mission-send-btn {
+  background: #b8f900 !important;
+  color: #0f1115 !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.5px !important;
+  width: 100% !important;
+  padding: 7px 12px !important;
+  border-radius: 4px !important;
+  margin-top: 2px !important;
+  cursor: pointer;
+  border: none;
+  transition: all 0.15s ease;
+}
+
+.mission-send-btn:hover {
+  background: #cbff1a !important;
+  box-shadow: 0 0 12px rgba(184, 249, 0, 0.45) !important;
+}
+
+.terminal-compose-studio.is-editing .terminal-events-grid,
+.context-edit-mode .compose-status-grid {
   display: none !important;
 }

@@ -32,7 +32,7 @@
   --terminal-channels-blur: 14px;             /* Channels column glass blur intensity */
   --terminal-channels-opacity: 1;             /* Overall channels column opacity */
   --terminal-sidebar-gap: 12px;               /* Vertical gap between Channels card and Controls card */
-  --terminal-channels-max-height: 418px;      /* Height limit for Channels section (fits 4 session cards) */
+  --terminal-channels-max-height: 326px;      /* Height limit for Channels section (fits 3 session cards) */
 
   /* [SESSION CARDS (CHANNEL LIST ITEMS)] */
   --terminal-session-card-height: 76px;       /* Height of each session card */
@@ -888,7 +888,7 @@ body.terminal-standalone-page {
 .terminal-channels-panel {
   flex: 0 0 auto;
   min-height: 140px;
-  max-height: var(--terminal-channels-max-height, 418px);
+  max-height: var(--terminal-channels-max-height, 326px);
   display: flex;
   flex-direction: column;
   position: relative;
@@ -2293,7 +2293,7 @@ body.terminal-standalone-page {
   min-height: 0 !important;
   display: flex !important;
   flex-direction: column !important;
-  gap: clamp(6px, 0.8vh, 10px) !important;
+  gap: clamp(3px, 0.4vh, 6px) !important;
   position: relative !important;
 }
 
@@ -3779,3 +3779,8 @@ body.is-resizing-image {
 }
 
 
+
+.terminal-window-body #chat-viewport {
+  margin-top: 4px;
+  padding-top: 14px;
+}

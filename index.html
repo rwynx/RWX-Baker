@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>RWX Baker • Arknights Endfield Custom Baker Maker &amp; Message Generator</title>
-  <meta name="description" content="Free Arknights: Endfield Message Generator &amp; Custom Baker Maker. Create authentic in-game direct &amp; squad group chats with any operator, add Baker emojis, and export high-res PNGs.">
-  <meta name="keywords" content="endfield custom baker maker, baker maker, endfield baker maker, baker generator, endfield baker generator, baker maker, endfield baker maker, arknights baker maker, arknights endfield baker generator, arknights baker generator, baker chat generator, baker message generator, endfield message generator, endfield chat generator, endfield dialogue generator, Endfield Baker, Baker SNS, arknights endfield fan tool, Hypergryph, Gryphline, rwx baker">
+  <meta name="description" content="Free Arknights: Endfield Message Generator &amp; Custom Baker Maker. Create authentic in-game chats, system status events, and mission quest directives with any operator, Baker emojis, and export high-res PNGs.">
+  <meta name="keywords" content="endfield custom baker maker, baker maker, endfield baker maker, baker generator, endfield baker generator, baker maker, endfield baker maker, arknights baker maker, arknights endfield baker generator, arknights baker generator, baker chat generator, baker message generator, endfield message generator, endfield chat generator, endfield dialogue generator, endfield mission generator, endfield quest maker, baker system events, Endfield Baker, Baker SNS, arknights endfield fan tool, Hypergryph, Gryphline, rwx baker">
   <meta name="author" content="RWyn">
   <meta name="theme-color" content="#121317">
   <link rel="canonical" href="https://baker.rwyn.ch/">
@@ -14,7 +14,7 @@
   <meta property="og:url" content="https://baker.rwyn.ch/">
   <meta property="og:site_name" content="RWX Baker">
   <meta property="og:title" content="RWX Baker • Arknights Endfield Custom Baker Maker &amp; Message Generator">
-  <meta property="og:description" content="Free Arknights: Endfield Message Generator &amp; Custom Baker Maker. Create authentic in-game direct &amp; squad group chats with any operator, add Baker emojis, and export high-res PNGs.">
+  <meta property="og:description" content="Free Arknights: Endfield Message Generator &amp; Custom Baker Maker. Create authentic in-game chats, system status events, and mission quest directives with any operator, Baker emojis, and export high-res PNGs.">
   <meta property="og:image" content="https://baker.rwyn.ch/showcase/og-preview.png?v=2">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -25,7 +25,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:url" content="https://baker.rwyn.ch/">
   <meta name="twitter:title" content="RWX Baker • Arknights Endfield Custom Baker Maker &amp; Message Generator">
-  <meta name="twitter:description" content="Free Arknights: Endfield Message Generator &amp; Custom Baker Maker. Create authentic in-game direct &amp; squad group chats with any operator, add Baker emojis, and export high-res PNGs.">
+  <meta name="twitter:description" content="Free Arknights: Endfield Message Generator &amp; Custom Baker Maker. Create authentic in-game chats, system status events, and mission quest directives with any operator, Baker emojis, and export high-res PNGs.">
   <meta name="twitter:image" content="https://baker.rwyn.ch/showcase/og-preview.png?v=2">
 
   <script type="application/ld+json">
@@ -59,7 +59,7 @@
           "Endfield Chat Generator",
           "Endfield Terminal Generator"
         ],
-        "keywords": "Baker generator, Endfield Baker generator, Baker maker, Endfield Baker maker, Arknights Endfield message generator, Baker chat generator, Endfield dialogue maker, Arknights Endfield fan tool",
+        "keywords": "Baker generator, Endfield Baker generator, Baker maker, Endfield Baker maker, Arknights Endfield message generator, Baker chat generator, Endfield dialogue maker, Arknights Endfield mission generator, Endfield quest maker, Arknights Endfield fan tool",
         "sameAs": [
           "https://github.com/rwxy/RWX-Baker",
           "https://www.reddit.com/r/Endfield/s/AB5x3O7lzQ"
@@ -102,8 +102,8 @@
           {
             "@type": "HowToStep",
             "position": 3,
-            "name": "Add Baker Emojis, Stickers and Images",
-            "text": "Attach authentic in-game Baker emojis and stickers, or upload custom pictures and freely resize them on the preview canvas."
+            "name": "Add Baker Emojis, System Status and Mission Directives",
+            "text": "Attach authentic in-game Baker emojis and stickers, upload custom pictures, insert game-styled System Status Banners (online/offline/group status), and announce custom Mission Quest Cards with telemetry badges and locations."
           },
           {
             "@type": "HowToStep",
@@ -148,6 +148,14 @@
           },
           {
             "@type": "Question",
+            "name": "Can I add in-game System Status Events and Mission Quest Cards?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes! RWX Baker includes authentic in-game System Status Events (like 'went offline.', 'is now online.', 'joined the group.', 'left the group.') and Mission Quest Directives (featuring neon-accented quest cards, authentic inverted-triangle telemetry badges, custom mission objectives, and locations like 'Homecoming // North Wuling Exclusion Zone'). Both support drag-and-drop reordering, click-to-edit, and high-res export."
+            }
+          },
+          {
+            "@type": "Question",
             "name": "Is my chat data saved and private?",
             "acceptedAnswer": {
               "@type": "Answer",
@@ -160,8 +168,8 @@
   }
   </script>
 
-  <link rel="stylesheet" href="rwxbaker-css/style.css?v=20261028_v6">
-  <link rel="stylesheet" href="rwxbaker-css/terminal.css?v=20261027_v1">
+  <link rel="stylesheet" href="rwxbaker-css/style.css?v=20261031_v8">
+  <link rel="stylesheet" href="rwxbaker-css/terminal.css?v=20261031_v8">
   <link rel="icon" type="image/png" sizes="192x192" href="favicon.png">
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
   <script defer src="https://cloud.umami.is/script.js" data-website-id="c20ff310-8fca-4a27-af54-efa614b5eb21"></script>
@@ -262,8 +270,7 @@
 
           <div class="terminal-topbar-export-controls">
             <div class="export-mode-group" role="group" aria-label="Export mode">
-              <button type="button" class="export-mode-btn active" data-export-mode="screen" title="Capture visible screen frame">Screen</button>
-              <button type="button" class="export-mode-btn" data-export-mode="terminal" title="Capture full terminal frame with channels">Full Terminal</button>
+              <button type="button" class="export-mode-btn active" data-export-mode="terminal" title="Capture full terminal frame with channels">Full Terminal</button>
               <button type="button" class="export-mode-btn" data-export-mode="paged" title="Capture multi-page slides">Multi-Page</button>
             </div>
             <button type="button" id="btn-export-png" class="export-png-btn" title="Download PNG screenshot">
@@ -409,21 +416,52 @@
                 </button>
               </div>
 
-              <div class="terminal-status-popover-container" id="terminal-status-popover-container">
-                <button type="button" id="btn-terminal-status-toggle" class="terminal-action-btn secondary status-trigger-btn" title="Insert an Online/Offline or Group status event">
-                  <span class="status-trigger-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="status-btn-svg"><path d="M4.93 19.07a10 10 0 0 1 0-14.14"></path><path d="M7.76 16.24a6 6 0 0 1 0-8.48"></path><circle cx="12" cy="12" r="2" fill="currentColor"></circle><path d="M16.24 7.76a6 6 0 0 1 0 8.48"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg></span>
-                  <span>System Status Event</span>
-                  <span class="status-trigger-arrow">&#x25BE;</span>
-                </button>
-                <div id="terminal-status-popover-menu" class="status-popover-menu hidden">
-                  <div class="status-popover-header">
-                    <span class="status-popover-title">SYSTEM STATUS // TRANSMISSION</span>
-                    <button type="button" id="btn-close-terminal-status-popover" class="status-popover-close" title="Close" aria-label="Close status menu">&times;</button>
+              <div class="terminal-events-grid" id="terminal-events-grid">
+                <div class="terminal-status-popover-container" id="terminal-status-popover-container">
+                  <button type="button" id="btn-terminal-status-toggle" class="terminal-action-btn secondary status-trigger-btn" title="Insert an Online/Offline or Group status event">
+                    <span class="status-trigger-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="status-btn-svg"><path d="M4.93 19.07a10 10 0 0 1 0-14.14"></path><path d="M7.76 16.24a6 6 0 0 1 0-8.48"></path><circle cx="12" cy="12" r="2" fill="currentColor"></circle><path d="M16.24 7.76a6 6 0 0 1 0 8.48"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg></span>
+                    <span>Status Event</span>
+                    <span class="status-trigger-arrow">&#x25BE;</span>
+                  </button>
+                  <div id="terminal-status-popover-menu" class="status-popover-menu hidden">
+                    <div class="status-popover-header">
+                      <span class="status-popover-title">SYSTEM STATUS // TRANSMISSION</span>
+                      <button type="button" id="btn-close-terminal-status-popover" class="status-popover-close" title="Close" aria-label="Close status menu">&times;</button>
+                    </div>
+                    <div id="terminal-status-presets-list" class="status-presets-list"></div>
+                    <div class="status-custom-row">
+                      <input type="text" id="input-terminal-custom-status" class="status-custom-input" placeholder="Type custom status..." autocomplete="off">
+                      <button type="button" id="btn-terminal-send-custom-status" class="status-custom-send-btn">SEND</button>
+                    </div>
                   </div>
-                  <div id="terminal-status-presets-list" class="status-presets-list"></div>
-                  <div class="status-custom-row">
-                    <input type="text" id="input-terminal-custom-status" class="status-custom-input" placeholder="Type custom status..." autocomplete="off">
-                    <button type="button" id="btn-terminal-send-custom-status" class="status-custom-send-btn">SEND</button>
+                </div>
+
+                <div class="terminal-mission-popover-container" id="terminal-mission-popover-container">
+                  <button type="button" id="btn-terminal-mission-toggle" class="terminal-action-btn secondary mission-trigger-btn" title="Insert an in-game Mission / Quest Directive">
+                    <span class="mission-trigger-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="mission-btn-svg"><polygon points="3,4 21,4 12,20" stroke="currentColor" stroke-width="1.8" fill="currentColor" fill-opacity="0.25"></polygon><polygon points="12,8.5 13.2,11.5 16.2,11.5 13.8,13.2 14.7,16 12,14.3 9.3,16 10.2,13.2 7.8,11.5 10.8,11.5" fill="currentColor" stroke="none"></polygon><circle cx="5" cy="12.5" r="0.8" fill="currentColor" stroke="none"></circle><circle cx="19" cy="12.5" r="0.8" fill="currentColor" stroke="none"></circle></svg></span>
+                    <span>Mission Event</span>
+                    <span class="status-trigger-arrow">&#x25BE;</span>
+                  </button>
+                  <div id="terminal-mission-popover-menu" class="status-popover-menu mission-popover-menu hidden">
+                    <div class="status-popover-header">
+                      <span class="status-popover-title">MISSION // DIRECTIVE EVENT</span>
+                      <button type="button" id="btn-close-terminal-mission-popover" class="status-popover-close" title="Close" aria-label="Close mission menu">&times;</button>
+                    </div>
+                    <div class="mission-inputs-stack">
+                      <div class="mission-input-field">
+                        <label class="mission-input-label" for="input-terminal-mission-title">MISSION NAME</label>
+                        <input type="text" id="input-terminal-mission-title" class="status-custom-input mission-input" placeholder="e.g. Homecoming" autocomplete="off">
+                      </div>
+                      <div class="mission-input-field">
+                        <label class="mission-input-label" for="input-terminal-mission-location">LOCATION</label>
+                        <input type="text" id="input-terminal-mission-location" class="status-custom-input mission-input" placeholder="e.g. North Wuling Exclusion Zone" autocomplete="off">
+                      </div>
+                    </div>
+                    <div class="mission-custom-row">
+                      <button type="button" id="btn-terminal-send-mission" class="status-custom-send-btn mission-send-btn">INSERT MISSION</button>
+                    </div>
+                    <div class="status-popover-section-label">QUICK PRESET</div>
+                    <div id="terminal-mission-presets-list" class="mission-presets-list"></div>
                   </div>
                 </div>
               </div>
@@ -748,9 +786,9 @@
             <li class="how-step-item">
               <div class="how-step-header">
                 <span class="how-step-num">03</span>
-                <strong>Add Baker Emojis, Stickers &amp; Pictures:</strong>
+                <strong>Emojis, System Status &amp; Mission Directives:</strong>
               </div>
-              <p>Express characters with authentic game-styled Baker emojis, stickers, and status stamps (like "Typing..." or "Went offline"). Upload custom pictures and drag their corner handle to freely resize them.</p>
+              <p>Express characters with authentic Baker emojis, stickers, and custom resizable images. Insert real-time <strong>System Status Events</strong> (like <em>went offline.</em> or <em>is now online.</em>) and authentic <strong>Mission Quest Directives</strong> with inverted-triangle telemetry badges, custom quest titles, and target locations (e.g. <em>Homecoming // North Wuling Exclusion Zone</em>).</p>
             </li>
             <li class="how-step-item">
               <div class="how-step-header">
@@ -787,6 +825,11 @@
           <div class="faq-item">
             <h3 class="faq-q">Can I create group chats with multiple characters?</h3>
             <p class="faq-a">Yes! You can toggle any channel to Group mode, assign squad units, set custom operation names, and switch active speakers seamlessly. You can send messages, images, stickers and add reaction emojis to messages too, just like the in-game Baker app!</p>
+          </div>
+
+          <div class="faq-item">
+            <h3 class="faq-q">Can I add in-game System Status Events and Mission Quest Cards?</h3>
+            <p class="faq-a">Yes! RWX Baker replicates Baker's in-game <strong>System Status Events</strong> (<code>went offline.</code>, <code>is now online.</code>, <code>joined the group.</code>, <code>left the group.</code>) and authentic <strong>Mission Quest Directives</strong> (featuring neon lime-accented cards, telemetry badges, custom mission objectives, and target locations). Both support drag-and-drop reordering, click-to-edit, and high-resolution export.</p>
           </div>
 
           <div class="faq-item">
@@ -954,10 +997,10 @@
 
   <!-- scripts -->
   <script src="rwxbaker-js/dom-to-image-more.min.js?v=20261019_v1"></script>
-  <script src="rwxbaker-assets/templates/terminal-template.js?v=20261018_v2"></script>
+  <script src="rwxbaker-assets/templates/terminal-template.js?v=20261031_v8"></script>
   <script src="rwxbaker-js/tutorial-template.js?v=20261018_v2"></script>
   <script src="rwxbaker-js/characters.js?v=20261018_v2"></script>
-  <script src="rwxbaker-js/terminal.js?v=20261028_v6"></script>
+  <script src="rwxbaker-js/terminal.js?v=20261031_v8"></script>
 </body>
 </html>
 

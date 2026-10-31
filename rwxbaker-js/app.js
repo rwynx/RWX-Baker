@@ -173,6 +173,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const btnCloseStatusPopover = document.getElementById("btn-close-status-popover");
   const statusPopoverContainer = document.getElementById("status-popover-container");
 
+  const btnContextMissionToggle = document.getElementById("btn-context-mission-toggle");
+  const missionPopoverMenu = document.getElementById("mission-popover-menu");
+  const missionPresetsList = document.getElementById("mission-presets-list");
+  const inputMissionTitle = document.getElementById("input-mission-title");
+  const inputMissionLocation = document.getElementById("input-mission-location");
+  const btnSendMission = document.getElementById("btn-send-mission");
+  const btnCloseMissionPopover = document.getElementById("btn-close-mission-popover");
+  const missionPopoverContainer = document.getElementById("mission-popover-container");
+
   const contextImageFile = document.getElementById("context-image-file");
   const imagePreviewContainer = document.getElementById("context-image-preview-container");
   const imagePreview = document.getElementById("context-image-preview");
@@ -650,6 +659,66 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
+      if (msg.type === "mission") {
+        if (currentGroup) {
+          const rowMsgIds = Array.from(currentGroup.querySelectorAll(".message-item")).map((el) => el.dataset.id);
+          attachRowDragListeners(currentGroup, rowMsgIds);
+          messageList.appendChild(currentGroup);
+          currentGroup = null;
+        }
+
+        const missionRow = document.createElement("div");
+        missionRow.dataset.id = msg.id;
+        missionRow.classList.add("message-mission-row");
+        if (msg.id === state.selectedMessageId) {
+          missionRow.classList.add("selected");
+        }
+
+        missionRow.addEventListener("click", (e) => {
+          e.stopPropagation();
+          selectMessageForEdit(msg.id);
+        });
+
+        attachMessageDragListeners(missionRow, msg.id);
+
+        const card = document.createElement("div");
+        card.classList.add("mission-card");
+
+        const accentBar = document.createElement("div");
+        accentBar.classList.add("mission-accent-bar");
+
+        const iconWrap = document.createElement("div");
+        iconWrap.classList.add("mission-icon-wrap");
+        iconWrap.setAttribute("aria-hidden", "true");
+        iconWrap.innerHTML = '<svg viewBox="0 0 48 42" fill="none" class="mission-card-svg"><polygon points="4,4 44,4 24,38" fill="rgba(255,255,255,0.32)" /><polygon points="24,11 26.6,18.5 34.5,18.5 28.1,23.2 30.5,30.5 24,25.8 17.5,30.5 19.9,23.2 13.5,18.5 21.4,18.5" fill="#1c1f24" /><circle cx="7" cy="22" r="1.2" fill="rgba(255,255,255,0.75)" /><circle cx="11.5" cy="22" r="1.2" fill="rgba(255,255,255,0.75)" /><circle cx="16" cy="22" r="1.2" fill="rgba(255,255,255,0.75)" /><circle cx="32" cy="22" r="1.2" fill="rgba(255,255,255,0.75)" /><circle cx="36.5" cy="22" r="1.2" fill="rgba(255,255,255,0.75)" /><circle cx="41" cy="22" r="1.2" fill="rgba(255,255,255,0.75)" /></svg>';
+
+        const divider = document.createElement("div");
+        divider.classList.add("mission-divider");
+
+        const body = document.createElement("div");
+        body.classList.add("mission-body");
+
+        const titleEl = document.createElement("div");
+        titleEl.classList.add("mission-title");
+        titleEl.textContent = (msg.title !== undefined && msg.title !== "") ? msg.title : "Homecoming";
+
+        const locEl = document.createElement("div");
+        locEl.classList.add("mission-location");
+        locEl.textContent = (msg.location !== undefined && msg.location !== "") ? msg.location : "North Wuling Exclusion Zone";
+
+        body.appendChild(titleEl);
+        body.appendChild(locEl);
+
+        card.appendChild(accentBar);
+        card.appendChild(iconWrap);
+        card.appendChild(divider);
+        card.appendChild(body);
+
+        missionRow.appendChild(card);
+        messageList.appendChild(missionRow);
+        return;
+      }
+
       const prevMsg = state.messages[idx - 1];
 
       const isNewRow =
@@ -892,13 +961,15 @@ document.addEventListener("DOMContentLoaded", () => {
       let senderTag;
       if (msg.type === "status") {
         senderTag = "Status";
+      } else if (msg.type === "mission") {
+        senderTag = "Mission";
       } else if (msg.sender === "incoming") {
         const charObj = CHARACTERS[msg.characterId];
         senderTag = charObj ? charObj.name : "Char";
       } else {
         senderTag = "User";
       }
-      const summaryText = msg.text || (msg.type === "image" ? "[Image]" : "[Sticker]");
+      const summaryText = msg.title || msg.text || (msg.type === "image" ? "[Image]" : (msg.type === "mission" ? "[Mission]" : "[Sticker]"));
       const content = document.createElement("span");
       content.classList.add("layer-item-content");
       content.appendChild(document.createTextNode(`#${idx + 1} [${senderTag}] `));
@@ -1014,7 +1085,7 @@ document.addEventListener("DOMContentLoaded", () => {
     void contextSectionTitle.offsetWidth; // trigger reflow
     contextSectionTitle.classList.add("neon-flash");
 
-    if (msg.type !== "status") {
+    if (msg.type !== "status" && msg.type !== "mission") {
       state.contextSender = msg.sender;
       if (msg.sender === "incoming") {
         btnSenderChar.classList.add("active");
@@ -1046,6 +1117,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if (state.contextType === "text") {
       formText.classList.remove("hidden");
       setInputValueFromStructuredText(contextTextInput, msg.text || "");
+    } else if (state.contextType === "mission") {
+      formText.classList.remove("hidden");
+      setInputValueFromStructuredText(contextTextInput, (msg.title || "") + " // " + (msg.location || ""));
     } else if (state.contextType === "image") {
       formImage.classList.remove("hidden");
       if (msg.imageSrc) {
@@ -1656,6 +1730,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function openStatusPopover() {
       if (!statusPopoverMenu) return;
+      closeMissionPopover();
       renderStatusPresets();
       statusPopoverMenu.classList.remove("hidden");
       if (statusPopoverContainer) statusPopoverContainer.classList.add("open");
@@ -1722,9 +1797,122 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
 
+    // Mission Directives in Classic
+    const MISSION_PRESETS = [
+      { title: "Homecoming", location: "North Wuling Exclusion Zone" }
+    ];
+
+    function renderMissionPresets() {
+      if (!missionPresetsList) return;
+      missionPresetsList.innerHTML = "";
+      MISSION_PRESETS.forEach((p) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "mission-preset-btn";
+        btn.innerHTML = `<span class="mission-preset-info"><span class="preset-title">${p.title}</span><span class="preset-loc">${p.location}</span></span><span class="mission-preset-icon"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="mission-preset-svg"><polygon points="3,4 21,4 12,20" stroke="currentColor" stroke-width="1.8" fill="currentColor" fill-opacity="0.25"></polygon><polygon points="12,8.5 13.2,11.5 16.2,11.5 13.8,13.2 14.7,16 12,14.3 9.3,16 10.2,13.2 7.8,11.5 10.8,11.5" fill="currentColor" stroke="none"></polygon><circle cx="5" cy="12.5" r="0.8" fill="currentColor" stroke="none"></circle><circle cx="19" cy="12.5" r="0.8" fill="currentColor" stroke="none"></circle></svg></span>`;
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          addMessage({
+            type: "mission",
+            title: p.title,
+            location: p.location,
+            sender: "system",
+          });
+          closeMissionPopover();
+          scrollToBottom();
+        });
+        missionPresetsList.appendChild(btn);
+      });
+    }
+
+    function openMissionPopover() {
+      if (!missionPopoverMenu) return;
+      closeStatusPopover();
+      renderMissionPresets();
+      missionPopoverMenu.classList.remove("hidden");
+      if (missionPopoverContainer) missionPopoverContainer.classList.add("open");
+      if (inputMissionTitle) {
+        inputMissionTitle.value = "";
+        if (inputMissionLocation) inputMissionLocation.value = "";
+        setTimeout(() => inputMissionTitle.focus(), 50);
+      }
+    }
+
+    function closeMissionPopover() {
+      if (!missionPopoverMenu) return;
+      missionPopoverMenu.classList.add("hidden");
+      if (missionPopoverContainer) missionPopoverContainer.classList.remove("open");
+    }
+
+    function sendCustomMission() {
+      const title = (inputMissionTitle && inputMissionTitle.value.trim()) || "Homecoming";
+      const location = (inputMissionLocation && inputMissionLocation.value.trim()) || "North Wuling Exclusion Zone";
+      addMessage({
+        type: "mission",
+        title: title,
+        location: location,
+        sender: "system",
+      });
+      if (inputMissionTitle) inputMissionTitle.value = "";
+      if (inputMissionLocation) inputMissionLocation.value = "";
+      closeMissionPopover();
+      scrollToBottom();
+    }
+
+    if (btnContextMissionToggle) {
+      btnContextMissionToggle.addEventListener("click", (e) => {
+        e.stopPropagation();
+        if (!missionPopoverMenu) return;
+        if (missionPopoverMenu.classList.contains("hidden")) {
+          openMissionPopover();
+        } else {
+          closeMissionPopover();
+        }
+      });
+    }
+
+    if (btnCloseMissionPopover) {
+      btnCloseMissionPopover.addEventListener("click", (e) => {
+        e.stopPropagation();
+        closeMissionPopover();
+      });
+    }
+
+    if (btnSendMission) {
+      btnSendMission.addEventListener("click", (e) => {
+        e.stopPropagation();
+        sendCustomMission();
+      });
+    }
+
+    if (inputMissionTitle) {
+      inputMissionTitle.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          if (inputMissionLocation && !inputMissionLocation.value.trim()) {
+            inputMissionLocation.focus();
+          } else {
+            sendCustomMission();
+          }
+        }
+      });
+    }
+
+    if (inputMissionLocation) {
+      inputMissionLocation.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          sendCustomMission();
+        }
+      });
+    }
+
     document.addEventListener("click", (e) => {
       if (statusPopoverContainer && !statusPopoverContainer.contains(e.target)) {
         closeStatusPopover();
+      }
+      if (missionPopoverContainer && !missionPopoverContainer.contains(e.target)) {
+        closeMissionPopover();
       }
     });
 
@@ -1957,6 +2145,23 @@ document.addEventListener("DOMContentLoaded", () => {
       if (selectedMsg) {
         if (selectedMsg.type === "status") {
           selectedMsg.text = getInputValueAsStructuredText(contextTextInput).trim();
+          exitEditMode();
+          return;
+        }
+
+        if (selectedMsg.type === "mission") {
+          const rawVal = getInputValueAsStructuredText(contextTextInput).trim();
+          if (rawVal.includes("//")) {
+            const parts = rawVal.split("//");
+            selectedMsg.title = parts[0].trim() || "Arena of Games";
+            selectedMsg.location = parts.slice(1).join("//").trim() || "OMV Dijiang";
+          } else if (rawVal.includes("|")) {
+            const parts = rawVal.split("|");
+            selectedMsg.title = parts[0].trim() || "Arena of Games";
+            selectedMsg.location = parts.slice(1).join("|").trim() || "OMV Dijiang";
+          } else {
+            selectedMsg.title = rawVal || "Arena of Games";
+          }
           exitEditMode();
           return;
         }
@@ -2956,12 +3161,15 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function addMessage(msgData) {
+    const isSpecialEvent = msgData.type === "status" || msgData.type === "mission";
     const newMsg = {
       id: "msg_" + Date.now() + "_" + Math.floor(Math.random() * 1000),
-      sender: msgData.sender || "outgoing",
+      sender: isSpecialEvent ? "system" : (msgData.sender || "outgoing"),
       characterId: msgData.characterId || state.activeCharacterId,
       type: msgData.type || "text",
       text: msgData.text || "",
+      title: msgData.title !== undefined ? msgData.title : undefined,
+      location: msgData.location !== undefined ? msgData.location : undefined,
       imageSrc: msgData.imageSrc || null,
       reactions: msgData.reactions || [],
     };

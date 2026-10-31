@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
     choices: [],
     currentSender: "outgoing", // "outgoing" (Endmin) or "incoming" (Operator)
     selectedMessageId: null,
-    exportMode: "screen",
+    exportMode: "terminal",
   };
 
   let terminalChannels = [];
@@ -116,6 +116,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const btnTerminalSendCustomStatus = document.getElementById("btn-terminal-send-custom-status");
   const btnCloseTerminalStatusPopover = document.getElementById("btn-close-terminal-status-popover");
   const terminalStatusPopoverContainer = document.getElementById("terminal-status-popover-container");
+
+  const btnTerminalMissionToggle = document.getElementById("btn-terminal-mission-toggle");
+  const terminalMissionPopoverMenu = document.getElementById("terminal-mission-popover-menu");
+  const terminalMissionPresetsList = document.getElementById("terminal-mission-presets-list");
+  const inputTerminalMissionTitle = document.getElementById("input-terminal-mission-title");
+  const inputTerminalMissionLocation = document.getElementById("input-terminal-mission-location");
+  const btnTerminalSendMission = document.getElementById("btn-terminal-send-mission");
+  const btnCloseTerminalMissionPopover = document.getElementById("btn-close-terminal-mission-popover");
+  const terminalMissionPopoverContainer = document.getElementById("terminal-mission-popover-container");
   const stickersPalette = document.getElementById("terminal-stickers-palette");
 
   const contextImageFile = document.getElementById("terminal-context-image-file");
@@ -235,7 +244,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let modalFilter = "all";
 
   // storage & persistence
-  const CURRENT_TERMINAL_TEMPLATE_VERSION = "20261018_v2";
+  const CURRENT_TERMINAL_TEMPLATE_VERSION = "20261031_v8";
 
   function loadPersistentState() {
     const installedVersion = localStorage.getItem("rwx_terminal_template_version");
@@ -312,7 +321,7 @@ document.addEventListener("DOMContentLoaded", () => {
         groupName: state.groupName || "",
         messages: state.messages || [],
         choices: state.choices || [],
-        exportMode: "screen",
+        exportMode: "terminal",
         terminalChannels: terminalChannels,
         activeTerminalChannelId: activeTerminalChannelId,
         timestamp: Date.now()
@@ -647,7 +656,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function enterEditMode(msg) {
-    if (msg.type !== "status") {
+    if (msg.type !== "status" && msg.type !== "mission") {
       state.currentSender = msg.sender;
       if (msg.sender === "incoming" && msg.characterId) {
         state.activeCharacterId = msg.characterId;
@@ -672,6 +681,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (type === "text" && contextTextInput) {
       setInputValueFromStructuredText(contextTextInput, msg.text || "");
+      contextTextInput.focus();
+    } else if (type === "mission" && contextTextInput) {
+      setInputValueFromStructuredText(contextTextInput, (msg.title || "") + " // " + (msg.location || ""));
       contextTextInput.focus();
     } else if (type === "image" && msg.imageSrc) {
       contextPendingImageSrc = msg.imageSrc;
@@ -773,6 +785,64 @@ document.addEventListener("DOMContentLoaded", () => {
         statusRow.appendChild(rightLine);
 
         messageList.appendChild(statusRow);
+        return;
+      }
+
+      if (msg.type === "mission") {
+        if (currentGroup) {
+          messageList.appendChild(currentGroup);
+          currentGroup = null;
+        }
+
+        const missionRow = document.createElement("div");
+        missionRow.dataset.id = msg.id;
+        missionRow.className = "message-mission-row";
+        if (msg.id === state.selectedMessageId) {
+          missionRow.classList.add("selected");
+        }
+
+        missionRow.addEventListener("click", (e) => {
+          e.stopPropagation();
+          selectMessageForEdit(msg.id);
+        });
+
+        attachMessageDragListeners(missionRow, msg.id);
+
+        const card = document.createElement("div");
+        card.className = "mission-card";
+
+        const accentBar = document.createElement("div");
+        accentBar.className = "mission-accent-bar";
+
+        const iconWrap = document.createElement("div");
+        iconWrap.className = "mission-icon-wrap";
+        iconWrap.setAttribute("aria-hidden", "true");
+        iconWrap.innerHTML = '<svg viewBox="0 0 48 42" fill="none" class="mission-card-svg"><polygon points="4,4 44,4 24,38" fill="rgba(255,255,255,0.32)" /><polygon points="24,11 26.6,18.5 34.5,18.5 28.1,23.2 30.5,30.5 24,25.8 17.5,30.5 19.9,23.2 13.5,18.5 21.4,18.5" fill="#1c1f24" /><circle cx="7" cy="22" r="1.2" fill="rgba(255,255,255,0.75)" /><circle cx="11.5" cy="22" r="1.2" fill="rgba(255,255,255,0.75)" /><circle cx="16" cy="22" r="1.2" fill="rgba(255,255,255,0.75)" /><circle cx="32" cy="22" r="1.2" fill="rgba(255,255,255,0.75)" /><circle cx="36.5" cy="22" r="1.2" fill="rgba(255,255,255,0.75)" /><circle cx="41" cy="22" r="1.2" fill="rgba(255,255,255,0.75)" /></svg>';
+
+        const divider = document.createElement("div");
+        divider.className = "mission-divider";
+
+        const body = document.createElement("div");
+        body.className = "mission-body";
+
+        const titleEl = document.createElement("div");
+        titleEl.className = "mission-title";
+        titleEl.textContent = (msg.title !== undefined && msg.title !== "") ? msg.title : "Homecoming";
+
+        const locEl = document.createElement("div");
+        locEl.className = "mission-location";
+        locEl.textContent = (msg.location !== undefined && msg.location !== "") ? msg.location : "North Wuling Exclusion Zone";
+
+        body.appendChild(titleEl);
+        body.appendChild(locEl);
+
+        card.appendChild(accentBar);
+        card.appendChild(iconWrap);
+        card.appendChild(divider);
+        card.appendChild(body);
+
+        missionRow.appendChild(card);
+        messageList.appendChild(missionRow);
         return;
       }
 
@@ -1470,7 +1540,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function appendMessage(msgData) {
     const newId = "term_m_" + Date.now();
-    const safeSender = msgData.type === "status"
+    const isSpecialEvent = msgData.type === "status" || msgData.type === "mission";
+    const safeSender = isSpecialEvent
       ? "system"
       : ((msgData.sender || state.currentSender) === "outgoing" ? "outgoing" : "incoming");
 
@@ -1480,6 +1551,8 @@ document.addEventListener("DOMContentLoaded", () => {
       characterId: msgData.characterId || state.activeCharacterId || "pelica",
       type: msgData.type || "text",
       text: msgData.text || "",
+      title: msgData.title !== undefined ? msgData.title : undefined,
+      location: msgData.location !== undefined ? msgData.location : undefined,
       imageSrc: msgData.imageSrc || null,
       reactions: []
     };
@@ -2291,6 +2364,24 @@ document.addEventListener("DOMContentLoaded", () => {
           return;
         }
 
+        if (msg.type === "mission") {
+          const rawVal = getInputValueAsStructuredText(contextTextInput).trim();
+          if (rawVal.includes("//")) {
+            const parts = rawVal.split("//");
+            msg.title = parts[0].trim() || "Arena of Games";
+            msg.location = parts.slice(1).join("//").trim() || "OMV Dijiang";
+          } else if (rawVal.includes("|")) {
+            const parts = rawVal.split("|");
+            msg.title = parts[0].trim() || "Arena of Games";
+            msg.location = parts.slice(1).join("|").trim() || "OMV Dijiang";
+          } else {
+            msg.title = rawVal || "Arena of Games";
+          }
+          savePersistentState();
+          exitEditMode();
+          return;
+        }
+
         msg.sender = state.currentSender;
         msg.characterId = state.activeCharacterId;
 
@@ -2330,7 +2421,7 @@ document.addEventListener("DOMContentLoaded", () => {
       btn.addEventListener("click", () => {
         exportModeBtns.forEach((b) => b.classList.remove("active"));
         btn.classList.add("active");
-        state.exportMode = btn.dataset.exportMode || "screen";
+        state.exportMode = btn.dataset.exportMode || "terminal";
       });
     });
 
@@ -3038,6 +3129,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function openTerminalStatusPopover() {
     if (!terminalStatusPopoverMenu) return;
+    closeTerminalMissionPopover();
     renderTerminalStatusPresets();
     terminalStatusPopoverMenu.classList.remove("hidden");
     if (terminalStatusPopoverContainer) terminalStatusPopoverContainer.classList.add("open");
@@ -3099,9 +3191,119 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // Mission Directives in Terminal Mode
+  const TERMINAL_MISSION_PRESETS = [
+    { title: "Homecoming", location: "North Wuling Exclusion Zone" }
+  ];
+
+  function renderTerminalMissionPresets() {
+    if (!terminalMissionPresetsList) return;
+    terminalMissionPresetsList.innerHTML = "";
+    TERMINAL_MISSION_PRESETS.forEach((p) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "mission-preset-btn";
+      btn.innerHTML = `<span class="mission-preset-info"><span class="preset-title">${p.title}</span><span class="preset-loc">${p.location}</span></span><span class="mission-preset-icon"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="mission-preset-svg"><polygon points="3,4 21,4 12,20" stroke="currentColor" stroke-width="1.8" fill="currentColor" fill-opacity="0.25"></polygon><polygon points="12,8.5 13.2,11.5 16.2,11.5 13.8,13.2 14.7,16 12,14.3 9.3,16 10.2,13.2 7.8,11.5 10.8,11.5" fill="currentColor" stroke="none"></polygon><circle cx="5" cy="12.5" r="0.8" fill="currentColor" stroke="none"></circle><circle cx="19" cy="12.5" r="0.8" fill="currentColor" stroke="none"></circle></svg></span>`;
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        appendMessage({
+          type: "mission",
+          title: p.title,
+          location: p.location,
+          sender: "system",
+        });
+        closeTerminalMissionPopover();
+        scrollToBottom();
+      });
+      terminalMissionPresetsList.appendChild(btn);
+    });
+  }
+
+  function openTerminalMissionPopover() {
+    if (!terminalMissionPopoverMenu) return;
+    closeTerminalStatusPopover();
+    renderTerminalMissionPresets();
+    terminalMissionPopoverMenu.classList.remove("hidden");
+    if (terminalMissionPopoverContainer) terminalMissionPopoverContainer.classList.add("open");
+    if (inputTerminalMissionTitle) {
+      inputTerminalMissionTitle.value = "";
+      if (inputTerminalMissionLocation) inputTerminalMissionLocation.value = "";
+      setTimeout(() => inputTerminalMissionTitle.focus(), 50);
+    }
+  }
+
+  function closeTerminalMissionPopover() {
+    if (!terminalMissionPopoverMenu) return;
+    terminalMissionPopoverMenu.classList.add("hidden");
+    if (terminalMissionPopoverContainer) terminalMissionPopoverContainer.classList.remove("open");
+  }
+
+  function sendTerminalCustomMission() {
+    const title = (inputTerminalMissionTitle && inputTerminalMissionTitle.value.trim()) || "Homecoming";
+    const location = (inputTerminalMissionLocation && inputTerminalMissionLocation.value.trim()) || "North Wuling Exclusion Zone";
+    appendMessage({
+      type: "mission",
+      title: title,
+      location: location,
+      sender: "system",
+    });
+    if (inputTerminalMissionTitle) inputTerminalMissionTitle.value = "";
+    if (inputTerminalMissionLocation) inputTerminalMissionLocation.value = "";
+    closeTerminalMissionPopover();
+    scrollToBottom();
+  }
+
+  if (btnTerminalMissionToggle) {
+    btnTerminalMissionToggle.addEventListener("click", (e) => {
+      e.stopPropagation();
+      if (!terminalMissionPopoverMenu) return;
+      if (terminalMissionPopoverMenu.classList.contains("hidden")) {
+        openTerminalMissionPopover();
+      } else {
+        closeTerminalMissionPopover();
+      }
+    });
+  }
+
+  if (btnCloseTerminalMissionPopover) {
+    btnCloseTerminalMissionPopover.addEventListener("click", (e) => {
+      e.stopPropagation();
+      closeTerminalMissionPopover();
+    });
+  }
+
+  if (btnTerminalSendMission) {
+    btnTerminalSendMission.addEventListener("click", sendTerminalCustomMission);
+  }
+
+  if (inputTerminalMissionTitle) {
+    inputTerminalMissionTitle.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        if (inputTerminalMissionLocation && !inputTerminalMissionLocation.value.trim()) {
+          inputTerminalMissionLocation.focus();
+        } else {
+          sendTerminalCustomMission();
+        }
+      }
+    });
+  }
+
+  if (inputTerminalMissionLocation) {
+    inputTerminalMissionLocation.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        sendTerminalCustomMission();
+      }
+    });
+  }
+
   document.addEventListener("click", (e) => {
     if (terminalStatusPopoverContainer && !terminalStatusPopoverContainer.contains(e.target)) {
       closeTerminalStatusPopover();
+    }
+    if (terminalMissionPopoverContainer && !terminalMissionPopoverContainer.contains(e.target)) {
+      closeTerminalMissionPopover();
     }
   });
 
