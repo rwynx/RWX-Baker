@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://baker.rwyn.ch/sitemap.xml
+Sitemap: https://baker.rwyn.app/sitemap.xml

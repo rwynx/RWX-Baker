@@ -2,7 +2,7 @@
 
 > **An in-browser recreation of the "Baker" messaging app and a message generator for *Arknights: Endfield*.**
 
-[![Live Tool](https://img.shields.io/badge/Live_App-baker.rwyn.ch-ffd200.svg?style=flat&logoColor=black)](https://baker.rwyn.ch/)
+[![Live Tool](https://img.shields.io/badge/Live_App-baker.rwyn.app-ffd200.svg?style=flat&logoColor=black)](https://baker.rwyn.app/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Zero Trackers](https://img.shields.io/badge/Trackers-Zero-brightgreen.svg)](privacy.html)
 [![Client-Side Only](https://img.shields.io/badge/Processing-100%25%20Client--Side-orange.svg)](privacy.html)
@@ -168,7 +168,7 @@ Want to do some lazy edits/tweaks to layout? Adjust chat dimensions, or skin the
 - Bubble alignments, avatars, and media offsets (stickers, images etc.)
 - Header asset controls, move the chat header assets around (especially phone view asset pos needs help)
 - Topographic map decoration controls and opacity
-- Export watermark stamp styles, positions, and live tuning workbench (**[LIVE • Watermark Styles](https://baker.rwyn.ch/watermark-styles.html)**)
+- Export watermark stamp styles, positions, and live tuning workbench (**[LIVE • Watermark Styles](https://baker.rwyn.app/watermark-styles.html)**)
 - Glow effects, animated button borders, and color themes
 - Terminal mode canvas sizing, channel column widths, and notch variables in `terminal.css`.
 - And some other stuff

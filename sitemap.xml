@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://baker.rwyn.ch/</loc>
+    <loc>https://baker.rwyn.app/</loc>
     <lastmod>2026-10-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://baker.rwyn.ch/classic.html</loc>
+    <loc>https://baker.rwyn.app/classic.html</loc>
     <lastmod>2026-10-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://baker.rwyn.ch/notice.html</loc>
+    <loc>https://baker.rwyn.app/notice.html</loc>
     <lastmod>2026-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://baker.rwyn.ch/privacy.html</loc>
+    <loc>https://baker.rwyn.app/privacy.html</loc>
     <lastmod>2026-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>

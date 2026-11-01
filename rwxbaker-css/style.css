@@ -63,7 +63,7 @@ html, body {
   color: var(--color-text-white);
 }
 
-/* Background video ambience (rwyn.ch style) */
+/* Background video ambience (rwyn.app style) */
 video.bg-video {
   position: fixed;
   inset: 0;
