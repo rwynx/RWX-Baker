@@ -26,7 +26,8 @@
     overflow: hidden;
   }
 
-  #app-container {
+  #app-container.phone-mode,
+  #app-container.tablet-mode {
     width: 100vw;
     height: calc(100dvh - 22px);
     max-height: calc(100dvh - 22px);
@@ -42,9 +43,9 @@
     box-sizing: border-box !important;
   }
 
-  #phone-frame,
   .phone-mode #phone-frame,
-  #app-container.phone-mode #phone-frame {
+  #app-container.phone-mode #phone-frame,
+  .tablet-mode #phone-frame {
     transform: none !important;
     width: calc(100vw - 28px) !important;
     max-width: 440px !important;
@@ -778,13 +779,14 @@
    ========================================================================== */
 @media (max-width: 480px) {
 
-  #app-container {
+  #app-container.phone-mode,
+  #app-container.tablet-mode {
     padding: 10px 10px 6px 10px !important;
   }
 
-  #phone-frame,
   .phone-mode #phone-frame,
-  #app-container.phone-mode #phone-frame {
+  #app-container.phone-mode #phone-frame,
+  .tablet-mode #phone-frame {
     width: calc(100vw - 20px) !important;
     max-height: calc(100% - 4px) !important;
     border-radius: 18px !important;

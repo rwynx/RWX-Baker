@@ -149,6 +149,77 @@ document.addEventListener("DOMContentLoaded", () => {
   const btnContextAddReaction = document.getElementById("btn-terminal-context-add-reaction");
   let contextSelectedReactionEmoji = "rwxbaker-assets/emoji/sns_emoji_001.png";
 
+  // mobile
+  const terminalMobileNav = document.getElementById("terminal-mobile-nav");
+  const btnMobileQuickCompose = document.getElementById("btn-mobile-quick-compose");
+  const btnMobileViewChat = document.getElementById("btn-mobile-view-chat");
+  const mobileNoticeToast = document.getElementById("mobile-notice-toast");
+  const btnDismissNotice = document.getElementById("btn-dismiss-notice");
+
+  function setMobileTab(tab) {
+    if (!phoneFrame) return;
+    const validTabs = ["chat", "compose", "channels"];
+    const targetTab = validTabs.includes(tab) ? tab : "chat";
+    phoneFrame.setAttribute("data-mobile-tab", targetTab);
+
+    const mobileNavBtns = document.querySelectorAll(".terminal-mobile-nav .mobile-nav-btn");
+    mobileNavBtns.forEach((btn) => {
+      btn.classList.toggle("active", btn.dataset.terminalTab === targetTab);
+    });
+
+    if (targetTab === "chat") {
+      scrollToBottom();
+    } else if (targetTab === "compose") {
+      if (contextTextInput) {
+        setTimeout(() => {
+          contextTextInput.focus();
+        }, 60);
+      }
+    }
+  }
+
+  function initMobileNoticeToast() {
+    if (!mobileNoticeToast) return;
+    let isDismissed = false;
+    try {
+      isDismissed = localStorage.getItem("rwx_terminal_mobile_notice_v2") === "true";
+    } catch (_) {}
+
+    if (window.innerWidth <= 900 && !isDismissed) {
+      let autoDismissTimer = null;
+
+      const dismissNotice = () => {
+        if (autoDismissTimer) {
+          clearTimeout(autoDismissTimer);
+          autoDismissTimer = null;
+        }
+        mobileNoticeToast.classList.remove("visible");
+        mobileNoticeToast.classList.add("fade-out");
+        try {
+          localStorage.setItem("rwx_terminal_mobile_notice_v2", "true");
+        } catch (_) {}
+        setTimeout(() => {
+          mobileNoticeToast.classList.add("hidden");
+        }, 350);
+      };
+
+      setTimeout(() => {
+        mobileNoticeToast.classList.remove("hidden");
+        requestAnimationFrame(() => {
+          mobileNoticeToast.classList.add("visible");
+        });
+      }, 900);
+
+      autoDismissTimer = setTimeout(() => {
+        dismissNotice();
+      }, 11000);
+
+      if (btnDismissNotice) {
+        btnDismissNotice.addEventListener("click", dismissNotice);
+      }
+    }
+  }
+
   function getInputValueAsStructuredText(element) {
     if (!element) return "";
     let structured = "";
@@ -546,7 +617,12 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function selectTerminalChannel(channelId) {
-    if (channelId === activeTerminalChannelId) return;
+    if (channelId === activeTerminalChannelId) {
+      if (window.innerWidth <= 900) {
+        setMobileTab("chat");
+      }
+      return;
+    }
     exitEditMode();
     syncStateToActiveChannel();
     activeTerminalChannelId = channelId;
@@ -559,6 +635,9 @@ document.addEventListener("DOMContentLoaded", () => {
     updateActiveSpeakerCards();
     renderSquadRoster();
     savePersistentState();
+    if (window.innerWidth <= 900) {
+      setMobileTab("chat");
+    }
   }
 
   // drag drop & edit helpers
@@ -695,6 +774,10 @@ document.addEventListener("DOMContentLoaded", () => {
     if (editActionsContainer) {
       editActionsContainer.classList.remove("hidden");
     }
+
+    if (window.innerWidth <= 900) {
+      setMobileTab("compose");
+    }
   }
 
   function exitEditMode() {
@@ -724,6 +807,10 @@ document.addEventListener("DOMContentLoaded", () => {
     if (contextImgPreview) contextImgPreview.classList.add("hidden");
     if (btnContextSendImage) btnContextSendImage.disabled = true;
     renderConversation();
+
+    if (window.innerWidth <= 900) {
+      setMobileTab("chat");
+    }
   }
 
   // conversation rendering
@@ -1161,6 +1248,9 @@ document.addEventListener("DOMContentLoaded", () => {
       renderSquadRoster();
       savePersistentState();
       scrollToBottom();
+      if (window.innerWidth <= 900) {
+        setMobileTab("chat");
+      }
       return;
     }
     const tutorial = window.RWX_TUTORIAL_TEMPLATE;
@@ -1197,6 +1287,10 @@ document.addEventListener("DOMContentLoaded", () => {
     updateActiveSpeakerCards();
     renderSquadRoster();
     savePersistentState();
+    scrollToBottom();
+    if (window.innerWidth <= 900) {
+      setMobileTab("chat");
+    }
   }
 
   function updateHeader() {
@@ -1886,10 +1980,13 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
 
-    if (btnHelpModal && helpModal) {
-      btnHelpModal.addEventListener("click", () => {
-        setHelpPage(1);
-        helpModal.classList.remove("hidden");
+    const helpTriggers = document.querySelectorAll(".btn-trigger-help-modal, #btn-help-modal");
+    if (helpTriggers.length && helpModal) {
+      helpTriggers.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          setHelpPage(1);
+          helpModal.classList.remove("hidden");
+        });
       });
     }
 
@@ -1925,11 +2022,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const btnCloseHowItWorks = document.getElementById("btn-close-how-it-works");
     const btnCloseHowItWorksBottom = document.getElementById("btn-close-how-it-works-bottom");
 
-    if (btnHowItWorks && howItWorksModal) {
-      btnHowItWorks.addEventListener("click", () => {
-        howItWorksModal.classList.remove("hidden");
-        const content = howItWorksModal.querySelector(".how-it-works-content");
-        if (content) content.scrollTop = 0;
+    const howItWorksTriggers = document.querySelectorAll(".btn-trigger-guide-modal, #btn-how-it-works, #btn-how-it-works-mobile");
+    if (howItWorksTriggers.length && howItWorksModal) {
+      howItWorksTriggers.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          howItWorksModal.classList.remove("hidden");
+          const content = howItWorksModal.querySelector(".how-it-works-content");
+          if (content) content.scrollTop = 0;
+        });
       });
     }
 
@@ -2431,6 +2531,30 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
 
+    // mobile nav
+    if (terminalMobileNav) {
+      terminalMobileNav.addEventListener("click", (e) => {
+        const btn = e.target.closest(".mobile-nav-btn");
+        if (!btn) return;
+        const targetTab = btn.dataset.terminalTab;
+        if (targetTab) {
+          setMobileTab(targetTab);
+        }
+      });
+    }
+
+    if (btnMobileQuickCompose) {
+      btnMobileQuickCompose.addEventListener("click", () => {
+        setMobileTab("compose");
+      });
+    }
+
+    if (btnMobileViewChat) {
+      btnMobileViewChat.addEventListener("click", () => {
+        setMobileTab("chat");
+      });
+    }
+
     window.addEventListener("beforeunload", () => {
       savePersistentState();
     });
@@ -2619,6 +2743,10 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
+    if (window.innerWidth <= 900) {
+      state.exportMode = "mobile";
+    }
+
     const mainPane = document.getElementById("terminal-main-pane") || phoneFrame;
     const terminalWindowBody = document.getElementById("terminal-window-body");
 
@@ -2781,8 +2909,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
         downloadDataUrl(dataUrl, "RWX-Terminal-Full.png");
 
-      } else if (state.exportMode === "full") {
-        mainPane.style.width = origPaneWidth + "px";
+      } else if (state.exportMode === "mobile" || state.exportMode === "full") {
+        const isMobileExport = state.exportMode === "mobile";
+        const targetWidth = isMobileExport
+          ? (origPaneWidth > 480 ? 460 : origPaneWidth)
+          : origPaneWidth;
+
+        mainPane.style.width = targetWidth + "px";
+        mainPane.style.maxWidth = targetWidth + "px";
         mainPane.style.height = "auto";
         mainPane.style.maxHeight = "none";
         if (terminalWindowBody) {
@@ -2805,7 +2939,7 @@ document.addEventListener("DOMContentLoaded", () => {
           onclone: (cloned) => { cloned.style.transform = "none"; }
         });
 
-        downloadDataUrl(dataUrl, "RWX-Terminal-Full.png");
+        downloadDataUrl(dataUrl, isMobileExport ? "RWX-Terminal-Mobile.png" : "RWX-Terminal-Full.png");
 
       } else if (state.exportMode === "screen") {
         chatViewport.style.overflow = "hidden";
@@ -3071,6 +3205,16 @@ document.addEventListener("DOMContentLoaded", () => {
     updateActiveSpeakerCards();
     renderSquadRoster();
     setupEventListeners();
+    setMobileTab("chat");
+    initMobileNoticeToast();
+
+    // default export mode
+    const isMobileInitial = window.innerWidth <= 900;
+    state.exportMode = isMobileInitial ? "mobile" : "terminal";
+    exportModeBtns.forEach((btn) => {
+      btn.classList.toggle("active", btn.dataset.exportMode === state.exportMode);
+    });
+
     initWatermark();
     initLiveClock();
     initParticleField();

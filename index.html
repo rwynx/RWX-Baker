@@ -168,8 +168,8 @@
   }
   </script>
 
-  <link rel="stylesheet" href="rwxbaker-css/style.css?v=20261031_v8">
-  <link rel="stylesheet" href="rwxbaker-css/terminal.css?v=20261031_v8">
+  <link rel="stylesheet" href="rwxbaker-css/style.css?v=20261108_v15">
+  <link rel="stylesheet" href="rwxbaker-css/terminal.css?v=20261108_v15">
   <link rel="icon" type="image/png" sizes="192x192" href="favicon.png">
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
   <script defer src="https://cloud.umami.is/script.js" data-website-id="c20ff310-8fca-4a27-af54-efa614b5eb21"></script>
@@ -203,21 +203,18 @@
             <span>Classic</span>
           </a>
 
-          <!-- Vertical Separator -->
           <div class="terminal-brand-separator" aria-hidden="true"></div>
 
-          <!-- Brand Logo and Titles with tactical hazard accent -->
           <a href="https://baker.rwyn.app/" class="terminal-brand-logo-link" title="RWX Baker • Home">
             <img src="rwxbaker-assets/ui/rwx-logo.png" alt="RWX Logo" class="terminal-brand-logo-img">
           </a>
           <span class="terminal-brand-hazard-stripes" aria-hidden="true">///</span>
           <div class="terminal-brand-titles">
-            <h1 class="terminal-brand-title">RWX BAKER • Studio<span class="visually-hidden">— Arknights Endfield Baker Generator &amp; Chat Maker</span></h1>
+            <h1 class="terminal-brand-title">RWX BAKER • <span class="terminal-brand-studio">Studio</span><span class="visually-hidden">— Arknights Endfield Baker Generator &amp; Chat Maker</span></h1>
             <span class="terminal-brand-subtitle">Arknights: Endfield Message Generator &amp; Baker Maker</span>
           </div>
         </div>
 
-        <!-- Right section: Tricolor bar + Square HINTS & GitHub -->
         <div class="terminal-landing-header-right">
           <div class="terminal-hud-tricolor" aria-hidden="true">
             <span class="hud-bar hud-bar-pink"></span>
@@ -229,10 +226,11 @@
           <button type="button" id="btn-how-it-works" class="terminal-how-it-works-btn" title="How It Works &amp; FAQ — Endfield Custom Baker Maker Guide">
             <span class="how-btn-icon" aria-hidden="true">?</span>
             <span class="how-btn-text">HOW IT WORKS?</span>
+            <span class="how-btn-text-mobile">GUIDE</span>
           </button>
 
           <div class="terminal-landing-header-actions">
-            <button type="button" id="btn-help-modal" class="terminal-hints-square-btn" title="Editor Tips & Shortcuts" aria-label="Editor Tips & Shortcuts">
+            <button type="button" id="btn-help-modal" class="terminal-hints-square-btn btn-trigger-help-modal" title="Editor Tips & Shortcuts" aria-label="Editor Tips & Shortcuts">
               <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <path d="M9 18h6"></path>
                 <path d="M10 22h4"></path>
@@ -248,10 +246,8 @@
         </div>
       </div>
 
-      <!-- Long horizontal separator with 7px insets & end fades -->
       <div class="terminal-unified-separator" aria-hidden="true"></div>
 
-      <!-- Lower Row: Backup & Export Actions + NOTE + HUD Mark -->
       <div class="terminal-unified-row-bottom">
         <div class="terminal-standalone-left">
           <div class="terminal-backup-controls" role="group" aria-label="Scenario backup">
@@ -270,8 +266,9 @@
 
           <div class="terminal-topbar-export-controls">
             <div class="export-mode-group" role="group" aria-label="Export mode">
-              <button type="button" class="export-mode-btn active" data-export-mode="terminal" title="Capture full terminal frame with channels">Full Terminal</button>
-              <button type="button" class="export-mode-btn" data-export-mode="paged" title="Capture multi-page slides">Multi-Page</button>
+              <button type="button" class="export-mode-btn export-mode-mobile" data-export-mode="mobile" title="Capture single-column mobile chat">Mobile</button>
+              <button type="button" class="export-mode-btn export-mode-terminal active" data-export-mode="terminal" title="Capture full terminal frame with channels">Full Terminal</button>
+              <button type="button" class="export-mode-btn export-mode-paged" data-export-mode="paged" title="Capture multi-page slides">Multi-Page</button>
             </div>
             <button type="button" id="btn-export-png" class="export-png-btn" title="Download PNG screenshot">
               <span class="export-btn-glow" aria-hidden="true"></span>
@@ -283,7 +280,27 @@
           </div>
         </div>
 
-        <!-- NOTE notification box placed in the lower row -->
+        <!-- tools -->
+        <div class="terminal-mobile-tools" aria-label="Quick tools">
+          <div class="terminal-mobile-tools-separator" aria-hidden="true"></div>
+          <button type="button" id="btn-how-it-works-mobile" class="terminal-how-it-works-btn btn-trigger-guide-modal" title="How It Works &amp; FAQ — Guide" aria-label="How It Works &amp; FAQ">
+            <span class="how-btn-icon" aria-hidden="true">?</span>
+            <span class="how-btn-text-mobile">GUIDE</span>
+          </button>
+          <button type="button" id="btn-help-modal-mobile" class="terminal-hints-square-btn btn-trigger-help-modal" title="Editor Tips &amp; Shortcuts" aria-label="Editor Tips &amp; Shortcuts">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M9 18h6"></path>
+              <path d="M10 22h4"></path>
+              <path d="M12 2a7 7 0 0 0-7 7c0 2.38 1.19 4.47 3 5.74V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 0 0-7-7z"></path>
+            </svg>
+          </button>
+          <a href="https://github.com/rwynx/RWX-Baker" target="_blank" rel="noopener noreferrer" class="terminal-nav-icon-link" title="View Source on GitHub">
+            <svg viewBox="0 0 16 16" width="15" height="15" fill="currentColor" aria-hidden="true">
+              <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+            </svg>
+          </a>
+        </div>
+
         <div class="terminal-wip-notice-topbar">
           <span class="wip-notice-text">Something is broken? Report bugs <br>on Discord (<strong>@rwyn</strong>) or GitHub.</span>
         </div>
@@ -293,6 +310,22 @@
         </div>
       </div>
     </header>
+
+    <!-- nav -->
+    <nav class="terminal-mobile-nav" id="terminal-mobile-nav" aria-label="Mobile workspace view switcher">
+      <button type="button" class="mobile-nav-btn active" data-terminal-tab="chat">
+        <svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="nav-btn-svg" aria-hidden="true"><path d="M2 13.5V3.5a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H5.5L2 13.5z"/><line x1="5" y1="5.5" x2="11" y2="5.5"/><line x1="5" y1="8" x2="9" y2="8"/></svg>
+        <span class="mobile-nav-label">CHAT VIEW</span>
+      </button>
+      <button type="button" class="mobile-nav-btn" data-terminal-tab="compose">
+        <svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="nav-btn-svg" aria-hidden="true"><path d="M11.5 2.5a1.5 1.5 0 0 1 2 2L5 13l-3 1 1-3 8.5-8.5z"/><line x1="10" y1="4" x2="12" y2="6"/></svg>
+        <span class="mobile-nav-label">TRANSMITTER</span>
+      </button>
+      <button type="button" class="mobile-nav-btn" data-terminal-tab="channels">
+        <svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="nav-btn-svg" aria-hidden="true"><rect x="2" y="2.5" width="12" height="3" rx="1"/><rect x="2" y="6.5" width="12" height="3" rx="1"/><rect x="2" y="10.5" width="12" height="3" rx="1"/></svg>
+        <span class="mobile-nav-label">CHANNELS</span>
+      </button>
+    </nav>
 
         <main id="phone-frame" class="terminal-frame">
 
@@ -373,6 +406,10 @@
             <div class="terminal-studio-header">
               <span class="terminal-studio-title" id="terminal-studio-title">COMPOSE CONTEXT</span>
               <div class="terminal-studio-header-actions">
+                <button type="button" id="btn-mobile-view-chat" class="small-secondary-btn terminal-mobile-view-chat-btn" title="View Terminal Chat">
+                  <svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 13.5V3.5a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H5.5L2 13.5z"/><line x1="5" y1="5.5" x2="11" y2="5.5"/><line x1="5" y1="8" x2="9" y2="8"/></svg>
+                  <span>View Chat</span>
+                </button>
                 <button type="button" id="btn-terminal-tutorial" class="small-secondary-btn" title="Reload tutorial conversation">Reload Tutorial</button>
                 <button type="button" id="btn-terminal-clear-chat" class="small-danger-btn" title="Clear all channels and messages">Clear All</button>
               </div>
@@ -606,6 +643,14 @@
 
                     <div id="chat-choices-container" class="choice-container">
                       </div>
+
+          <!-- quick bar -->
+          <div class="terminal-mobile-chat-bottom-bar" id="terminal-mobile-chat-bottom-bar">
+            <button type="button" class="terminal-mobile-quick-compose-btn" id="btn-mobile-quick-compose" title="Open Transmitter & Compose">
+              <svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" class="quick-compose-svg" aria-hidden="true"><path d="M11.5 2.5a1.5 1.5 0 0 1 2 2L5 13l-3 1 1-3 8.5-8.5z"/><line x1="10" y1="4" x2="12" y2="6"/></svg>
+              <span>TRANSMIT / COMPOSE</span>
+            </button>
+          </div>
 
                     <footer id="input-footer">
             <span class="terminal-input-decoration" aria-hidden="true"></span>
@@ -877,7 +922,9 @@
     <div class="help-modal-card">
       <div class="help-modal-header">
         <div class="help-modal-title">
-          <span class="help-modal-icon">💡</span>
+          <span class="help-modal-icon">
+            <svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 13h4M6.5 14.5h3M6 10a4 4 0 1 1 4 0c-.5.5-.8 1-1 2h-2c-.2-1-.5-1.5-1-2z"/></svg>
+          </span>
           <h3 id="help-modal-title">TIPS &amp; TRANSMISSION SHORTCUTS</h3>
         </div>
         <button type="button" id="btn-close-help" class="help-modal-close" aria-label="Close tips">&times;</button>
@@ -995,12 +1042,25 @@
     </div>
   </footer>
 
+  <!-- toast -->
+  <div id="mobile-notice-toast" class="mobile-notice-toast hidden" role="alert" aria-live="polite">
+    <div class="notice-toast-content">
+      <span class="notice-toast-icon">
+        <svg viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="notice-toast-svg" aria-hidden="true"><rect x="2.5" y="3.5" width="15" height="10" rx="1.5"/><line x1="7" y1="16.5" x2="13" y2="16.5"/><line x1="10" y1="13.5" x2="10" y2="16.5"/></svg>
+      </span>
+      <div class="notice-toast-text">
+        <strong>Desktop Recommended:</strong> For the full dual-pane layout and 1:1 in-game replica <strong>Full Terminal export</strong> (showing active squad channels &amp; operations), visit on PC! Single-column mobile chats can be created &amp; exported directly here.
+      </div>
+    </div>
+    <button type="button" id="btn-dismiss-notice" class="notice-toast-close" title="Dismiss notice" aria-label="Dismiss notice">&times;</button>
+  </div>
+
   <!-- scripts -->
   <script src="rwxbaker-js/dom-to-image-more.min.js?v=20261019_v1"></script>
-  <script src="rwxbaker-assets/templates/terminal-template.js?v=20261031_v8"></script>
+  <script src="rwxbaker-assets/templates/terminal-template.js?v=20261108_v9"></script>
   <script src="rwxbaker-js/tutorial-template.js?v=20261018_v2"></script>
   <script src="rwxbaker-js/characters.js?v=20261018_v2"></script>
-  <script src="rwxbaker-js/terminal.js?v=20261031_v8"></script>
+  <script src="rwxbaker-js/terminal.js?v=20261108_v15"></script>
 </body>
 </html>
 
